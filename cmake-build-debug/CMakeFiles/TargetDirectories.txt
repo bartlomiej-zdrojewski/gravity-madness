@@ -1,3 +1,0 @@
-C:/Users/Mastermind/Documents/Repositories/gravity-madness/cmake-build-debug/CMakeFiles/gravity_madness.dir
-C:/Users/Mastermind/Documents/Repositories/gravity-madness/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Mastermind/Documents/Repositories/gravity-madness/cmake-build-debug/CMakeFiles/rebuild_cache.dir
