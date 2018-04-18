@@ -1,0 +1,25 @@
+<Graphics>
+
+    <Textures>
+
+        <Path>assets/graphics/textures/</Path>
+
+        <Texture>
+            <Name></Name>
+            <Path></Path>
+        </Texture>
+
+    </Textures>
+
+    <Fonts>
+
+        <Path>assets/graphics/fonts/</Path>
+
+        <Font>
+            <Name></Name>
+            <Path></Path>
+        </Font>
+
+    </Fonts>
+
+</Graphics>

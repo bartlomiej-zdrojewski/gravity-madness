@@ -1,0 +1,10 @@
+<Config>
+    <GraphicsConfig>config/graphics.xml</GraphicsConfig>
+    <SoundsConfig>config/sounds.xml</SoundsConfig>
+    <WindowWidth>800</WindowWidth>
+    <WindowHeight>600</WindowHeight>
+    <Fullscreen>false</Fullscreen>
+    <Antialiasing>0</Antialiasing>
+    <HighScore>0</HighScore>
+    <Debug>false</Debug>
+</Config>
