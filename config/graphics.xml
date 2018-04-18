@@ -5,8 +5,8 @@
         <Path>assets/graphics/textures/</Path>
 
         <Texture>
-            <Name></Name>
-            <Path></Path>
+            <Name>Test</Name>
+            <Path>test.jpg</Path>
         </Texture>
 
     </Textures>
@@ -16,8 +16,8 @@
         <Path>assets/graphics/fonts/</Path>
 
         <Font>
-            <Name></Name>
-            <Path></Path>
+            <Name>Test</Name>
+            <Path>test.ttf</Path>
         </Font>
 
     </Fonts>

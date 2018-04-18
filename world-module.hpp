@@ -31,8 +31,8 @@ public:
 
         Mode = Modes::Init;
 
-        Script * GraphicsConfig;
-        Script * SoundsConfig;
+        Script * GraphicsConfig = nullptr;
+        Script * SoundsConfig = nullptr;
 
         if ( !config( Config, GraphicsConfig, SoundsConfig ) ) {
 
@@ -64,7 +64,8 @@ public:
     sf::ContextSettings getVideoContext ( );
 
     void update ( );
-    void render ( );
+    void update ( sf::Event &Event );
+    void render ( sf::RenderWindow &Window );
 
 private:
 
@@ -77,6 +78,10 @@ private:
 
     LoggerManager * Log;
     GraphicsModule * Graphics;
+    // SoundsModule * Sounds;
+
+    sf::Thread * GraphicsThread;
+    // sf::Thread * SoundsThread;
 
     Modes Mode;
     bool Debugging;

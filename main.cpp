@@ -9,8 +9,6 @@ int main ( ) {
 
         sf::RenderWindow Window ( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
 
-        World.setMode( WorldModule::Modes::Init );
-
         while ( Window.isOpen() ) {
 
             sf::Event Event {};
@@ -19,23 +17,29 @@ int main ( ) {
 
                 if ( Event.type == sf::Event::Closed ) {
 
-                    Window.close(); } }
+                    Window.close(); }
 
-            World.update();
+                else {
 
-            if ( World.hasVideoChanged() ) {
+                    World.update( Event ); } }
 
-                Window.create( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() ); }
+            if ( Window.isOpen() ) {
 
-            if ( World.getMode() == WorldModule::Modes::Idle ) {
+                if ( World.getMode() != WorldModule::Modes::Idle ) {
 
-                Window.close(); }
+                    World.update();
 
-            else {
+                    if ( World.hasVideoChanged() ) {
 
-                Window.clear();
-                World.render();
-                Window.display(); } } }
+                        Window.create( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() ); }
+
+                    Window.clear();
+                    World.render( Window );
+                    Window.display(); }
+
+                else {
+
+                    Window.close(); } } } }
 
     else {
 

@@ -8,11 +8,10 @@ class Logger {
 
 public:
 
-    Logger ( );
     Logger * getLogger ( );
 
-    bool wasErrorLoged ( );
-    bool wasWarningLoged ( );
+    bool wasErrorLogged ( );
+    bool wasWarningLogged ( );
 
     void logError ( std::string Message );
     void logWarning ( std::string Message );

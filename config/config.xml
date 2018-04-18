@@ -3,8 +3,8 @@
     <SoundsConfig>config/sounds.xml</SoundsConfig>
     <WindowWidth>800</WindowWidth>
     <WindowHeight>600</WindowHeight>
-    <Fullscreen>false</Fullscreen>
-    <Antialiasing>0</Antialiasing>
+    <FullScreen>false</FullScreen>
+    <Antyaliasing>0</Antyaliasing>
     <HighScore>0</HighScore>
     <Debug>false</Debug>
 </Config>
