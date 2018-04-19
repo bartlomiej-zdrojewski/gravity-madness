@@ -18,14 +18,14 @@ include_directories(${SFML_INCLUDE_DIR})
 #    SET(GUI_TYPE WIN32)
 #endif()
 
-set(SOURCE_FILES pugixml/pugixml.cpp main.cpp world-module.cpp graphics-module.cpp logger.cpp loger-manager.cpp script.cpp)
-set(HEADER_FILES pugixml/pugiconfig.hpp pugixml/pugixml.hpp gravity-madness.hpp world-module.hpp graphics-module.hpp script.hpp logger.hpp logger-manager.hpp)
+set(SOURCE_FILES pugixml/pugixml.cpp main.cpp world-module.cpp graphics-module.cpp logger.cpp loger-manager.cpp script.cpp game-module.cpp)
+set(HEADER_FILES pugixml/pugiconfig.hpp pugixml/pugixml.hpp gravity-madness.hpp world-module.hpp graphics-module.hpp script.hpp logger.hpp logger-manager.hpp game-module.hpp)
 
 add_executable(gravity_madness ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(gravity_madness ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 add_custom_command(TARGET gravity_madness PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/config $<TARGET_FILE_DIR:gravity_madness>/config)
+        ${CMAKE_SOURCE_DIR}/scripts $<TARGET_FILE_DIR:gravity_madness>/scripts)
 add_custom_command(TARGET gravity_madness PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:gravity_madness>/assets)
 

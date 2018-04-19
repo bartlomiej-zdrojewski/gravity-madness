@@ -10,7 +10,7 @@ LoggerManager::LoggerManager ( std::string FilePath ) {
 
     if ( Output->is_open() ) {
 
-        *Output << "Opening log with timestamp " << time( nullptr ) << std::endl; }
+        *Output << "[" << time( nullptr ) << "] " << "Opening log" << std::endl; }
 
     else {
 
@@ -21,7 +21,7 @@ LoggerManager::~LoggerManager ( ) {
 
     if ( Output ) {
 
-        *Output << "Closing log with timestamp " << time( nullptr ) << std::endl; }
+        *Output << "[" << time( nullptr ) << "] " << "Closing log" << std::endl; }
 
     delete Output; }
 
@@ -43,12 +43,12 @@ void LoggerManager::update ( ) {
 
         while ( Log->wasErrorLogged() ) {
 
-            *Output << Log->getError() << std::endl;
+            *Output << "[" << time( nullptr ) << "] " << Log->getError() << std::endl;
 
             ErrorLogged = true; }
 
         if ( Log->wasWarningLogged() ) {
 
-            *Output << Log->getWarning() << std::endl;
+            *Output << "[" << time( nullptr ) << "] " << Log->getWarning() << std::endl;
 
             WarningLogged = true; } } }

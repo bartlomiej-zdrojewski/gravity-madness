@@ -1,8 +1,6 @@
 #ifndef GRAVITY_MADNESS_GRAPHICS_MODULE
 #define GRAVITY_MADNESS_GRAPHICS_MODULE
 
-#include <iostream> // TODO TEMP
-
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
@@ -35,8 +33,8 @@ public:
     void enableFullScreen ( );
     void disableFullScreen ( );
 
-    sf::Texture * getTexture ( std::string Name );
-    sf::Font * getFont ( std::string Name );
+    sf::Texture& getTexture ( std::string Name );
+    sf::Font& getFont ( std::string Name );
 
 private:
 

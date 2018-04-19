@@ -21,8 +21,6 @@ void GraphicsModule::init ( ) {
 
         return; }
 
-    std::cout << "Graphic module start" << std::endl; // TODO TEMP
-
     std::vector <GraphicFile> TextureFiles;
     std::vector <GraphicFile> FontFiles;
 
@@ -30,89 +28,145 @@ void GraphicsModule::init ( ) {
 
     if ( Root ) {
 
-        std::vector <pugi::xml_node*> TextureContainerNode = Config->getChildren( Root, "Textures" );
+        auto GraphicsNode = Config->getChildren( *Root, "Graphics" );
 
-        if ( !TextureContainerNode.empty() ) {
+        if ( !GraphicsNode.empty() ) {
 
-            if ( TextureContainerNode.size() > 1 ) {
+            if ( GraphicsNode.size() > 1 ) {
 
-                logWarning( "Graphics module config script has unexpected structure, 'Textures' node is not unique." ); }
+                logWarning( "Graphics module config script has unexpected structure, 'Graphics' node is not unique." ); }
 
-            std::vector <pugi::xml_node*> PathNode = Config->getChildren( Root, "Path" );
-            std::vector <pugi::xml_node*> TextureNodes = Config->getChildren( Root, "Texture" );
+            auto TexturesNode = Config->getChildren( GraphicsNode[0], "Textures" );
 
-            if ( !PathNode.empty() ) {
+            if ( !TexturesNode.empty() ) {
 
-                if ( PathNode.size() > 1 ) {
+                if ( TexturesNode.size() > 1 ) {
 
-                    logWarning( "Graphics module config script has unexpected structure, 'Textures/Path' node is not unique." ); }
+                    logWarning( "Graphics module config script has unexpected structure, 'Graphics/Textures' node is not unique." ); }
 
-                std::string Path = Config->getTextValue( PathNode[0] );
+                auto PrePathNode = Config->getChildren( TexturesNode[0], "Path" );
+                auto TextureNodes = Config->getChildren( TexturesNode[0], "Texture" );
 
-                if ( !TextureNodes.empty() ) {
+                if ( !PrePathNode.empty() ) {
 
-                    for ( auto TextureNode : TextureNodes ) {
+                    if ( PrePathNode.size() > 1 ) {
 
-                        GraphicFile File;
-                        
-                        File.Name = Config->getTextValue( Config->getChildren( TextureNode, "Name" )[0] );
-                        File.Path = Path + Config->getTextValue( Config->getChildren( TextureNode, "Path" )[0] );
-                        
-                        TextureFiles.push_back( File ); } }
+                        logWarning( "Graphics module config script has unexpected structure, 'Graphics/Textures/Path' node is not unique." ); }
 
-                else {
+                    std::string PrePath = Config->getTextValue( PrePathNode[0] );
 
-                    logWarning( "Graphics module config script has unexpected structure, not single 'Textures/Texture' node was found." ); } }
+                    if ( !TextureNodes.empty() ) {
 
-            else {
+                        for ( auto TextureNode : TextureNodes ) {
 
-                logError( "Graphics module config script is damaged, 'Textures/Path' node was not found!" ); } }
+                            auto NameNode = Config->getChildren( TextureNode, "Name" );
+                            auto PathNode = Config->getChildren( TextureNode, "Path" );
 
-        else {
+                            if ( !NameNode.empty() && !PathNode.empty() ) {
 
-            logError( "Graphics module config script is damaged, 'Textures' node was not found!" ); }
+                                GraphicFile File;
 
-        std::vector <pugi::xml_node*> FontContainerNode = Config->getChildren( Root, "Fonts" );
+                                std::string Name = Config->getTextValue( NameNode[0] );
+                                std::string Path = Config->getTextValue( PathNode[0] );
 
-        if ( !FontContainerNode.empty() ) {
+                                for ( size_t i = 0; i < Name.size(); i++ ) {
 
-            if ( FontContainerNode.size() > 1 ) {
+                                    Name[i] = (char) tolower( Name[i] ); }
 
-                logWarning( "Graphics module config script has unexpected structure, 'Fonts' node is not unique." ); }
+                                File.Name = Name;
+                                File.Path = PrePath + Path;
 
-            std::vector <pugi::xml_node*> PathNode = Config->getChildren( Root, "Path" );
-            std::vector <pugi::xml_node*> FontNodes = Config->getChildren( Root, "Font" );
+                                TextureFiles.push_back( File ); }
 
-            if ( !PathNode.empty() ) {
+                            else {
 
-                if ( PathNode.size() > 1 ) {
+                                if ( NameNode.empty() ) {
 
-                    logWarning( "Graphics module config script has unexpected structure, 'Fonts/Path' node is not unique." ); }
+                                    logError( "Graphics module config script is corrupted, 'Graphics/Textures/Texture/Name' node was not found!" ); }
 
-                std::string Path = Config->getTextValue( PathNode[0] );
+                                if ( PathNode.empty() ) {
 
-                if ( !FontNodes.empty() ) {
+                                    logError( "Graphics module config script is corrupted, 'Graphics/Textures/Texture/Path' node was not found!" ); } } } }
 
-                    for ( auto FontNode : FontNodes ) {
+                    else {
 
-                        GraphicFile File;
-
-                        File.Name = Config->getTextValue( Config->getChildren( FontNode, "Name" )[0] );
-                        File.Path = Path + Config->getTextValue( Config->getChildren( FontNode, "Path" )[0] );
-
-                        FontFiles.push_back( File ); } }
+                        logWarning( "Graphics module config script has unexpected structure, not single 'Graphics/Textures/Texture' node was found." ); } }
 
                 else {
 
-                    logWarning( "Graphics module config script has unexpected structure, not single 'Fonts/Font' node was found." ); } }
+                    logError( "Graphics module config script is corrupted, 'Graphics/Textures/Path' node was not found!" ); } }
 
             else {
 
-                logError( "Graphics module config script is damaged, 'Fonts/Path' node was not found!" ); } }
+                logError( "Graphics module config script is corrupted, 'Graphics/Textures' node was not found!" ); }
+
+            auto FontContainerNode = Config->getChildren( GraphicsNode[0], "Fonts" );
+
+            if ( !FontContainerNode.empty() ) {
+
+                if ( FontContainerNode.size() > 1 ) {
+
+                    logWarning( "Graphics module config script has unexpected structure, 'Graphics/Fonts' node is not unique." ); }
+
+                auto PrePathNode = Config->getChildren( FontContainerNode[0], "Path" );
+                auto FontNodes = Config->getChildren( FontContainerNode[0], "Font" );
+
+                if ( !PrePathNode.empty() ) {
+
+                    if ( PrePathNode.size() > 1 ) {
+
+                        logWarning( "Graphics module config script has unexpected structure, 'Graphics/Fonts/Path' node is not unique." ); }
+
+                    std::string PrePath = Config->getTextValue( PrePathNode[0] );
+
+                    if ( !FontNodes.empty() ) {
+
+                        for ( auto FontNode : FontNodes ) {
+
+                            auto NameNode = Config->getChildren( FontNode, "Name" );
+                            auto PathNode = Config->getChildren( FontNode, "Path" );
+
+                            if ( !NameNode.empty() && !PathNode.empty() ) {
+
+                                GraphicFile File;
+
+                                std::string Name = Config->getTextValue( NameNode[0] );
+                                std::string Path = Config->getTextValue( PathNode[0] );
+
+                                for ( size_t i = 0; i < Name.size(); i++ ) {
+
+                                    Name[i] = (char) tolower( Name[i] ); }
+
+                                File.Name = Name;
+                                File.Path = PrePath + Path;
+
+                                FontFiles.push_back( File ); }
+
+                            else {
+
+                                if ( NameNode.empty() ) {
+
+                                    logError( "Graphics module config script is corrupted, 'Graphics/Fonts/Font/Name' node was not found!" ); }
+
+                                if ( PathNode.empty() ) {
+
+                                    logError( "Graphics module config script is corrupted, 'Graphics/Fonts/Font/Path' node was not found!" ); } } } }
+
+                    else {
+
+                        logWarning( "Graphics module config script has unexpected structure, not single 'Graphics/Fonts/Font' node was found." ); } }
+
+                else {
+
+                    logError( "Graphics module config script is corrupted, 'Graphics/Fonts/Path' node was not found!" ); } }
+
+            else {
+
+                logError( "Graphics module config script is corrupted, 'Graphics/Fonts' node was not found!" ); } }
 
         else {
 
-            logError( "Graphics module config script is damaged, 'Fonts' node was not found!" ); } }
+            logError( "Graphics module config script is corrupted, 'Graphics' node was not found!" ); } }
 
     else {
 
@@ -122,7 +176,7 @@ void GraphicsModule::init ( ) {
 
         if ( !ImageBuffer.loadFromFile( File.Path ) ) {
 
-            logError( "Failed to load texture from file '" + File.Path + "'!" );
+            logError( "Failed to load texture from '" + File.Path + " file'!" );
 
             continue; }
 
@@ -151,8 +205,6 @@ void GraphicsModule::init ( ) {
 
     ImageBuffer.create( 0, 0 );
 
-    std::cout << "Graphic module stop" << std::endl; // TODO TEMP
-
     (*InitState)++; }
 
 void GraphicsModule::initContext ( ) {
@@ -160,8 +212,6 @@ void GraphicsModule::initContext ( ) {
     if ( ImageState != 1 ) {
 
         return; }
-
-    std::cout << "Init context" << std::endl; // TODO TEMP
 
     auto * Texture = new sf::Texture;
 
@@ -199,7 +249,11 @@ void GraphicsModule::disableFullScreen ( ) {
 
     FullScreen = false; }
 
-sf::Texture * GraphicsModule::getTexture ( std::string Name ) {
+sf::Texture& GraphicsModule::getTexture ( std::string Name ) {
+
+    for ( size_t i = 0; i < Name.size(); i++ ) {
+
+        Name[i] = (char) tolower( Name[i] ); }
 
     auto Element = Textures.find( Name );
 
@@ -209,9 +263,13 @@ sf::Texture * GraphicsModule::getTexture ( std::string Name ) {
 
         return getTexture( "Default" ); }
 
-    return Element->second; }
+    return *Element->second; }
 
-sf::Font * GraphicsModule::getFont ( std::string Name ) {
+sf::Font& GraphicsModule::getFont ( std::string Name ) {
+
+    for ( size_t i = 0; i < Name.size(); i++ ) {
+
+        Name[i] = (char) tolower( Name[i] ); }
 
     auto Element = Fonts.find( Name );
 
@@ -221,7 +279,7 @@ sf::Font * GraphicsModule::getFont ( std::string Name ) {
 
         return getFont( "Default" ); }
 
-    return Element->second; }
+    return *Element->second; }
 
 void GraphicsModule::initDefault ( ) { // TODO Load from memory
 

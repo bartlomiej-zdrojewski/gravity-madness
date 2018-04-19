@@ -10,4 +10,10 @@
 #include "script.hpp"
 #include "world-module.hpp"
 
+#if defined(WIN32)
+    #include <windows.h>
+#elif defined(unix) || defined(__unix) || defined(__unix__)
+    #include <iostream>
+#endif
+
 #endif

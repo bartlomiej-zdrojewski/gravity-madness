@@ -1,5 +1,4 @@
 #include "script.hpp"
-#include <iostream>
 
 Script::Script ( std::string FilePath ) {
 
@@ -37,37 +36,29 @@ pugi::xml_node * Script::getRoot ( ) {
 
     return Document; }
 
-std::vector <pugi::xml_node*> Script::getChildren ( pugi::xml_node * Node, std::string Filter ) {
+std::vector <pugi::xml_node> Script::getChildren ( pugi::xml_node Node, std::string Filter ) {
 
     if ( !Node ) {
 
-        return std::vector <pugi::xml_node*> ();}
+        return std::vector <pugi::xml_node> ();}
 
-    std::vector <pugi::xml_node*> Children;
+    std::vector <pugi::xml_node> Children;
 
-    for ( auto Child : Node->children() ) {
+    for ( auto Child : Node.children() ) {
 
         if ( Filter.empty() || Filter == std::string( Child.name() ) ) {
 
-            Children.push_back( &Child ); } }
+            Children.push_back( Child ); } }
 
     return Children; }
 
-std::string Script::getTextValue ( pugi::xml_node * Node ) {
+std::string Script::getTextValue ( pugi::xml_node Node ) {
 
-    if ( !Node ) {
+    return Node.text().get(); }
 
-        return ""; }
+bool Script::getBooleanValue ( pugi::xml_node Node ) {
 
-    return Node->value(); }
-
-bool Script::getBooleanValue ( pugi::xml_node * Node ) {
-
-    if ( !Node ) {
-
-        return false; }
-
-    std::string Value = Node->value();
+    std::string Value = Node.text().get();
 
     for ( size_t i = 0; i < Value.size(); i++ ) {
 
@@ -75,17 +66,13 @@ bool Script::getBooleanValue ( pugi::xml_node * Node ) {
 
     return Value == "true"; }
 
-int Script::getIntegerValue ( pugi::xml_node * Node ) {
-
-    if ( !Node ) {
-
-        return 0; }
+int Script::getIntegerValue ( pugi::xml_node Node ) {
 
     int Value;
 
     try {
 
-        Value = std::stoi( Node->value() ); }
+        Value = std::stoi( Node.text().get() ); }
 
     catch ( ... ) {
 
@@ -93,15 +80,11 @@ int Script::getIntegerValue ( pugi::xml_node * Node ) {
 
     return Value; }
 
-void Script::setValue ( pugi::xml_node * Node, std::string Value ) {
+void Script::setValue ( pugi::xml_node Node, std::string Value ) {
 
-    if ( !Node ) {
+    Node.set_value( Value.c_str() ); }
 
-        return; }
-
-    Node->set_value( Value.c_str() ); }
-
-void Script::setValue ( pugi::xml_node * Node, bool Value ) {
+void Script::setValue ( pugi::xml_node Node, bool Value ) {
 
     if ( !Node ) {
 
@@ -109,16 +92,12 @@ void Script::setValue ( pugi::xml_node * Node, bool Value ) {
 
     if ( Value ) {
 
-        Node->set_value( "true" ); }
+        Node.set_value( "true" ); }
 
     else {
 
-        Node->set_value( "false" ); } }
+        Node.set_value( "false" ); } }
 
-void Script::setValue ( pugi::xml_node * Node, int Value ) {
+void Script::setValue ( pugi::xml_node Node, int Value ) {
 
-    if ( !Node ) {
-
-        return; }
-
-    Node->set_value( std::to_string( Value ).c_str() ); }
+    Node.set_value( std::to_string( Value ).c_str() ); }

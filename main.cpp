@@ -1,11 +1,12 @@
+#include <iostream>
 #include "gravity-madness.hpp"
 
 int main ( ) {
 
-    Script Config ( "config/config.xml" );
+    Script Config ( "scripts/settings.xml" );
     WorldModule World ( Config );
 
-    if ( World.getMode() != WorldModule::Modes::Idle ) {
+    if ( World.getMode() != WorldModule::Modes::IdleMode ) {
 
         sf::RenderWindow Window ( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
 
@@ -25,7 +26,7 @@ int main ( ) {
 
             if ( Window.isOpen() ) {
 
-                if ( World.getMode() != WorldModule::Modes::Idle ) {
+                if ( World.getMode() != WorldModule::Modes::IdleMode ) {
 
                     World.update();
 
@@ -43,13 +44,16 @@ int main ( ) {
 
     else {
 
+        std::string Message = "Essential configuration file couldn't be loaded. It may be corrupted or unreachable. "
+                              "Check 'scripts/settings.xml' file or contact support team.";
+
         #if defined(WIN32)
 
-            // ...
+            MessageBox( nullptr, Message.c_str(), "Gravity Madness", MB_OK | MB_ICONSTOP );
 
         #elif defined(unix) || defined(__unix) || defined(__unix__)
 
-            // ...
+            std::cerr << Message;
 
         #endif
 

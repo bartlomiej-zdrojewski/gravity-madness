@@ -6,7 +6,7 @@
 
         <Texture>
             <Name>Test</Name>
-            <Path>test.jpg</Path>
+            <Path>test.png</Path>
         </Texture>
 
     </Textures>

@@ -1,11 +1,10 @@
 #ifndef GRAVITY_MADNESS_WORLD_MODULE
 #define GRAVITY_MADNESS_WORLD_MODULE
 
-#include <iostream> // TODO TEMP
-
 #include "script.hpp"
-#include "graphics-module.hpp"
 #include "logger-manager.hpp"
+#include "graphics-module.hpp"
+#include "game-module.hpp"
 
 class WorldModule : public Logger {
 
@@ -13,30 +12,34 @@ public:
 
     enum Modes {
 
-        Idle,
-        Init,
-        InitTimeWarning,
-        InitTimeError,
-        RunTimeError,
-        MainMenu,
-        Game,
-        PauseMenu,
-        ScoreMenu,
-        Finish,
-        Debug
+        IdleMode,
+        InitMode,
+        InitTimeWarningMode,
+        InitTimeErrorMode,
+        RunTimeErrorMode,
+        MainMenuMode,
+        GameMode,
+        PauseMenuMode,
+        ScoreBoardMode,
+        DebugMode
 
         };
 
     explicit WorldModule ( Script Config ) : Config ( Config ), Logger ( ) {
 
-        Mode = Modes::Init;
+        Mode = Modes::InitMode;
+
+        Log = nullptr;
+        Graphics = nullptr;
+        // Sounds = nullptr;
+        Game = nullptr;
 
         Script * GraphicsConfig = nullptr;
         Script * SoundsConfig = nullptr;
 
-        if ( !config( Config, GraphicsConfig, SoundsConfig ) ) {
+        if ( !config( &GraphicsConfig, &SoundsConfig ) ) {
 
-            Mode = Modes::Idle;
+            Mode = Modes::IdleMode;
 
             return; }
 
@@ -50,6 +53,9 @@ public:
         Log->manage( getLogger() );
         Log->manage( Graphics->getLogger() );
         // Log->manage( Sounds->getLogger() );
+
+        Graphics->setWindowSize( InitWindowWidth, InitWindowHeight );
+        InitFullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
 
         }
 
@@ -69,7 +75,7 @@ public:
 
 private:
 
-    bool config ( Script &Config, Script * GraphicsConfig, Script * SoundsConfig );
+    bool config ( Script ** GraphicsConfig, Script ** SoundsConfig );
     void init ( );
 
 private:
@@ -79,14 +85,21 @@ private:
     LoggerManager * Log;
     GraphicsModule * Graphics;
     // SoundsModule * Sounds;
+    GameModule * Game;
 
     sf::Thread * GraphicsThread;
     // sf::Thread * SoundsThread;
 
     Modes Mode;
-    bool Debugging;
     int8_t InitState;
     bool VideoChanged;
+
+    unsigned int InitWindowWidth;
+    unsigned int InitWindowHeight;
+    unsigned int InitAntyaliasing;
+    bool InitFullScreen;
+    unsigned int HighScore;
+    bool Debugging;
 
     };
 
