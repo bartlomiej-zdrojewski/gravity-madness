@@ -197,4 +197,4 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
         if ( (*i)->isDestructed() ) {
 
             destructBody( *i );
-            Spaceships.erase( i ); } } }
+            i = Spaceships.erase( i ); } } }
