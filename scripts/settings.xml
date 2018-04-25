@@ -1,10 +1,10 @@
 <Settings>
     <GraphicsSettings>scripts/graphics.xml</GraphicsSettings>
-    <SoundsSettings>scripts/sounds.xml</SoundsSettings>
+    <AudioSettings>scripts/audio.xml</AudioSettings>
     <WindowWidth>800</WindowWidth>
     <WindowHeight>600</WindowHeight>
     <FullScreen>false</FullScreen>
-    <Antyaliasing>0</Antyaliasing>
+    <Antyaliasing>4</Antyaliasing>
     <HighScore>0</HighScore>
     <Debug>false</Debug>
 </Settings>

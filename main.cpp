@@ -1,4 +1,3 @@
-#include <iostream>
 #include "gravity-madness.hpp"
 
 int main ( ) {
@@ -9,6 +8,7 @@ int main ( ) {
     if ( World.getMode() != WorldModule::Modes::IdleMode ) {
 
         sf::RenderWindow Window ( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
+        Window.setFramerateLimit( 60 );
 
         while ( Window.isOpen() ) {
 

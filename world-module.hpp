@@ -31,13 +31,13 @@ public:
 
         Log = nullptr;
         Graphics = nullptr;
-        // Sounds = nullptr;
+        // Audio = nullptr;
         Game = nullptr;
 
         Script * GraphicsConfig = nullptr;
-        Script * SoundsConfig = nullptr;
+        Script * AudioConfig = nullptr;
 
-        if ( !config( &GraphicsConfig, &SoundsConfig ) ) {
+        if ( !config( &GraphicsConfig, &AudioConfig ) ) {
 
             Mode = Modes::IdleMode;
 
@@ -45,17 +45,20 @@ public:
 
         Log = new LoggerManager ( "log.txt" );
         Graphics = new GraphicsModule ( GraphicsConfig, &InitState );
-        // Sounds = new SoundsModule ( );
+        // Audio = new AudioModule ( );
 
         InitState = 0;
         VideoChanged = false;
 
         Log->manage( getLogger() );
         Log->manage( Graphics->getLogger() );
-        // Log->manage( Sounds->getLogger() );
+        // Log->manage( Audio->getLogger() );
 
         Graphics->setWindowSize( InitWindowWidth, InitWindowHeight );
         InitFullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
+        Graphics->setAntyaliasingLevel( InitAntyaliasing );
+
+        // Audio options
 
         }
 
@@ -75,7 +78,7 @@ public:
 
 private:
 
-    bool config ( Script ** GraphicsConfig, Script ** SoundsConfig );
+    bool config ( Script ** GraphicsConfig, Script ** AudioConfig );
     void init ( );
 
 private:
@@ -84,11 +87,11 @@ private:
 
     LoggerManager * Log;
     GraphicsModule * Graphics;
-    // SoundsModule * Sounds;
+    // AudioModule * Audio;
     GameModule * Game;
 
     sf::Thread * GraphicsThread;
-    // sf::Thread * SoundsThread;
+    // sf::Thread * AudioThread;
 
     Modes Mode;
     int8_t InitState;

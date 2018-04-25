@@ -10,7 +10,7 @@ Script::Script ( std::string FilePath ) {
         delete Document;
         Document = nullptr; } }
 
-Script::~Script ( ) { // TODO Throws error
+Script::~Script ( ) { // TODO FIX - THROWS ERROR
 
     // delete Document;
 

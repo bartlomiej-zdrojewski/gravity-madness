@@ -5,7 +5,7 @@ WorldModule::~WorldModule ( ) {
     delete Game;
     delete Log;
     delete Graphics;
-    // delete Sounds;
+    // delete Audio;
 
     }
 
@@ -41,7 +41,10 @@ uint32_t WorldModule::getVideoStyle ( ) {
 
 sf::ContextSettings WorldModule::getVideoContext ( ) { // TODO Antyaliasing
 
-    return sf::ContextSettings ( ); }
+    sf::ContextSettings Context;
+    Context.antialiasingLevel = Graphics->getAntyaliasingLevel();
+
+    return Context; }
 
 void WorldModule::update ( ) {
 
@@ -126,7 +129,7 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 
     }
 
-bool WorldModule::config ( Script ** GraphicsConfig, Script ** SoundsConfig ) {
+bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
     InitWindowWidth = 0;
     InitWindowHeight = 0;
@@ -155,10 +158,10 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** SoundsConfig ) {
             delete *GraphicsConfig;
             *GraphicsConfig = new Script ( Config.getTextValue( Setting ) ); }
 
-        else if ( std::string( Setting.name() ) == "SoundsSettings" ) {
+        else if ( std::string( Setting.name() ) == "AudioSettings" ) {
 
-            // delete SoundsConfig;
-            // SoundsConfig = new Script ( Config.getTextValue( Setting ) );
+            // delete AudioConfig;
+            // AudioConfig = new Script ( Config.getTextValue( Setting ) );
 
             }
 
@@ -193,7 +196,7 @@ void WorldModule::init ( ) {
     if ( InitState == 0 ) {
 
         GraphicsThread = new sf::Thread ( &GraphicsModule::init, Graphics );
-        // SoundsThread = new sf::Thread ( &GraphicsModule::init, Sounds );
+        // AudioThread = new sf::Thread ( &GraphicsModule::init, Audio );
 
         GraphicsThread->launch();
         // SoundThread->launch();
@@ -211,7 +214,7 @@ void WorldModule::init ( ) {
     else {
 
         delete GraphicsThread;
-        //delete SoundsThread;
+        //delete AudioThread;
 
         Log->update();
 

@@ -11,12 +11,13 @@ class GraphicsModule : public Logger {
 
 public:
 
-    GraphicsModule ( Script * Config, int8_t * InitState ) : Config ( Config ), InitState( InitState ), Logger ( ) { // TODO Antyaliasing
+    GraphicsModule ( Script * Config, int8_t * InitState ) : Config ( Config ), InitState( InitState ), Logger ( ) {
 
         ImageState = 0;
         WindowWidth = 0;
         WindowHeight = 0;
         FullScreen = false;
+        AntyaliasingLevel = 0;
 
         initDefault(); }
 
@@ -32,6 +33,9 @@ public:
     bool isFullScreenEnabled ( );
     void enableFullScreen ( );
     void disableFullScreen ( );
+
+    unsigned int getAntyaliasingLevel ( );
+    void setAntyaliasingLevel ( unsigned int AntyaliasingLevel );
 
     sf::Texture& getTexture ( std::string Name );
     sf::Font& getFont ( std::string Name );
@@ -57,6 +61,7 @@ private:
     unsigned int WindowWidth;
     unsigned int WindowHeight;
     bool FullScreen;
+    unsigned int AntyaliasingLevel;
 
     std::unordered_map <std::string, sf::Texture*> Textures;
     std::unordered_map <std::string, sf::Font*> Fonts;

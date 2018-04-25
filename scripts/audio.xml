@@ -1,0 +1,25 @@
+<Audio>
+
+    <Music>
+
+        <Path>assets/audio/music/</Path>
+
+        <Track>
+            <Name></Name>
+            <Path></Path>
+        </Track>
+
+    </Music>
+
+    <Sounds>
+
+        <Path>assets/audio/sounds/</Path>
+
+        <Sound>
+            <Name></Name>
+            <Path></Path>
+        </Sound>
+
+    </Sounds>
+
+</Audio>

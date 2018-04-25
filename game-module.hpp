@@ -1,13 +1,28 @@
 #ifndef GRAVITY_MADNESS_GAME_MODULE
 #define GRAVITY_MADNESS_GAME_MODULE
 
+#include <list>
+#include <cmath>
+#include <algorithm>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include "graphics-module.hpp"
+#include "body.hpp"
+#include "planet.hpp"
+#include "spaceship.hpp"
+#include "player-controller.hpp"
+
+// Asteroid
+// Missile
+// PowerUp
+// ParticleSystem / ParticleEffect
 
 class GameModule {
 
 public:
 
-    GameModule ( GraphicsModule * Graphics );
+    explicit GameModule ( GraphicsModule * Graphics );
     ~ GameModule ( );
 
     void update ( );
@@ -16,7 +31,27 @@ public:
 
 private:
 
+    void destructBody ( Body * Object );
+
+    float getMinDistance ( sf::Vector2f A, sf::Vector2f B );
+    float getDistance ( sf::Vector2f A, sf::Vector2f B );
+
+    Body * getRayTarget ( sf::Vector2f Position, float Angle );
+    Body * getAngularTarget ( sf::Vector2f Position, sf::Vector2f Angle );
+
+    void updatePlanets ( sf::Time ElapsedTime );
+    void updateSpaceships ( sf::Time ElapsedTime );
+
+private:
+
     GraphicsModule * Graphics;
+
+    sf::Clock Clock;
+    float Gravity;
+    Spaceship * PlayerSpaceship;
+
+    std::list <Planet*> Planets;
+    std::list <Spaceship*> Spaceships;
 
     };
 
