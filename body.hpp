@@ -10,6 +10,9 @@ public:
 
     Body ( float Mass, float Radius );
 
+    float getAngle ( sf::Vector2f Vector );
+    float normalizeAngle ( float Angle );
+
     float getMass ( );
     void setMass ( float Mass );
 
@@ -31,8 +34,6 @@ public:
     virtual void onDestruction ( ) { }
 
 private:
-
-    float getAngle ( sf::Vector2f Vector );
 
     float Mass;
     float Radius;

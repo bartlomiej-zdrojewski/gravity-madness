@@ -11,7 +11,9 @@
 #include "body.hpp"
 #include "planet.hpp"
 #include "spaceship.hpp"
+#include "player-interface.hpp"
 #include "player-controller.hpp"
+#include "ai-controller.hpp"
 
 // Asteroid
 // Missile
@@ -46,9 +48,13 @@ private:
 
     GraphicsModule * Graphics;
 
+    unsigned int PlayerCount;
+    const static int MaximumPlayerCount = 4;
+    Spaceship * PlayerSpaceship [MaximumPlayerCount];
+    PlayerInterface * Interface [MaximumPlayerCount];
+
     sf::Clock Clock;
     float Gravity;
-    Spaceship * PlayerSpaceship;
 
     std::list <Planet*> Planets;
     std::list <Spaceship*> Spaceships;

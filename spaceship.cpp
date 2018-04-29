@@ -1,3 +1,4 @@
+#include <iostream>
 #include "spaceship.hpp"
 
 SpaceshipController * Spaceship::getSpaceshipController ( ) {
@@ -6,7 +7,33 @@ SpaceshipController * Spaceship::getSpaceshipController ( ) {
 
 void Spaceship::setSpaceshipController ( SpaceshipController * Controller ) {
 
-    this->Controller = Controller; }
+    this->Controller = Controller;
+
+    if ( Controller ) {
+
+        Controller->setSpaceship( this ); } }
+
+void Spaceship::setEnergy ( float Energy ) {
+
+    this->Energy = Energy; }
+
+float Spaceship::getEnergy ( ) {
+
+    return Energy; }
+
+void Spaceship::updateEnergy ( float DeltaEnergy ) {
+
+    Energy += DeltaEnergy;
+
+    if ( Energy < 0.f ) {
+
+        Energy = 0.f; } }
+
+void Spaceship::updateEnergy ( sf::Vector2f Acceleration, sf::Time ElapsedTime ) {
+
+    const float DeltaEnergy = ElapsedTime.asSeconds() * sqrtf( Acceleration.x * Acceleration.x + Acceleration.y * Acceleration.y );
+
+    updateEnergy( - DeltaEnergy ); }
 
 void Spaceship::update ( sf::Event &Event ) {
 
@@ -38,22 +65,25 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
             // TODO SOME ANIMATION
 
+            updateEnergy( Acceleration, ElapsedTime );
             updateVelocity( Acceleration, ElapsedTime ); }
 
-        else if ( Controller->onThrustBackward() ) { // TODO CALIBRATE
+        else if ( Controller->onThrustBackward() ) {
 
-            float MinimumVelocity = 1.f;
+            const float MinimumVelocity = 1.f;
 
             if ( fabsf( getVelocity().x ) > MinimumVelocity || fabsf( getVelocity().y ) > MinimumVelocity ) {
 
                 float Angle = getVelocityAngle() + 3.14159f;
+                float Module = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
 
                 sf::Vector2f Acceleration;
-                Acceleration.x = Thrust * cosf( Angle );
-                Acceleration.y = Thrust * sinf( Angle );
+                Acceleration.x = SuppressingFactor * Module * cosf( Angle );
+                Acceleration.y = SuppressingFactor * Module * sinf( Angle );
 
                 // TODO SOME ANIMATION
 
+                updateEnergy( Acceleration, ElapsedTime );
                 updateVelocity( Acceleration, ElapsedTime ); } }
 
         // ...

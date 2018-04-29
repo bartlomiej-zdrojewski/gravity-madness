@@ -10,6 +10,7 @@ public:
     PlayerController ( ) : SpaceshipController ( ) { }
 
     void update ( sf::Event &Event );
+    void update ( sf::Time ElapsedTime );
 
     };
 

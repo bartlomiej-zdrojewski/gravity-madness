@@ -7,6 +7,26 @@ Body::Body ( float Mass, float Radius ) {
 
     Destructed = false; }
 
+float Body::getAngle ( sf::Vector2f Vector ) {
+
+    if ( Vector.x == 0.f && Vector.y == 0.f ) {
+
+        return 0.f; }
+
+    return ( Vector.y >= 0.f ? 1.f : -1.f ) * acosf( Vector.x / sqrtf( Vector.x * Vector.x + Vector.y * Vector.y ) ); }
+
+float Body::normalizeAngle ( float Angle ) {
+
+    while ( Angle > M_PI ) {
+
+        Angle -= 2.f * M_PI; }
+
+    while ( Angle < - M_PI ) {
+
+        Angle += 2.f * M_PI; }
+
+    return Angle; }
+
 float Body::getMass ( ) {
 
     return Mass; }
@@ -58,11 +78,3 @@ void Body::destruct ( ) {
 bool Body::isDestructed ( ) {
 
     return Destructed; }
-
-float Body::getAngle ( sf::Vector2f Vector ) {
-
-    if ( Vector.x == 0.f && Vector.y == 0.f ) {
-
-        return 0.f; }
-
-    return ( Vector.y >= 0.f ? 1.f : -1.f ) * acosf( Vector.x / sqrtf( Vector.x * Vector.x + Vector.y * Vector.y ) ); }

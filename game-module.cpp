@@ -1,19 +1,27 @@
+#include <iostream>
 #include "game-module.hpp"
 
 GameModule::GameModule ( GraphicsModule * Graphics ) {
 
     this->Graphics = Graphics;
+
+    PlayerCount = 1;
     Gravity = 1.f;
+
+    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
+
+        PlayerSpaceship[i] = nullptr;
+        Interface[i] = new PlayerInterface ( Graphics ); }
 
     // TEMP ->
 
-    auto C = new PlayerController ( );
+    auto C = new AIController ( );
 
-    auto * P = new Planet ( 25, 100 );
+    auto * P = new Planet ( 5000, 100 ); // density 0.0012 -> M = ( 1.33f * M_PI * R * R * R )
     P->setPosition( sf::Vector2f( 400, 300 ) );
     Planets.push_back( P );
 
-    auto * P2 = new Planet ( 25, 100 );
+    auto * P2 = new Planet ( 5000, 100 );
     P2->setPosition( sf::Vector2f( 100, -100 ) );
     Planets.push_back( P2 );
 
@@ -21,7 +29,10 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     S->setPosition( sf::Vector2f( 700, 300 ) );
     S->setSpaceshipController( C );
     Spaceships.push_back( S );
-    PlayerSpaceship = S;
+    PlayerSpaceship[0] = S;
+
+    PlayerSpaceship[0]->setEnergy( 1000.f );
+    Interface[0]->setSpaceship( PlayerSpaceship[0] );
 
     // -> TEMP
 
@@ -45,6 +56,10 @@ void GameModule::update ( ) {
 
         }
 
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        Interface[i]->update(); }
+
     // TODO CHECK FOR MODE CHANGE
 
     }
@@ -61,37 +76,54 @@ void GameModule::update ( sf::Event &Event ) {
 
 void GameModule::render ( sf::RenderWindow &Window ) {
 
-    if ( PlayerSpaceship ) {
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        sf::View View = Window.getDefaultView();
-        sf::Vector2f Center = PlayerSpaceship->getPosition();
+        float ViewWidth = Graphics->getWindowWidth();
+        float ViewHeight = Graphics->getWindowHeight();
 
-        // Center.x += ( Graphics->getWindowHeight() * 0.17f ) * cosf( PlayerSpaceship->getVelocityAngle() );
-        // Center.y += ( Graphics->getWindowHeight() * 0.17f ) * sinf( PlayerSpaceship->getVelocityAngle() );
+        // TODO SET VIEWPORT
 
-        View.setSize( Graphics->getWindowWidth(), Graphics->getWindowHeight() );
-        View.setCenter( Center );
-        // View.setRotation( ( PlayerSpaceship->getVelocityAngle() * 180.f / 3.14f ) + 90.f );
+        Interface[0]->setViewport( sf::FloatRect( 0.f, 0.f, ViewWidth, ViewHeight ) );
+        Interface[0]->setOrientation( PlayerInterface::Orientations::Left );
 
-        Window.setView( View ); }
+        if ( PlayerSpaceship[i] ) {
 
-    for ( auto ActivePlanet : Planets ) { // TODO CHECK IF ON THE SCREEN
+            sf::View View = Window.getDefaultView();
+            sf::Vector2f Center = PlayerSpaceship[i]->getPosition();
 
-        ActivePlanet->render( Window ); }
+            // Center.x += ( ViewWidth * 0.17f ) * cosf( PlayerSpaceship->getVelocityAngle() );
+            // Center.y += ( ViewHeight * 0.17f ) * sinf( PlayerSpaceship->getVelocityAngle() );
 
-    for ( auto ActiveSpaceship : Spaceships ) { // TODO CHECK IF ON THE SCREEN
+            View.setCenter( Center );
+            View.setSize( ViewWidth, ViewHeight );
+            // View.setRotation( ( PlayerSpaceship->getVelocityAngle() * 180.f / 3.14f ) + 90.f );
+            View.zoom( 600.f / Graphics->getWindowHeight() );
 
-        ActiveSpaceship->render( Window ); }
+            Window.setView( View ); }
 
-    }
+        for ( auto ActivePlanet : Planets ) { // TODO CHECK IF ON THE SCREEN
+
+            ActivePlanet->render( Window ); }
+
+        for ( auto ActiveSpaceship : Spaceships ) { // TODO CHECK IF ON THE SCREEN
+
+            ActiveSpaceship->render( Window ); }
+
+
+        Interface[i]->render( Window );
+
+        } }
 
 void GameModule::destructBody ( Body * Object ) {
 
     Object->onDestruction();
 
-    if ( Object == PlayerSpaceship ) {
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        PlayerSpaceship = nullptr; }
+        if ( Object == PlayerSpaceship[i] ) {
+
+            PlayerSpaceship[i] = nullptr;
+            Interface[i]->setSpaceship( nullptr ); } }
 
     delete Object; }
 
@@ -137,14 +169,25 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
     for ( auto ActiveSpaceship : Spaceships ) {
 
-        sf::Vector2f Acceleration;
+        sf::Vector2f AccelerationSum;
+
+        float ClosestBodyDistance = 1000000.f;
+        sf::Vector2f ClosestBodyAcceleration;
 
         for ( auto ActivePlanet : Planets ) {
 
+            sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveSpaceship->getPosition(), ActivePlanet->getPosition() );
 
-            Acceleration.x -= Gravity * ActivePlanet->getMass() * ( ActiveSpaceship->getPosition().x - ActivePlanet->getPosition().x ) / Distance;
-            Acceleration.y -= Gravity * ActivePlanet->getMass() * ( ActiveSpaceship->getPosition().y - ActivePlanet->getPosition().y ) / Distance;
+            Acceleration.x -= Gravity * ActivePlanet->getMass() * ( ActiveSpaceship->getPosition().x - ActivePlanet->getPosition().x ) / ( Distance * Distance );
+            Acceleration.y -= Gravity * ActivePlanet->getMass() * ( ActiveSpaceship->getPosition().y - ActivePlanet->getPosition().y ) / ( Distance * Distance );
+
+            if ( ( Distance - ActivePlanet->getRadius() ) < ClosestBodyDistance ) {
+
+                ClosestBodyDistance = Distance - ActivePlanet->getRadius();
+                ClosestBodyAcceleration = Acceleration; }
+
+            AccelerationSum += Acceleration;
 
             if ( Distance <= ( ActiveSpaceship->getRadius() + ActivePlanet->getRadius() ) ) {
 
@@ -152,7 +195,22 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     ActiveSpaceship->onCollision( ActivePlanet ); } } }
 
-        ActiveSpaceship->updateVelocity( Acceleration, ElapsedTime ); }
+        // TODO ASTEROIDS
+
+        bool AI = true;
+        /*
+        for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+            if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                AI = false; } }
+        */
+        if ( AI ) {
+
+            ( (AIController*) ActiveSpaceship->getSpaceshipController() )->setClosestBodyDistance( ClosestBodyDistance );
+            ( (AIController*) ActiveSpaceship->getSpaceshipController() )->setClosestBodyAcceleration( ClosestBodyAcceleration ); }
+
+        ActiveSpaceship->updateVelocity( AccelerationSum, ElapsedTime ); }
 
     for ( auto FirstSpaceship : Spaceships ) {
 
@@ -172,7 +230,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                         FirstSpaceship->onCollision( SecondSpaceship ); } } } } }
 
-    // TODO MORE COLLISIONS
+    // TODO POWER UPS
 
     for ( auto ActiveSpaceship : Spaceships ) {
 

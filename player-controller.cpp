@@ -77,3 +77,20 @@ void PlayerController::update ( sf::Event &Event ) {
     // ...
 
     }
+
+void PlayerController::update ( sf::Time ElapsedTime ) {
+
+    if ( MySpaceship ) {
+
+        MySpaceship->updateEnergy( EnergyRestoration * ElapsedTime.asSeconds() );
+
+        if ( MySpaceship->getEnergy() < MinimumThrustEnergy ) {
+
+            ThrustForward = false;
+            ThrustBackward = false; }
+
+        }
+
+    // ...
+
+    }

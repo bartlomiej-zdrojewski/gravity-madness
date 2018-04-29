@@ -6,6 +6,8 @@
 #include "spaceship-controller.hpp"
 #include "graphics-module.hpp"
 
+class SpaceshipController;
+
 class Spaceship : public Body {
 
 public:
@@ -17,12 +19,18 @@ public:
         MissileShot = false;
 
         Thrust = 100.f;
+        SuppressingFactor = 0.75f;
         // ...
 
         }
 
     SpaceshipController * getSpaceshipController ( );
     void setSpaceshipController ( SpaceshipController * Controller );
+
+    void setEnergy ( float Energy );
+    float getEnergy ( );
+    void updateEnergy ( float DeltaEnergy );
+    void updateEnergy ( sf::Vector2f Acceleration, sf::Time ElapsedTime );
 
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );
@@ -42,7 +50,9 @@ private:
     bool RayShot;
     bool MissileShot;
 
+    float Energy;
     float Thrust;
+    float SuppressingFactor;
 
     };
 

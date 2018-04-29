@@ -1,5 +1,9 @@
 #include "spaceship-controller.hpp"
 
+void SpaceshipController::setSpaceship ( Spaceship * MySpaceship ) {
+
+    this->MySpaceship = MySpaceship; }
+
 bool SpaceshipController::onThrustForward ( ) {
 
     return ThrustForward; }
