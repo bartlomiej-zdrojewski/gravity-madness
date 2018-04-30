@@ -9,8 +9,8 @@ public:
 
     AggressiveAIController ( ) : AIController ( ) {
 
-        RayShotRestorationDuration = sf::seconds( 0.2f );
-        MissileRestorationDuration = sf::seconds( 3.f );
+        RayShotRestorationDuration = sf::seconds( 0.25f );
+        MissileRestorationDuration = sf::seconds( 5.f );
 
         };
 

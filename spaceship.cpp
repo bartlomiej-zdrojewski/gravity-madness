@@ -1,11 +1,17 @@
 #include <iostream>
 #include "spaceship.hpp"
 
-SpaceshipController * Spaceship::getSpaceshipController ( ) {
+Spaceship::~Spaceship ( ) {
+
+    if ( Controller ) {
+
+        Controller->setSpaceship( nullptr ); } }
+
+SpaceshipController * Spaceship::getController ( ) {
 
     return Controller; }
 
-void Spaceship::setSpaceshipController ( SpaceshipController * Controller ) {
+void Spaceship::setController ( SpaceshipController * Controller ) {
 
     this->Controller = Controller;
 
@@ -44,6 +50,7 @@ void Spaceship::updateHealth ( float DeltaHealth ) {
     if ( Health <= 0.f ) {
 
         Health = 0.f;
+        Energy = 0.f;
 
         destruct(); }
 
@@ -117,6 +124,7 @@ void Spaceship::update ( sf::Event &Event ) {
 
 void Spaceship::update ( sf::Time ElapsedTime ) {
 
+    updateHealth( HealthRestoration * ElapsedTime.asSeconds() );
     updateEnergy( EnergyRestoration * ElapsedTime.asSeconds() );
 
     if ( Controller ) {
@@ -162,7 +170,7 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
                 updateEnergy( Acceleration, ElapsedTime );
                 updateVelocity( Acceleration, ElapsedTime ); } }
 
-        if ( Controller->onRayShot() && Energy >= ( 10.f ) ) {
+        if ( Controller->onRayShot() && Energy >= RayPower ) {
 
             RayShot = true;
 
@@ -220,6 +228,10 @@ bool Spaceship::onMissileShot ( ) {
 void Spaceship::onCollision ( Planet * Other ) {
 
     // TODO CHANGE VELOCITY TO PREPARE PARTICLE EFFECT
+
+    // setVelocity( ... );
+    setHealth( 0.f );
+    setEnergy( 0.f );
 
     destruct(); }
 

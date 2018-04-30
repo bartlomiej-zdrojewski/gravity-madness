@@ -36,7 +36,7 @@ void PlayerController::update ( sf::Event &Event ) {
 
             case sf::Keyboard::Space: {
 
-                KeepRayShot = true;
+                ForceRayShot = true;
 
                 break; }
 
@@ -76,7 +76,7 @@ void PlayerController::update ( sf::Event &Event ) {
 
             case sf::Keyboard::Space: {
 
-                KeepRayShot = false;
+                ForceRayShot = false;
 
                 break; }
 
@@ -92,8 +92,11 @@ void PlayerController::update ( sf::Event &Event ) {
 
 void PlayerController::update ( sf::Time ElapsedTime ) {
 
-    if ( KeepRayShot ) {
+    RayShotRestorationTime -= ElapsedTime;
 
-        RayShot = true; }
+    if ( ForceRayShot && RayShotRestorationTime.asSeconds() <= 0.f ) {
+
+        RayShot = true;
+        RayShotRestorationTime = RayShotRestorationDuration; }
 
     }

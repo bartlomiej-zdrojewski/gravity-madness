@@ -22,10 +22,14 @@ public:
         TargetDistance = 1000000.f;
         TargetAngle = PI;
 
-        ClosestBodyDistance = 1000000.f; }
+        ClosestBodyDistance = 1000000.f;
+        ShotPanicTime = sf::seconds( 0.f );
+        ShotPanicDuration = sf::seconds( 3.f );
+        ShotPanicDirection = 0; }
 
     void setClosestBodyDistance ( float Distance );
     void setClosestBodyAcceleration ( sf::Vector2f Acceleration );
+    void enableShotPanic ( );
 
     void setTargetIn120Degrees ( Spaceship * Target, float Distance = 1000000.f, float Angle = 0.f );
     void setTargetIn60Degrees ( Spaceship * Target, float Distance = 1000000.f, float Angle = 0.f );
@@ -54,6 +58,10 @@ private:
 
     float ClosestBodyDistance;
     sf::Vector2f ClosestBodyAcceleration;
+
+    sf::Time ShotPanicTime;
+    sf::Time ShotPanicDuration;
+    int ShotPanicDirection;
 
     };
 

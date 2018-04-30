@@ -1,4 +1,3 @@
-#include <iostream>
 #include "ai-controller.hpp"
 
 void AIController::setClosestBodyDistance ( float Distance ) {
@@ -8,6 +7,11 @@ void AIController::setClosestBodyDistance ( float Distance ) {
 void AIController::setClosestBodyAcceleration ( sf::Vector2f Acceleration ) {
 
     ClosestBodyAcceleration = Acceleration; }
+
+void AIController::enableShotPanic ( ) {
+
+    ShotPanicTime = ShotPanicDuration;
+    ShotPanicDirection = rand() % 3; }
 
 void AIController::setTargetIn120Degrees ( Spaceship * Target, float Distance, float Angle ) {
 
@@ -54,6 +58,7 @@ void AIController::update ( sf::Time ElapsedTime ) {
     ThrustBackward = false;
     ThrustLeft = false;
     ThrustRight = false;
+    ShotPanicTime -= ElapsedTime;
 
     float Distance = ClosestBodyDistance;
     sf::Vector2f Acceleration = ClosestBodyAcceleration;
@@ -102,6 +107,18 @@ void AIController::update ( sf::Time ElapsedTime ) {
             else if ( AngleDifference < 0.f && AngleDifference > ( - PI / 4.f ) ) {
 
                 ThrustForward = true;
+                ThrustLeft = true; } }
+
+        else if ( ShotPanicTime.asSeconds() > 0.f ) {
+
+            ThrustForward = true;
+
+            if ( ShotPanicDirection == 0 ) {
+
+                ThrustRight = true; }
+
+            else if ( ShotPanicDirection == 1 ) {
+
                 ThrustLeft = true; } }
 
         else if ( VelocityModule > MaximumVelocity ) {

@@ -40,12 +40,17 @@ private:
     float getMinDistance ( sf::Vector2f A, sf::Vector2f B );
     float getDistance ( sf::Vector2f A, sf::Vector2f B );
 
+    bool isPlayer ( Spaceship * MySpaceship );
+    bool isOnScreen ( sf::Vector2f Center, float Radius );
+
     Spaceship * getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection );
     Spaceship * getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle );
 
     void updatePlanets ( sf::Time ElapsedTime );
     void updateSpaceships ( sf::Time ElapsedTime );
     void updateRayShots ( sf::Time ElapsedTime );
+    void updateMissiles ( sf::Time ElapsedTime );
+    void updatePowerUps ( sf::Time ElapsedTime );
 
 private:
 

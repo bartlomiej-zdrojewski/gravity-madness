@@ -10,11 +10,11 @@ Script::Script ( std::string FilePath ) {
         delete Document;
         Document = nullptr; } }
 
-Script::~Script ( ) { // TODO FIX - THROWS ERROR
+Script::~Script ( ) { // Document can't be deleted
 
-    // delete Document;
+    if ( Document ) {
 
-    }
+        Document->reset(); } }
 
 std::string Script::getFilePath ( ) {
 

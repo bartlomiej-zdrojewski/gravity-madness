@@ -9,7 +9,9 @@ public:
 
     PlayerController ( ) : SpaceshipController ( ) {
 
-        KeepRayShot = false;
+        RayShotRestorationTime = sf::seconds( 0.f );
+        RayShotRestorationDuration = sf::seconds( 0.05f );
+        ForceRayShot = false;
 
         }
 
@@ -18,7 +20,9 @@ public:
 
 private:
 
-    bool KeepRayShot;
+    bool ForceRayShot;
+    sf::Time RayShotRestorationTime;
+    sf::Time RayShotRestorationDuration;
 
     };
 

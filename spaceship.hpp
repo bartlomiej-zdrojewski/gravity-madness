@@ -32,8 +32,10 @@ public:
 
         }
 
-    SpaceshipController * getSpaceshipController ( );
-    void setSpaceshipController ( SpaceshipController * Controller );
+    ~ Spaceship ( );
+
+    SpaceshipController * getController ( );
+    void setController ( SpaceshipController * Controller );
 
     float getHealth ( );
     void setHealth ( float Health );

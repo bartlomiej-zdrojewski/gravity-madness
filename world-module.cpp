@@ -39,7 +39,7 @@ uint32_t WorldModule::getVideoStyle ( ) {
 
     return sf::Style::Titlebar | sf::Style::Close; }
 
-sf::ContextSettings WorldModule::getVideoContext ( ) { // TODO Antyaliasing
+sf::ContextSettings WorldModule::getVideoContext ( ) {
 
     sf::ContextSettings Context;
     Context.antialiasingLevel = Graphics->getAntyaliasingLevel();
