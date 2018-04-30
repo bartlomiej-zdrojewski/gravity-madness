@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ai-controller.hpp"
 
 void AIController::setClosestBodyDistance ( float Distance ) {
@@ -8,20 +9,40 @@ void AIController::setClosestBodyAcceleration ( sf::Vector2f Acceleration ) {
 
     ClosestBodyAcceleration = Acceleration; }
 
-void AIController::setTargetIn120Degrees ( bool Target, float Distance ) {
+void AIController::setTargetIn120Degrees ( Spaceship * Target, float Distance, float Angle ) {
 
     TargetIn120Degrees = Target;
-    TargetDistance = Distance; }
 
-void AIController::setTargetIn60Degrees ( bool Target, float Distance ) {
+    if ( Target ) {
+
+        TargetDistance = Distance;
+        TargetAngle = Angle; }
+
+    else {
+
+        setTargetIn60Degrees( nullptr ); } }
+
+void AIController::setTargetIn60Degrees ( Spaceship * Target, float Distance, float Angle ) {
+
+    TargetIn60Degrees = Target;
+
+    if ( Target ) {
+
+        TargetDistance = Distance;
+        TargetAngle = Angle; }
+
+    else {
+
+        setTargetIn30Degrees( nullptr ); } }
+
+void AIController::setTargetIn30Degrees ( Spaceship * Target, float Distance, float Angle ) {
 
     TargetIn30Degrees = Target;
-    TargetDistance = Distance; }
 
-void AIController::setTargetIn30Degrees ( bool Target, float Distance ) {
+    if ( Target ) {
 
-    TargetIn30Degrees = Target;
-    TargetDistance = Distance; }
+        TargetDistance = Distance;
+        TargetAngle = Angle; } }
 
 void AIController::update ( sf::Time ElapsedTime ) {
 
@@ -33,12 +54,6 @@ void AIController::update ( sf::Time ElapsedTime ) {
     ThrustBackward = false;
     ThrustLeft = false;
     ThrustRight = false;
-
-    MySpaceship->updateEnergy( EnergyRestoration * ElapsedTime.asSeconds() );
-
-    if ( MySpaceship->getEnergy() < MinimumThrustEnergy ) {
-
-        return; }
 
     float Distance = ClosestBodyDistance;
     sf::Vector2f Acceleration = ClosestBodyAcceleration;
@@ -63,38 +78,40 @@ void AIController::update ( sf::Time ElapsedTime ) {
             ThrustForward = true;
             ThrustLeft = true; } }
 
-    else if ( AccelerationModule > 30.f ) {
+    else if ( AccelerationModule > ( 0.3f * MySpaceship->getThrust() ) ) {
 
-        if ( AngleDifference >= 0.f && AngleDifference < ( M_PI / 3.f ) ) {
-
-            ThrustForward = true;
-            ThrustRight = true; }
-
-        else if ( AngleDifference < 0.f && AngleDifference > ( - M_PI / 3.f ) ) {
-
-            ThrustForward = true;
-            ThrustLeft = true; } }
-
-    else if ( AccelerationModule > 10.f || VelocityModule < MinimumVelocity ) {
-
-        if ( AngleDifference >= 0.f && AngleDifference < ( M_PI / 4.f ) ) {
+        if ( AngleDifference >= 0.f && AngleDifference < ( PI / 3.f ) ) {
 
             ThrustForward = true;
             ThrustRight = true; }
 
-        else if ( AngleDifference < 0.f && AngleDifference > ( - M_PI / 4.f ) ) {
+        else if ( AngleDifference < 0.f && AngleDifference > ( - PI / 3.f ) ) {
 
             ThrustForward = true;
             ThrustLeft = true; } }
 
-    else if ( VelocityModule > MaximumVelocity ) {
+    else if ( MySpaceship->getEnergy() >= MinimumThrustEnergy ) {
 
-        ThrustBackward = true; }
+        if ( AccelerationModule > ( 0.1f * MySpaceship->getThrust() ) || VelocityModule < MinimumVelocity ) {
 
-    else {
+            if ( AngleDifference >= 0.f && AngleDifference < ( PI / 4.f ) ) {
 
-        onSafeOrbit( ElapsedTime );
+                ThrustForward = true;
+                ThrustRight = true; }
 
-        return; }
+            else if ( AngleDifference < 0.f && AngleDifference > ( - PI / 4.f ) ) {
 
-    onUnsafeOrbit( ElapsedTime ); }
+                ThrustForward = true;
+                ThrustLeft = true; } }
+
+        else if ( VelocityModule > MaximumVelocity ) {
+
+            ThrustBackward = true; }
+
+        else {
+
+            onSafeOrbit( ElapsedTime );
+
+            return; }
+
+        onUnsafeOrbit( ElapsedTime ); } }

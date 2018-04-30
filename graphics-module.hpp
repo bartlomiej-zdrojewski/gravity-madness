@@ -6,6 +6,7 @@
 
 #include "script.hpp"
 #include "logger.hpp"
+#include "ray.hpp"
 
 class GraphicsModule : public Logger {
 

@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+#include "definitions.hpp"
 #include "graphics-module.hpp"
 #include "body.hpp"
 #include "planet.hpp"
@@ -14,6 +15,7 @@
 #include "player-interface.hpp"
 #include "player-controller.hpp"
 #include "ai-controller.hpp"
+#include "aggressive-ai-controller.hpp"
 
 // Asteroid
 // Missile
@@ -38,11 +40,12 @@ private:
     float getMinDistance ( sf::Vector2f A, sf::Vector2f B );
     float getDistance ( sf::Vector2f A, sf::Vector2f B );
 
-    Body * getRayTarget ( sf::Vector2f Position, float Angle );
-    Body * getAngularTarget ( sf::Vector2f Position, sf::Vector2f Angle );
+    Spaceship * getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection );
+    Spaceship * getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle );
 
     void updatePlanets ( sf::Time ElapsedTime );
     void updateSpaceships ( sf::Time ElapsedTime );
+    void updateRayShots ( sf::Time ElapsedTime );
 
 private:
 
@@ -55,9 +58,11 @@ private:
 
     sf::Clock Clock;
     float Gravity;
+    float DetectionDistance;
 
     std::list <Planet*> Planets;
     std::list <Spaceship*> Spaceships;
+    std::list <Ray*> RayShots;
 
     };
 

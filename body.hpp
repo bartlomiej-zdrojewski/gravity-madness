@@ -4,6 +4,8 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
+#include "definitions.hpp"
+
 class Body {
 
 public:

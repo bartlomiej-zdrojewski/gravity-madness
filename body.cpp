@@ -1,3 +1,4 @@
+#include <iostream>
 #include "body.hpp"
 
 Body::Body ( float Mass, float Radius ) {
@@ -17,13 +18,13 @@ float Body::getAngle ( sf::Vector2f Vector ) {
 
 float Body::normalizeAngle ( float Angle ) {
 
-    while ( Angle > M_PI ) {
+    while ( Angle > PI ) {
 
-        Angle -= 2.f * M_PI; }
+        Angle -= 2.f * PI; }
 
-    while ( Angle < - M_PI ) {
+    while ( Angle < - PI ) {
 
-        Angle += 2.f * M_PI; }
+        Angle += 2.f * PI; }
 
     return Angle; }
 

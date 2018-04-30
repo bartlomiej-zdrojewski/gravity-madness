@@ -19,3 +19,23 @@ bool SpaceshipController::onThrustLeft ( ) {
 bool SpaceshipController::onThrustRight ( ) {
 
     return ThrustRight; }
+
+bool SpaceshipController::onRayShot ( ) {
+
+    if ( RayShot ) {
+
+        RayShot = false;
+
+        return true; }
+
+    return false; }
+
+bool SpaceshipController::onMissileShot ( ) {
+
+    if ( MissileShot ) {
+
+        MissileShot = false;
+
+        return true; }
+
+    return false; }

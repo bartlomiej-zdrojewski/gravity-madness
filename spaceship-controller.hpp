@@ -16,17 +16,12 @@ public:
 
         MySpaceship = nullptr;
 
-        EnergyRestoration = 5.f;
-        MinimumThrustEnergy = 10.f;
-        // ...
-
         ThrustForward = false;
         ThrustBackward = false;
         ThrustLeft = false;
         ThrustRight = false;
-        // ...
-
-        }
+        RayShot = false;
+        MissileShot = false; }
 
     void setSpaceship ( Spaceship * MySpaceship );
 
@@ -43,10 +38,6 @@ public:
 protected:
 
     Spaceship * MySpaceship;
-
-    float EnergyRestoration;
-    float MinimumThrustEnergy;
-    // ...
 
     bool ThrustForward;
     bool ThrustBackward;

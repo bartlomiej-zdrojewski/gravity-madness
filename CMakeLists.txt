@@ -24,8 +24,8 @@ elseif(UNIX)
 
 endif()
 
-set(SOURCE_FILES pugixml/pugixml.cpp main.cpp world-module.cpp graphics-module.cpp logger.cpp loger-manager.cpp script.cpp game-module.cpp spaceship.cpp planet.cpp body.cpp player-controller.cpp spaceship-controller.cpp player-interface.cpp ai-controller.cpp)
-set(HEADER_FILES pugixml/pugiconfig.hpp pugixml/pugixml.hpp gravity-madness.hpp world-module.hpp graphics-module.hpp script.hpp logger.hpp logger-manager.hpp game-module.hpp body.hpp planet.hpp spaceship.hpp spaceship-controller.hpp player-controller.hpp player-interface.hpp ai-controller.hpp)
+set(SOURCE_FILES pugixml/pugixml.cpp main.cpp world-module.cpp graphics-module.cpp logger.cpp loger-manager.cpp script.cpp game-module.cpp spaceship.cpp planet.cpp body.cpp player-controller.cpp spaceship-controller.cpp player-interface.cpp ai-controller.cpp aggressive-ai-controller.cpp ray.cpp)
+set(HEADER_FILES pugixml/pugiconfig.hpp pugixml/pugixml.hpp gravity-madness.hpp world-module.hpp graphics-module.hpp script.hpp logger.hpp logger-manager.hpp game-module.hpp body.hpp planet.hpp spaceship.hpp spaceship-controller.hpp player-controller.hpp player-interface.hpp ai-controller.hpp definitions.hpp aggressive-ai-controller.hpp ray.hpp)
 
 add_executable(gravity_madness ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(gravity_madness ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})

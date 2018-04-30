@@ -34,6 +34,12 @@ void PlayerController::update ( sf::Event &Event ) {
 
                 break; }
 
+            case sf::Keyboard::Space: {
+
+                KeepRayShot = true;
+
+                break; }
+
                 // ...
 
             default: {
@@ -68,6 +74,12 @@ void PlayerController::update ( sf::Event &Event ) {
 
                 break; }
 
+            case sf::Keyboard::Space: {
+
+                KeepRayShot = false;
+
+                break; }
+
                 // ...
 
             default: {
@@ -80,17 +92,8 @@ void PlayerController::update ( sf::Event &Event ) {
 
 void PlayerController::update ( sf::Time ElapsedTime ) {
 
-    if ( MySpaceship ) {
+    if ( KeepRayShot ) {
 
-        MySpaceship->updateEnergy( EnergyRestoration * ElapsedTime.asSeconds() );
-
-        if ( MySpaceship->getEnergy() < MinimumThrustEnergy ) {
-
-            ThrustForward = false;
-            ThrustBackward = false; }
-
-        }
-
-    // ...
+        RayShot = true; }
 
     }

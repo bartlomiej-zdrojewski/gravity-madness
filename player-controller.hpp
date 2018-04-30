@@ -7,10 +7,18 @@ class PlayerController : public SpaceshipController {
 
 public:
 
-    PlayerController ( ) : SpaceshipController ( ) { }
+    PlayerController ( ) : SpaceshipController ( ) {
+
+        KeepRayShot = false;
+
+        }
 
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );
+
+private:
+
+    bool KeepRayShot;
 
     };
 
