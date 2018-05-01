@@ -12,14 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62bf6682-e578-46fe-be45-0f9be21c3950" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ai-controller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ai-controller.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ai-controller.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/ai-controller.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/definitions.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/definitions.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spaceship.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spaceship.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -167,7 +160,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/sounds.xml" />
         <option value="$PROJECT_DIR$/graphics.xml" />
         <option value="$PROJECT_DIR$/config.xml" />
         <option value="$PROJECT_DIR$/config/sounds.xml" />
@@ -218,6 +210,7 @@
         <option value="$PROJECT_DIR$/game-module.hpp" />
         <option value="$PROJECT_DIR$/game-module.cpp" />
         <option value="$PROJECT_DIR$/ai-controller.cpp" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -312,7 +305,7 @@
       <workItem from="1524923384729" duration="40513000" />
       <workItem from="1525077819080" duration="30518000" />
       <workItem from="1525170545249" duration="12111000" />
-      <workItem from="1525198795308" duration="7064000" />
+      <workItem from="1525198795308" duration="7917000" />
     </task>
     <task id="LOCAL-00001" summary="Gitignore">
       <created>1523705590203</created>
@@ -384,25 +377,31 @@
       <option name="project" value="LOCAL" />
       <updated>1525183001973</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Area limit">
+      <created>1525205902181</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1525205902181</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="174112000" />
+    <option name="totallyTimeSpent" value="174965000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info active="true" anchor="bottom" id="Messages" order="0" visible="true" weight="0.32478634" />
+      <window_info anchor="bottom" id="Messages" order="0" visible="true" weight="0.32478634" />
       <window_info anchor="bottom" id="CMake" order="8" weight="0.32905984" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" weight="0.32915717" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Serial Monitor" order="10" />
       <window_info anchor="bottom" id="Run" order="3" />
       <window_info anchor="bottom" id="Terminal" order="11" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32905984" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.5045558" side_tool="true" weight="0.25725028" />
@@ -433,7 +432,8 @@
     <MESSAGE value="Ray shot and aggressive AI" />
     <MESSAGE value="Fancy interface, shot panic and minor fixes" />
     <MESSAGE value="Particle system" />
-    <option name="LAST_COMMIT_MESSAGE" value="Particle system" />
+    <MESSAGE value="Area limit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Area limit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -441,11 +441,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cmake-build-release/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4590" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/asteroid.hpp" />
     <entry file="file://$USER_HOME$/Downloads/menu.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -799,6 +794,13 @@
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="21" lean-forward="true" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
         </state>
       </provider>
     </entry>
