@@ -10,9 +10,9 @@ public:
 
     AIController ( ) : SpaceshipController ( ) {
 
-        MinimumVelocity = 25.f;
-        MaximumVelocity = 50.f;
-        MinimumDistance = 75.f;
+        MinimumVelocity = 50.f;
+        MaximumVelocity = 150.f;
+        MinimumDistance = 100.f;
         MinimumThrustEnergy = 50.f;
         MinimumRayShotEnergy = 100.f;
 

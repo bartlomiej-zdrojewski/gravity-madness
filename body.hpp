@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "definitions.hpp"
+#include "particle-system.hpp"
 
 class Body {
 
@@ -33,7 +34,9 @@ public:
     void destruct ( );
     bool isDestructed ( );
 
-    virtual void onDestruction ( ) { }
+    virtual ParticleSystem * onDestruction ( ) {
+
+        return nullptr; }
 
 private:
 

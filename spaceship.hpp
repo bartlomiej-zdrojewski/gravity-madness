@@ -6,6 +6,7 @@
 #include "planet.hpp"
 #include "spaceship-controller.hpp"
 #include "graphics-module.hpp"
+#include "particle-system.hpp"
 
 class SpaceshipController;
 
@@ -18,6 +19,7 @@ public:
         Controller = nullptr;
         RayShot = false;
         MissileShot = false;
+        ExplosionOnDestruction = true;
 
         Health = 250.f;
         HealthLimit = 250.f;
@@ -36,6 +38,8 @@ public:
 
     SpaceshipController * getController ( );
     void setController ( SpaceshipController * Controller );
+
+    float getInfluenceRadius ( );
 
     float getHealth ( );
     void setHealth ( float Health );
@@ -67,9 +71,9 @@ public:
     bool onRayShot ( );
     bool onMissileShot ( );
 
-    void onCollision ( Planet * Other );
+    ParticleSystem * onCollision ( Planet * Other );
     void onCollision ( Spaceship * Other );
-    void onDestruction ( );
+    ParticleSystem * onDestruction ( );
 
 private:
 
@@ -77,6 +81,7 @@ private:
 
     bool RayShot;
     bool MissileShot;
+    bool ExplosionOnDestruction;
 
     float Health;
     float HealthRestoration;

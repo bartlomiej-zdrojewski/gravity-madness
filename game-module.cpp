@@ -43,7 +43,18 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     S->setController( C2 );
     Spaceships.push_back( S );
 
+    auto C3 = new AggressiveAIController ( );
+    S = new Spaceship ( 10 );
+    S->setPosition( sf::Vector2f( -700, -200 ) );
+    S->setController( C3 );
+    //Spaceships.push_back( S );
+
     // -> TEMP
+
+    auto * PS = new ParticleSystem ( );
+    PS->setOriginPosition( sf::Vector2f( 750, 300 ) );
+    PS->generateParticles( 10000 );
+    //ParticleSystems.push_back( PS );
 
     }
 
@@ -62,6 +73,7 @@ void GameModule::update ( ) {
         updatePlanets( ElapsedTime );
         updateSpaceships( ElapsedTime );
         updateRayShots( ElapsedTime );
+        updateParticleSystems( ElapsedTime );
         // ...
 
         }
@@ -113,6 +125,10 @@ void GameModule::render ( sf::RenderWindow &Window ) { // TODO VIEW FOR EACH PLA
 
         // TODO MOVE 'SET VIEW' HERE
 
+        for ( auto ActiveParticleSystem : ParticleSystems ) {
+
+            ActiveParticleSystem->render( Window ); }
+
         for ( auto ActiveRayShot : RayShots ) {
 
             ActiveRayShot->render( Window ); }
@@ -127,7 +143,7 @@ void GameModule::render ( sf::RenderWindow &Window ) { // TODO VIEW FOR EACH PLA
 
         for ( auto ActiveSpaceship : Spaceships ) {
 
-            if ( isOnScreen( ActiveSpaceship->getPosition(), ActiveSpaceship->getRadius() ) ) {
+            if ( isOnScreen( ActiveSpaceship->getPosition(), ActiveSpaceship->getInfluenceRadius() ) ) {
 
                 ActiveSpaceship->render( Window ); } }
 
@@ -138,7 +154,11 @@ void GameModule::render ( sf::RenderWindow &Window ) { // TODO VIEW FOR EACH PLA
 
 void GameModule::destructBody ( Body * Object ) {
 
-    Object->onDestruction();
+    ParticleSystem * Explosion = Object->onDestruction();
+
+    if ( Explosion ) {
+
+        ParticleSystems.push_back( Explosion ); }
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -308,7 +328,11 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 if ( true ) { // TODO SUPER ACCURATE CHECK
 
-                    ActiveSpaceship->onCollision( ActivePlanet ); } } }
+                    ParticleSystem * Explosion = ActiveSpaceship->onCollision( ActivePlanet );
+
+                    if ( Explosion ) {
+
+                        ParticleSystems.push_back( Explosion ); } } } }
 
         // TODO ASTEROIDS
 
@@ -455,3 +479,16 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
     // TODO
 
     }
+
+void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
+
+    for ( auto ActiveParticleSystem : ParticleSystems ) {
+
+        ActiveParticleSystem->update( ElapsedTime ); }
+
+    for ( auto i = ParticleSystems.begin(); i != ParticleSystems.end(); i++ ) {
+
+        if ( (*i)->getParticleCount() == 0 ) {
+
+            delete (*i);
+            i = ParticleSystems.erase( i ); } } }

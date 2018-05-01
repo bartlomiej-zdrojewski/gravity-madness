@@ -1,4 +1,3 @@
-#include <iostream>
 #include "body.hpp"
 
 Body::Body ( float Mass, float Radius ) {

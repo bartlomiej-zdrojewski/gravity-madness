@@ -1,4 +1,3 @@
-#include <iostream>
 #include "aggressive-ai-controller.hpp"
 
 void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
@@ -16,7 +15,7 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
                 ThrustRight = true; }
 
-            else if ( TargetAngle < 0.f ) {
+            else if ( TargetAngle > 0.f ) {
 
                 ThrustLeft = true; } }
 
@@ -42,7 +41,7 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
                 ThrustRight = true; }
 
-            else if ( TargetAngle < 0.f ) {
+            else if ( TargetAngle > 0.f ) {
 
                 ThrustLeft = true; } } }
 
@@ -60,7 +59,7 @@ void AggressiveAIController::onUnsafeOrbit ( sf::Time ElapsedTime ) {
         if ( MySpaceship->getEnergy() >= MinimumRayShotEnergy && RayShotRestorationTime.asSeconds() <= 0.f ) {
 
             RayShot = true;
-            RayShotRestorationTime = RayShotRestorationTime; } }
+            RayShotRestorationTime = RayShotRestorationDuration; } }
 
     else if ( TargetIn60Degrees ) {
 

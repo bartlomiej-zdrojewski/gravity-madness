@@ -1,4 +1,3 @@
-#include <iostream>
 #include "spaceship.hpp"
 
 Spaceship::~Spaceship ( ) {
@@ -18,6 +17,13 @@ void Spaceship::setController ( SpaceshipController * Controller ) {
     if ( Controller ) {
 
         Controller->setSpaceship( this ); } }
+
+float Spaceship::getInfluenceRadius ( ) {
+
+    // TODO
+    return getRadius();
+
+    }
 
 float Spaceship::getHealth ( ) {
 
@@ -183,7 +189,6 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
                 MissileShot = true; } } }
 
     updatePosition( ElapsedTime );
-
     // ...
 
     }
@@ -225,15 +230,26 @@ bool Spaceship::onMissileShot ( ) {
 
     return false; }
 
-void Spaceship::onCollision ( Planet * Other ) {
+ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
 
-    // TODO CHANGE VELOCITY TO PREPARE PARTICLE EFFECT
-
-    // setVelocity( ... );
     setHealth( 0.f );
     setEnergy( 0.f );
+    destruct();
 
-    destruct(); }
+    auto * Explosion = new ParticleSystem ( );
+    float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
+    float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+    ExplosionOnDestruction = false;
+
+    Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( Other->getRadius() * cosf( Normal ), Other->getRadius() * sinf( Normal ) ) );
+    Explosion->setOriginVelocity( sf::Vector2f( 0, 0 ) );
+    Explosion->setAngleRange( Normal, 0.8f * PI );
+    Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
+    Explosion->setColorRange( sf::Color ( 100, 50, 0 ), sf::Color ( 255, 150, 50 ) );
+    Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 3.f ) );
+    Explosion->generateParticles( Velocity > 150.f ? 10000 : 5000 );
+
+    return Explosion; }
 
 void Spaceship::onCollision ( Spaceship * Other ) {
 
@@ -241,8 +257,21 @@ void Spaceship::onCollision ( Spaceship * Other ) {
 
     }
 
-void Spaceship::onDestruction ( ) {
+ParticleSystem * Spaceship::onDestruction ( ) {
 
-    // TODO SOME PARTICLE EFFECT
+    if ( !ExplosionOnDestruction ) {
 
-    }
+        return nullptr; }
+
+    auto * Explosion = new ParticleSystem ( );
+    float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+
+    Explosion->setOriginPosition( getPosition() );
+    Explosion->setOriginVelocity( getVelocity() );
+    Explosion->setAngleRange( getVelocityAngle(), Velocity > 100.f ? ( 2.f * PI / 3.f ) : 0.9f * PI );
+    Explosion->setVelocityRange( - 25.f, Velocity > 100.f ? 75.f : 50.f );
+    Explosion->setColorRange( sf::Color ( 100, 50, 0 ), sf::Color ( 255, 150, 50 ) );
+    Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 5.f ) );
+    Explosion->generateParticles( 5000 );
+
+    return Explosion; }

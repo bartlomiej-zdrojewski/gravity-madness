@@ -1,4 +1,3 @@
-#include <iostream>
 #include "ray.hpp"
 
 Ray::Ray ( sf::Vector2f Position, float Angle ) {

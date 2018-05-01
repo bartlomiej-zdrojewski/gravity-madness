@@ -16,6 +16,7 @@
 #include "player-controller.hpp"
 #include "ai-controller.hpp"
 #include "aggressive-ai-controller.hpp"
+#include "particle-system.hpp"
 
 // Asteroid
 // Missile
@@ -51,6 +52,7 @@ private:
     void updateRayShots ( sf::Time ElapsedTime );
     void updateMissiles ( sf::Time ElapsedTime );
     void updatePowerUps ( sf::Time ElapsedTime );
+    void updateParticleSystems ( sf::Time ElapsedTime );
 
 private:
 
@@ -68,6 +70,7 @@ private:
     std::list <Planet*> Planets;
     std::list <Spaceship*> Spaceships;
     std::list <Ray*> RayShots;
+    std::list <ParticleSystem*> ParticleSystems;
 
     };
 

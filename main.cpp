@@ -2,6 +2,8 @@
 
 int main ( ) {
 
+    srand( (unsigned int) time( nullptr ) );
+
     Script Config ( "scripts/settings.xml" );
     WorldModule World ( Config );
 
