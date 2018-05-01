@@ -3,7 +3,6 @@
 
 #include <ctime>
 #include <fstream>
-
 #include "logger.hpp"
 
 class LoggerManager {

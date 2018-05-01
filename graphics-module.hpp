@@ -3,10 +3,8 @@
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-
-#include "script.hpp"
 #include "logger.hpp"
-#include "ray.hpp"
+#include "script.hpp"
 
 class GraphicsModule : public Logger {
 

@@ -1,10 +1,10 @@
 #ifndef GRAVITY_MADNESS_WORLD_MODULE
 #define GRAVITY_MADNESS_WORLD_MODULE
 
-#include "script.hpp"
-#include "logger-manager.hpp"
-#include "graphics-module.hpp"
 #include "game-module.hpp"
+#include "graphics-module.hpp"
+#include "logger-manager.hpp"
+#include "script.hpp"
 
 class WorldModule : public Logger {
 

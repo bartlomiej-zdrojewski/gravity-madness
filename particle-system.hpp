@@ -1,10 +1,9 @@
 #ifndef GRAVITY_MADNESS_PARTICLE_SYSTEM
 #define GRAVITY_MADNESS_PARTICLE_SYSTEM
 
-#include <SFML/Graphics.hpp>
-#include <list>
 #include <cmath>
-
+#include <list>
+#include <SFML/Graphics.hpp>
 #include "definitions.hpp"
 
 class ParticleSystem { // TODO ERROR CHECK

@@ -1,27 +1,25 @@
 #ifndef GRAVITY_MADNESS_GAME_MODULE
 #define GRAVITY_MADNESS_GAME_MODULE
 
-#include <list>
-#include <cmath>
 #include <algorithm>
-#include <SFML/Graphics.hpp>
+#include <cmath>
+#include <list>
 #include <SFML/Audio.hpp>
-
+#include <SFML/Graphics.hpp>
 #include "definitions.hpp"
-#include "graphics-module.hpp"
-#include "body.hpp"
-#include "planet.hpp"
-#include "spaceship.hpp"
-#include "player-interface.hpp"
-#include "player-controller.hpp"
-#include "ai-controller.hpp"
 #include "aggressive-ai-controller.hpp"
+#include "ai-controller.hpp"
+#include "body.hpp"
+#include "graphics-module.hpp"
+#include "planet.hpp"
+#include "player-controller.hpp"
+#include "player-interface.hpp"
+#include "spaceship.hpp"
 #include "particle-system.hpp"
 
 // Asteroid
 // Missile
 // PowerUp
-// ParticleSystem / ParticleEffect
 
 class GameModule {
 

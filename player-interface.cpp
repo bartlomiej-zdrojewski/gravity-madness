@@ -6,7 +6,6 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
 
     MySpaceship = nullptr;
     Viewport = sf::FloatRect( 0.f, 0.f, Graphics->getWindowWidth(), Graphics->getWindowHeight() );
-    Orientation = Orientations::Left;
 
     ActivatedOpacity = 0.87f;
     UnactivatedOpacity = 0.34f;
@@ -21,10 +20,6 @@ void PlayerInterface::setSpaceship ( Spaceship * MySpaceship ) {
 void PlayerInterface::setViewport ( sf::FloatRect Viewport ) {
 
     this->Viewport = Viewport; }
-
-void PlayerInterface::setOrientation ( Orientations Orientation ) {
-
-    this->Orientation = Orientation; }
 
 void PlayerInterface::update ( sf::Time ElapsedTime ) {
 

@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <SFML/Graphics.hpp>
-
 #include "definitions.hpp"
 
 class Ray {
