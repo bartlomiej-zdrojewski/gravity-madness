@@ -114,6 +114,14 @@ void Spaceship::setThrust ( float Thrust ) {
 
     this->Thrust = Thrust; }
 
+float Spaceship::getSuppressingFactor ( ) {
+
+    return SuppressingFactor; }
+
+void Spaceship::setSuppressingFactor ( float SuppressingFactor ) {
+
+    this->SuppressingFactor = SuppressingFactor; }
+
 float Spaceship::getRayPower ( ) {
 
     return RayPower; }
@@ -245,7 +253,7 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
     Explosion->setOriginVelocity( sf::Vector2f( 0, 0 ) );
     Explosion->setAngleRange( Normal, 0.8f * PI );
     Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
-    Explosion->setColorRange( sf::Color ( 100, 50, 0 ), sf::Color ( 255, 150, 50 ) );
+    Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 3.f ) );
     Explosion->generateParticles( Velocity > 150.f ? 10000 : 5000 );
 
@@ -270,7 +278,7 @@ ParticleSystem * Spaceship::onDestruction ( ) {
     Explosion->setOriginVelocity( getVelocity() );
     Explosion->setAngleRange( getVelocityAngle(), Velocity > 100.f ? ( 2.f * PI / 3.f ) : 0.9f * PI );
     Explosion->setVelocityRange( - 25.f, Velocity > 100.f ? 75.f : 50.f );
-    Explosion->setColorRange( sf::Color ( 100, 50, 0 ), sf::Color ( 255, 150, 50 ) );
+    Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
     Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 5.f ) );
     Explosion->generateParticles( 5000 );
 

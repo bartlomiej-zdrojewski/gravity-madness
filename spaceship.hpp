@@ -61,6 +61,9 @@ public:
     float getThrust ( );
     void setThrust ( float Thrust );
 
+    float getSuppressingFactor ( );
+    void setSuppressingFactor ( float SuppressingFactor );
+
     float getRayPower ( );
     void setRayPower ( float RayPower );
 

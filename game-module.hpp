@@ -43,6 +43,7 @@ private:
 
     bool isPlayer ( Spaceship * MySpaceship );
     bool isOnScreen ( sf::Vector2f Center, float Radius );
+    bool isOnScreen ( sf::FloatRect Area );
 
     Spaceship * getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection );
     Spaceship * getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle );
@@ -53,6 +54,9 @@ private:
     void updateMissiles ( sf::Time ElapsedTime );
     void updatePowerUps ( sf::Time ElapsedTime );
     void updateParticleSystems ( sf::Time ElapsedTime );
+
+    void prepareAreaLimit ( );
+    void renderAreaLimit ( sf::RenderWindow &Window );
 
 private:
 
@@ -66,11 +70,13 @@ private:
     sf::Clock Clock;
     float Gravity;
     float DetectionDistance;
+    float AreaRadius;
 
     std::list <Planet*> Planets;
     std::list <Spaceship*> Spaceships;
     std::list <Ray*> RayShots;
     std::list <ParticleSystem*> ParticleSystems;
+    std::vector <sf::Vertex> AreaLimit;
 
     };
 

@@ -8,6 +8,7 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     PlayerCount = 1;
     Gravity = 0.5f;
     DetectionDistance = 750.f;
+    AreaRadius = 1000.f;
 
     for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
 
@@ -41,6 +42,8 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     S = new Spaceship ( 10 );
     S->setPosition( sf::Vector2f( -700, -300 ) );
     S->setController( C2 );
+    S->setEnergy( 10000.f );
+    S->setEnergyLimit( 10000.f );
     Spaceships.push_back( S );
 
     auto C3 = new AggressiveAIController ( );
@@ -55,6 +58,8 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     PS->setOriginPosition( sf::Vector2f( 750, 300 ) );
     PS->generateParticles( 10000 );
     //ParticleSystems.push_back( PS );
+
+    prepareAreaLimit();
 
     }
 
@@ -125,9 +130,13 @@ void GameModule::render ( sf::RenderWindow &Window ) { // TODO VIEW FOR EACH PLA
 
         // TODO MOVE 'SET VIEW' HERE
 
+        renderAreaLimit( Window );
+
         for ( auto ActiveParticleSystem : ParticleSystems ) {
 
-            ActiveParticleSystem->render( Window ); }
+            if ( isOnScreen( ActiveParticleSystem->getInfluenceArea() ) ) {
+
+                ActiveParticleSystem->render( Window ); } }
 
         for ( auto ActiveRayShot : RayShots ) {
 
@@ -201,6 +210,13 @@ bool GameModule::isOnScreen ( sf::Vector2f Center, float Radius ) {
 
     }
 
+bool GameModule::isOnScreen ( sf::FloatRect Area ) {
+
+    // TODO
+    return true;
+
+    }
+
 Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection ) {
 
     Spaceship * Target = nullptr;
@@ -262,9 +278,7 @@ Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float MaximumA
 
             continue; }
 
-        float AngleDifference = atan2f( ActiveSpaceship->getPosition().x - Requester->getPosition().x, ActiveSpaceship->getPosition().y - Requester->getPosition().y );
-
-        AngleDifference = PI / 2.f - AngleDifference;
+        float AngleDifference = atan2f( ActiveSpaceship->getPosition().y - Requester->getPosition().y, ActiveSpaceship->getPosition().x - Requester->getPosition().x );
         AngleDifference = Requester->normalizeAngle( Requester->getVelocityAngle() - AngleDifference );
 
         if ( fabsf( AngleDifference ) < ( 0.5f * MaximumAngle ) ) {
@@ -342,6 +356,18 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             ( (AIController*) ActiveSpaceship->getController() )->setClosestBodyDistance( ClosestBodyDistance );
             ( (AIController*) ActiveSpaceship->getController() )->setClosestBodyAcceleration( ClosestBodyAcceleration ); }
+
+        if ( fabsf( ActiveSpaceship->getPosition().x ) > ( SQRT2_2ND * AreaRadius ) || fabsf( ActiveSpaceship->getPosition().y ) > ( SQRT2_2ND * AreaRadius ) ) {
+
+            float Distance = getDistance( sf::Vector2f ( 0.f, 0.f ), ActiveSpaceship->getPosition() );
+
+            if ( Distance > ( AreaRadius - 0.3f * DetectionDistance ) && !isPlayer( ActiveSpaceship ) ) {
+
+                ( (AIController*) ActiveSpaceship->getController() )->enableLimitPanic(); }
+
+            if ( Distance > AreaRadius ) {
+
+                ActiveSpaceship->updateHealth( - 5.f * ElapsedTime.asSeconds() ); } }
 
         ActiveSpaceship->updateVelocity( AccelerationSum, ElapsedTime ); }
 
@@ -492,3 +518,17 @@ void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
             delete (*i);
             i = ParticleSystems.erase( i ); } } }
+
+void GameModule::prepareAreaLimit ( ) {
+
+    AreaLimit.resize( 1000 );
+
+    for ( unsigned int i = 0; i < 1000; i++ ) {
+
+        AreaLimit[i].position.x = AreaRadius * cosf( 2.f * PI * ( i / 1000.f ) );
+        AreaLimit[i].position.y = AreaRadius * sinf( 2.f * PI * ( i / 1000.f ) );
+        AreaLimit[i].color = sf::Color::White; } }
+
+void GameModule::renderAreaLimit ( sf::RenderWindow &Window ) {
+
+    Window.draw( &AreaLimit[0], AreaLimit.size(), sf::Lines ); }
