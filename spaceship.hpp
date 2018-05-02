@@ -1,13 +1,15 @@
 #ifndef GRAVITY_MADNESS_SPACESHIP
 #define GRAVITY_MADNESS_SPACESHIP
 
-#include "definitions.hpp"
+#include "asteroid.hpp"
 #include "body.hpp"
-#include "planet.hpp"
-#include "spaceship-controller.hpp"
+#include "definitions.hpp"
 #include "graphics-module.hpp"
 #include "particle-system.hpp"
+#include "planet.hpp"
+#include "spaceship-controller.hpp"
 
+class Asteroid;
 class SpaceshipController;
 
 class Spaceship : public Body {
@@ -75,7 +77,8 @@ public:
     bool onMissileShot ( );
 
     ParticleSystem * onCollision ( Planet * Other );
-    void onCollision ( Spaceship * Other );
+    ParticleSystem * onCollision ( Asteroid * Other );
+    ParticleSystem * onCollision ( Spaceship * Other );
     ParticleSystem * onDestruction ( );
 
 private:

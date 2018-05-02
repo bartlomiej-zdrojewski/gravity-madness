@@ -6,9 +6,13 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     this->Graphics = Graphics;
 
     PlayerCount = 1;
-    Gravity = 0.5f;
+    Gravity = 1.f;
     DetectionDistance = 750.f;
-    AreaRadius = 1000.f;
+    AreaRadius = 1500.f;
+    AsteroidCount = 5;
+
+    AsteroidPauseDuration = sf::seconds( 5.f );
+    AsteroidPauseTime = sf::seconds( 0.f );
 
     for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
 
@@ -20,7 +24,7 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     auto C = new PlayerController ( );
     auto C2 = new AggressiveAIController ( );
 
-    auto * P = new Planet ( 1000, 100 ); // density 0.0012 -> M = 0.0012 * ( 1.33f * M_PI * R * R * R )
+    auto * P = new Planet ( 5000, 100 ); // density 0.0012 -> M = 0.0012 * ( 1.33f * M_PI * R * R * R )
     P->setPosition( sf::Vector2f( 400, 300 ) );
     Planets.push_back( P );
 
@@ -59,6 +63,11 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     PS->generateParticles( 10000 );
     //ParticleSystems.push_back( PS );
 
+    auto * A = new Asteroid ( 100, 15 );
+    A->setPosition( sf::Vector2f( 900, 200 ) );
+    A->setVelocity( sf::Vector2f( -0, 0 ) );
+    Asteroids.push_back( A );
+
     prepareAreaLimit();
 
     }
@@ -76,12 +85,12 @@ void GameModule::update ( ) {
     if ( ElapsedTime.asSeconds() < 0.1f ) {
 
         updatePlanets( ElapsedTime );
+        updateAsteroids( ElapsedTime );
         updateSpaceships( ElapsedTime );
         updateRayShots( ElapsedTime );
-        updateParticleSystems( ElapsedTime );
-        // ...
-
-        }
+        updateMissiles( ElapsedTime );
+        updatePowerUps( ElapsedTime );
+        updateParticleSystems( ElapsedTime ); }
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -109,9 +118,7 @@ void GameModule::render ( sf::RenderWindow &Window ) { // TODO VIEW FOR EACH PLA
         float ViewHeight = Graphics->getWindowHeight();
 
         // TODO SET VIEWPORT
-
         Interface[0]->setViewport( sf::FloatRect( 0.f, 0.f, ViewWidth, ViewHeight ) );
-        Interface[0]->setOrientation( PlayerInterface::Orientations::Left );
 
         if ( PlayerSpaceship[i] ) {
 
@@ -148,7 +155,11 @@ void GameModule::render ( sf::RenderWindow &Window ) { // TODO VIEW FOR EACH PLA
 
                 ActivePlanet->render( Window ); } }
 
-        // TODO ASTEROIDS
+        for ( auto ActiveAsteroid : Asteroids ) {
+
+            if ( isOnScreen( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
+
+                ActiveAsteroid->render( Window ); } }
 
         for ( auto ActiveSpaceship : Spaceships ) {
 
@@ -192,6 +203,10 @@ float GameModule::getDistance ( sf::Vector2f A, sf::Vector2f B ) {
     const float DistanceY = ( A.y - B.y );
 
     return sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
+
+float GameModule::getRandomFloat ( ) {
+
+    return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }
 
 bool GameModule::isPlayer ( Spaceship * MySpaceship ) {
 
@@ -250,7 +265,15 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
                 TargetDistance = Distance;
                 TargetIntersection = Intersection; } } }
 
-    // TODO ASTEROIDS
+    for ( auto ActiveAsteroid : Asteroids ) {
+
+        if ( RayShot.getIntersection( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius(), Intersection, Distance ) ) {
+
+            if ( Distance < TargetDistance ) {
+
+                Target = nullptr;
+                TargetDistance = Distance;
+                TargetIntersection = Intersection; } } }
 
     // TODO MISSILES
 
@@ -314,6 +337,108 @@ void GameModule::updatePlanets ( sf::Time ElapsedTime ) {
             destructBody( *i );
             Planets.erase( i ); } } }
 
+void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
+
+    AsteroidPauseTime -= ElapsedTime;
+
+    if ( Asteroids.size() < AsteroidCount && AsteroidPauseTime.asSeconds() <= 0.f ) {
+
+        AsteroidPauseTime = AsteroidPauseDuration;
+
+        float Mass = 8.f + getRandomFloat() * 12.f;
+        float Radius = Mass * ( 0.75f + getRandomFloat() * 0.5f );
+
+        auto * NewAsteroid = new Asteroid ( Mass, Radius );
+
+        float Angle = ( - PI ) + getRandomFloat() * ( 2.f * PI ) + ( - PI / 6.f ) + getRandomFloat() * ( PI / 3.f );
+        float Distance = AreaRadius + 1000.f;
+
+        NewAsteroid->setPosition( sf::Vector2f( Distance * cosf( Angle ), Distance * sinf( Angle ) ) );
+        NewAsteroid->setVelocity( sf::Vector2f( 50.f * cosf( Angle - PI ), 50.f * sinf( Angle - PI ) ) );
+
+        Asteroids.push_back( NewAsteroid ); }
+
+    for ( auto ActiveAsteroid : Asteroids ) {
+
+        for ( auto ActivePlanet : Planets ) {
+
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( ActiveAsteroid->getPosition(), ActivePlanet->getPosition() );
+
+            Acceleration.x -= Gravity * ActivePlanet->getMass() * ( ActiveAsteroid->getPosition().x - ActivePlanet->getPosition().x ) / ( Distance * Distance );
+            Acceleration.y -= Gravity * ActivePlanet->getMass() * ( ActiveAsteroid->getPosition().y - ActivePlanet->getPosition().y ) / ( Distance * Distance );
+
+            ActiveAsteroid->updateVelocity( Acceleration, ElapsedTime );
+
+            if ( Distance <= ( ActiveAsteroid->getRadius() + ActivePlanet->getRadius() ) ) {
+
+                if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                    ParticleSystem * Explosion = ActiveAsteroid->onCollision( ActivePlanet );
+
+                    if ( Explosion ) {
+
+                        ParticleSystems.push_back( Explosion ); } } } }
+
+        for ( auto ActiveSpaceship : Spaceships ) {
+
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( ActiveAsteroid->getPosition(), ActiveSpaceship->getPosition() );
+
+            Acceleration.x -= Gravity * ActiveSpaceship->getMass() * ( ActiveAsteroid->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance );
+            Acceleration.y -= Gravity * ActiveSpaceship->getMass() * ( ActiveAsteroid->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance );
+
+            ActiveAsteroid->updateVelocity( Acceleration, ElapsedTime );
+
+            if ( Distance <= ( ActiveAsteroid->getRadius() + ActiveSpaceship->getRadius() ) ) {
+
+                if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                    ParticleSystem * Explosion = ActiveAsteroid->onCollision( ActiveSpaceship );
+
+                    if ( Explosion ) {
+
+                        ParticleSystems.push_back( Explosion ); } } } }
+
+        float DistanceFromOrigin = getDistance( sf::Vector2f ( 0.f, 0.f ), ActiveAsteroid->getPosition() );
+
+        if ( DistanceFromOrigin < AreaRadius ) {
+
+            ActiveAsteroid->resetExistenceTime(); } }
+
+    for ( auto FirstAsteroid : Asteroids ) {
+
+        for ( auto SecondAsteroid : Asteroids ) {
+
+            if ( FirstAsteroid == SecondAsteroid ) {
+
+                continue; }
+
+            float MinimumDistance = FirstAsteroid->getRadius() + SecondAsteroid->getRadius();
+
+            if ( getMinDistance( FirstAsteroid->getPosition(), SecondAsteroid->getPosition() ) <= MinimumDistance ) {
+
+                if ( getDistance( FirstAsteroid->getPosition(), SecondAsteroid->getPosition() ) <= MinimumDistance ) {
+
+                    if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                        ParticleSystem * Explosion = FirstAsteroid->onCollision( SecondAsteroid );
+
+                        if ( Explosion ) {
+
+                            ParticleSystems.push_back( Explosion ); } } } } } }
+
+    for ( auto ActiveAsteroid : Asteroids ) {
+
+        ActiveAsteroid->update( ElapsedTime ); }
+
+    for ( auto i = Asteroids.begin(); i != Asteroids.end(); i++ ) {
+
+        if ( (*i)->isDestructed() ) {
+
+            destructBody( *i );
+            i = Asteroids.erase( i ); } } }
+
 void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
     for ( auto ActiveSpaceship : Spaceships ) {
@@ -348,11 +473,32 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                         ParticleSystems.push_back( Explosion ); } } } }
 
-        // TODO ASTEROIDS
+        for ( auto ActiveAsteroid : Asteroids ) {
 
-        // TODO POWER UPS
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( ActiveSpaceship->getPosition(), ActiveAsteroid->getPosition() );
 
-        if ( !isPlayer( ActiveSpaceship ) ) {
+            Acceleration.x -= Gravity * ActiveAsteroid->getMass() * ( ActiveSpaceship->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance );
+            Acceleration.y -= Gravity * ActiveAsteroid->getMass() * ( ActiveSpaceship->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance );
+
+            if ( ( Distance - ActiveAsteroid->getRadius() ) < ClosestBodyDistance ) {
+
+                ClosestBodyDistance = Distance - ActiveAsteroid->getRadius();
+                ClosestBodyAcceleration = Acceleration; }
+
+            AccelerationSum += Acceleration;
+
+            if ( Distance <= ( ActiveSpaceship->getRadius() + ActiveAsteroid->getRadius() ) ) {
+
+                if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                    ParticleSystem * Explosion = ActiveSpaceship->onCollision( ActiveAsteroid );
+
+                    if ( Explosion ) {
+
+                        ParticleSystems.push_back( Explosion ); } } } }
+
+        if ( !isPlayer( ActiveSpaceship ) && ActiveSpaceship->getController() != nullptr ) {
 
             ( (AIController*) ActiveSpaceship->getController() )->setClosestBodyDistance( ClosestBodyDistance );
             ( (AIController*) ActiveSpaceship->getController() )->setClosestBodyAcceleration( ClosestBodyAcceleration ); }
@@ -361,7 +507,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             float Distance = getDistance( sf::Vector2f ( 0.f, 0.f ), ActiveSpaceship->getPosition() );
 
-            if ( Distance > ( AreaRadius - 0.3f * DetectionDistance ) && !isPlayer( ActiveSpaceship ) ) {
+            if ( Distance > ( AreaRadius - 0.3f * DetectionDistance ) && !isPlayer( ActiveSpaceship ) && ActiveSpaceship->getController() != nullptr ) {
 
                 ( (AIController*) ActiveSpaceship->getController() )->enableLimitPanic(); }
 
@@ -387,13 +533,15 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     if ( true ) { // TODO SUPER ACCURATE CHECK
 
-                        FirstSpaceship->onCollision( SecondSpaceship ); } } } } }
+                        ParticleSystem * Explosion = FirstSpaceship->onCollision( SecondSpaceship );
 
+                        if ( Explosion ) {
 
+                            ParticleSystems.push_back( Explosion ); } } } } } }
 
     for ( auto ActiveSpaceship : Spaceships ) {
 
-        if ( !isPlayer( ActiveSpaceship ) ) {
+        if ( !isPlayer( ActiveSpaceship ) && ActiveSpaceship->getController() != nullptr ) {
 
             float Distance, Angle;
             Spaceship * Target = getAngularTarget( ActiveSpaceship, 2.f * PI / 3.f, Distance, Angle );
@@ -424,7 +572,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 ( (AIController*) ActiveSpaceship->getController() )->setTargetIn120Degrees( nullptr ); }
 
-            // TODO SHOW POWER UPS
+            // TODO SHOW AI POWER UPS
 
             }
 
@@ -442,15 +590,15 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 if ( isPlayer( Target ) ) {
 
-                    // TODO SCREEN EFFECT
+                    // TODO SCREEN EFFECT IN INTERFACE
 
                     }
 
-                else {
+                else if ( ActiveSpaceship->getController() != nullptr ) {
 
                     ( (AIController*) Target->getController() )->enableShotPanic(); }
 
-                // TODO PARTICLE EFFECT
+                // TODO PARTICLE EFFECT ON HIT
 
                 }
 

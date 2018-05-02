@@ -9,11 +9,13 @@
 #include "definitions.hpp"
 #include "aggressive-ai-controller.hpp"
 #include "ai-controller.hpp"
+#include "asteroid.hpp"
 #include "body.hpp"
 #include "graphics-module.hpp"
 #include "planet.hpp"
 #include "player-controller.hpp"
 #include "player-interface.hpp"
+#include "ray.hpp"
 #include "spaceship.hpp"
 #include "particle-system.hpp"
 
@@ -38,6 +40,7 @@ private:
 
     float getMinDistance ( sf::Vector2f A, sf::Vector2f B );
     float getDistance ( sf::Vector2f A, sf::Vector2f B );
+    float getRandomFloat ( );
 
     bool isPlayer ( Spaceship * MySpaceship );
     bool isOnScreen ( sf::Vector2f Center, float Radius );
@@ -47,6 +50,7 @@ private:
     Spaceship * getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle );
 
     void updatePlanets ( sf::Time ElapsedTime );
+    void updateAsteroids ( sf::Time ElapsedTime );
     void updateSpaceships ( sf::Time ElapsedTime );
     void updateRayShots ( sf::Time ElapsedTime );
     void updateMissiles ( sf::Time ElapsedTime );
@@ -69,8 +73,12 @@ private:
     float Gravity;
     float DetectionDistance;
     float AreaRadius;
+    unsigned int AsteroidCount;
+    sf::Time AsteroidPauseTime;
+    sf::Time AsteroidPauseDuration;
 
     std::list <Planet*> Planets;
+    std::list <Asteroid*> Asteroids;
     std::list <Spaceship*> Spaceships;
     std::list <Ray*> RayShots;
     std::list <ParticleSystem*> ParticleSystems;

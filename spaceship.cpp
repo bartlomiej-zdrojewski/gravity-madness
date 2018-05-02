@@ -255,13 +255,21 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
     Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
     Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 3.f ) );
-    Explosion->generateParticles( Velocity > 150.f ? 10000 : 5000 );
+    Explosion->generateParticles( Velocity > 200.f ? 10000 : 5000 );
 
     return Explosion; }
 
-void Spaceship::onCollision ( Spaceship * Other ) {
+ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
     // TODO MAKE DAMAGE AND DESTRUCT IF NECESSARY
+    return nullptr;
+
+    }
+
+ParticleSystem *  Spaceship::onCollision ( Spaceship * Other ) {
+
+    // TODO MAKE DAMAGE AND DESTRUCT IF NECESSARY
+    return nullptr;
 
     }
 

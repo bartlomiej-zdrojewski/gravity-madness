@@ -19,6 +19,10 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
                 ThrustLeft = true; } }
 
+        else {
+
+            ThrustBackward = true; }
+
         if ( MySpaceship->getEnergy() >= MinimumRayShotEnergy && RayShotRestorationTime.asSeconds() <= 0.f ) {
 
             RayShot = true;
