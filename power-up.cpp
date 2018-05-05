@@ -5,6 +5,7 @@ PowerUp::PowerUp ( float Radius, sf::Time Duration, float * Gravity, unsigned in
     MySpaceship = nullptr;
     this->Gravity = Gravity;
     this->AsteroidCount = AsteroidCount;
+    Texture = nullptr;
 
     Caught = false;
     Expired = false;
@@ -67,7 +68,7 @@ void PowerUp::render ( sf::RenderWindow &Window ) { // TODO
 
         sf::CircleShape Circle;
 
-        Circle.setRadius( Radius );
+        Circle.setRadius( getRadius() );
         Circle.setOrigin( getRadius(), getRadius() );
         Circle.setPosition( getPosition() );
         Circle.setFillColor( sf::Color( 0, 255, 0 ) );

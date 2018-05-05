@@ -222,16 +222,18 @@ void WorldModule::init ( ) {
 
             setMode( Modes::InitTimeErrorMode ); }
 
-        else if ( Log->wasWarningLogged() ) {
-
-            setMode( Modes::InitTimeWarningMode ); }
-
-        else if ( Debugging ) {
-
-            setMode( Modes::DebugMode ); }
-
         else {
 
             Game = new GameModule ( Graphics );
 
-            setMode( Modes::MainMenuMode ); } } }
+            if ( Log->wasWarningLogged() ) {
+
+                setMode( Modes::InitTimeWarningMode ); }
+
+            else if ( Debugging ) {
+
+                setMode( Modes::DebugMode ); }
+
+            else {
+
+                setMode( Modes::MainMenuMode ); } } } }

@@ -40,16 +40,15 @@ protected:
     Spaceship * MySpaceship;
     float * Gravity;
     unsigned int * AsteroidCount;
+    sf::Texture * Texture;
+
+    bool Caught;
+    bool Expired;
 
     bool GravityModifier;
     bool AsteroidModifier;
 
-    sf::Texture Texture;
-
 private:
-
-    bool Caught;
-    bool Expired;
 
     float Radius;
     sf::Vector2f Position;

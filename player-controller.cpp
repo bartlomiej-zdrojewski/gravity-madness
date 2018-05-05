@@ -40,6 +40,12 @@ void PlayerController::update ( sf::Event &Event ) {
 
                 break; }
 
+            case sf::Keyboard::Q: {
+
+                MissileShot = true;
+
+                break; }
+
                 // ...
 
             default: {
@@ -77,6 +83,12 @@ void PlayerController::update ( sf::Event &Event ) {
             case sf::Keyboard::Space: {
 
                 ForceRayShot = false;
+
+                break; }
+
+            case sf::Keyboard::Q: {
+
+                MissileShot = false;
 
                 break; }
 

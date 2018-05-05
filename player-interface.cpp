@@ -1,4 +1,3 @@
-#include <iostream>
 #include "player-interface.hpp"
 
 PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "ai-controller.hpp"
 
 void AIController::setClosestBodyDistance ( float Distance ) {
@@ -52,6 +51,15 @@ void AIController::setTargetIn30Degrees ( Spaceship * Target, float Distance, fl
 
         TargetDistance = Distance;
         TargetAngle = Angle; } }
+
+void AIController::setPowerUp ( PowerUp * MyPowerUp, float Distance, float Angle ) {
+
+    this->MyPowerUp = MyPowerUp;
+
+    if ( MyPowerUp ) {
+
+        PowerUpDistace = Distance;
+        PowerUpAngle = Angle; } }
 
 void AIController::update ( sf::Time ElapsedTime ) {
 

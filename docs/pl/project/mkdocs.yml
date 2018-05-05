@@ -1,0 +1,8 @@
+site_name: Gravity Madness
+pages:
+    - Wstęp: index.md
+    - Moduły: modules.md
+    - Klasy: classes.md
+    - Rozgrywka: gameplay.md
+    - Statki: spaceships.md
+    - Kontrolery: controllers.md

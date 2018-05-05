@@ -1,3 +1,4 @@
+#include <iostream>
 #include "aggressive-ai-controller.hpp"
 
 void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
@@ -46,6 +47,20 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
                 ThrustRight = true; }
 
             else if ( TargetAngle > 0.f ) {
+
+                ThrustLeft = true; } } }
+
+    else if ( MyPowerUp ) {
+
+        if ( PowerUpDistace < 200.f || ( ( PowerUpDistace < 500.f ) && ( fabsf( PowerUpAngle ) > ( PI / 12.f ) ) ) ) {
+
+            ThrustForward = true;
+
+            if ( PowerUpAngle < 0.f ) {
+
+                ThrustRight = true; }
+
+            else if ( PowerUpAngle > 0.f ) {
 
                 ThrustLeft = true; } } }
 

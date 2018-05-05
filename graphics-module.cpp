@@ -269,7 +269,7 @@ sf::Texture& GraphicsModule::getTexture ( std::string Name ) {
 
         logError( "Texture '" + Name + "' was not found!" );
 
-        return getTexture( "Default" ); }
+        return getTexture( "default" ); }
 
     return *Element->second; }
 
@@ -285,13 +285,11 @@ sf::Font& GraphicsModule::getFont ( std::string Name ) {
 
         logError( "Font '" + Name + "' was not found!" );
 
-        return getFont( "Default" ); }
+        return getFont( "default" ); }
 
     return *Element->second; }
 
 void GraphicsModule::initDefault ( ) { // TODO Load from memory
 
-    Textures.insert( { "Default", new sf::Texture () } );
-    Fonts.insert( { "Default", new sf::Font () } );
-
-    }
+    Textures.insert( { "default", new sf::Texture () } );
+    Fonts.insert( { "default", new sf::Font () } ); }

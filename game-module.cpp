@@ -14,8 +14,8 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     AsteroidPauseDuration = sf::seconds( 5.f );
     AsteroidPauseTime = sf::seconds( 30.f );
 
-    PowerUpPauseDuration = sf::seconds( 10.f );
-    PowerUpPauseTime = sf::seconds( 30.f );
+    PowerUpPauseDuration = sf::seconds( 5.f );
+    PowerUpPauseTime = sf::seconds( 5.f );
 
     for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
 
@@ -164,9 +164,11 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
                     ActiveSpaceship->render( Window ); } }
 
-            // TODO MISSILES
+            for ( auto ActiveMissile : Missiles ) {
 
-            }
+                if ( isOnScreen( ActiveMissile->getPosition(), ActiveMissile->getInfluenceRadius() ) ) {
+
+                    ActiveMissile->render( Window ); } } }
 
         Interface[i]->render( Window ); }
 
@@ -234,7 +236,7 @@ bool GameModule::isOnScreen ( sf::FloatRect Area ) {
 
     }
 
-Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection ) {
+Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection, bool AffectMissiles ) {
 
     Spaceship * Target = nullptr;
     float TargetDistance = 1000000.f;
@@ -278,6 +280,7 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
                 TargetIntersection = Intersection; } } }
 
     // TODO MISSILES
+    // if ( AffectMissiles ) then ...
 
     Intersection = TargetIntersection;
 
@@ -306,7 +309,7 @@ Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float MaximumA
         float AngleDifference = atan2f( ActiveSpaceship->getPosition().y - Requester->getPosition().y, ActiveSpaceship->getPosition().x - Requester->getPosition().x );
         AngleDifference = Requester->normalizeAngle( Requester->getVelocityAngle() - AngleDifference );
 
-        if ( fabsf( AngleDifference ) < ( 0.5f * MaximumAngle ) ) {
+        if ( fabsf( AngleDifference ) <= ( 0.5f * MaximumAngle ) ) {
 
             Distance = getDistance( Requester->getPosition(), ActiveSpaceship->getPosition() );
 
@@ -326,11 +329,73 @@ Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float MaximumA
 
     return Target; }
 
+Spaceship * GameModule::getAngularTarget ( Missile * Requester, float MaximumAngle ) {
+
+    float TargetDistance = 1000000.f;
+    Spaceship * Target = nullptr;
+
+    for ( auto ActiveSpaceship : Spaceships ) {
+
+        if ( getMinDistance( Requester->getPosition(), ActiveSpaceship->getPosition() ) > DetectionDistance ) {
+
+            continue; }
+
+        float AngleDifference = atan2f( ActiveSpaceship->getPosition().y - Requester->getPosition().y, ActiveSpaceship->getPosition().x - Requester->getPosition().x );
+        AngleDifference = Requester->normalizeAngle( Requester->getVelocityAngle() - AngleDifference );
+
+        if ( fabsf( AngleDifference ) <= ( 0.5f * MaximumAngle ) ) {
+
+            float Distance = getDistance( Requester->getPosition(), ActiveSpaceship->getPosition() );
+
+            if ( Distance <= DetectionDistance && Distance < TargetDistance ) {
+
+                Target = ActiveSpaceship;
+                TargetDistance = Distance; } } }
+
+    return Target; }
+
+PowerUp * GameModule::detectPowerUp ( Spaceship * Requester, float &Distance, float &Angle ) {
+
+    float TargetDistance = 1000000.f;
+    PowerUp * Target = nullptr;
+    Angle = PI;
+
+    for ( auto ActivePowerUp : PowerUps ) {
+
+        if ( getMinDistance( Requester->getPosition(), ActivePowerUp->getPosition() ) > DetectionDistance ) {
+
+            continue; }
+
+        float AngleDifference = atan2f( ActivePowerUp->getPosition().y - Requester->getPosition().y, ActivePowerUp->getPosition().x - Requester->getPosition().x );
+        AngleDifference = Requester->normalizeAngle( Requester->getVelocityAngle() - AngleDifference );
+
+        if ( fabsf( AngleDifference ) <= ( PI / 6.f ) ) {
+
+            Distance = getDistance( Requester->getPosition(), ActivePowerUp->getPosition() );
+
+            if ( Distance <= DetectionDistance && Distance < TargetDistance ) {
+
+                Target = ActivePowerUp;
+                TargetDistance = Distance;
+                Angle = AngleDifference; } } }
+
+    if ( Target ) {
+
+        Distance = TargetDistance; }
+
+    else {
+
+        Distance = 1000000.f; }
+
+    return Target; }
+
 void GameModule::updatePlanets ( sf::Time ElapsedTime ) {
 
     for ( auto ActivePlanet : Planets ) {
 
         ActivePlanet->update( ElapsedTime ); }
+
+    // Delete destructed planets
 
     for ( auto i = Planets.begin(); i != Planets.end(); i++ ) {
 
@@ -340,6 +405,8 @@ void GameModule::updatePlanets ( sf::Time ElapsedTime ) {
             Planets.erase( i ); } } }
 
 void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
+
+    // Generate asteroids
 
     AsteroidPauseTime -= ElapsedTime;
 
@@ -359,6 +426,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
         NewAsteroid->setVelocity( sf::Vector2f( 50.f * cosf( Angle - PI ), 50.f * sinf( Angle - PI ) ) );
 
         Asteroids.push_back( NewAsteroid ); }
+
+    // Update gravity acceleration, detect collisions with planets and spaceships
 
     for ( auto ActiveAsteroid : Asteroids ) {
 
@@ -408,6 +477,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
             ActiveAsteroid->resetExistenceTime(); } }
 
+    // Detect collisions between asteroids
+
     for ( auto FirstAsteroid : Asteroids ) {
 
         for ( auto SecondAsteroid : Asteroids ) {
@@ -434,6 +505,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         ActiveAsteroid->update( ElapsedTime ); }
 
+    // Delete destructed asteroids
+
     for ( auto i = Asteroids.begin(); i != Asteroids.end(); i++ ) {
 
         if ( (*i)->isDestructed() ) {
@@ -442,6 +515,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
             i = Asteroids.erase( i ); } } }
 
 void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
+
+    // Update gravity acceleration and influence of area limit, detect collisions with planets and asteroids
 
     for ( auto ActiveSpaceship : Spaceships ) {
 
@@ -519,6 +594,8 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
         ActiveSpaceship->updateVelocity( AccelerationSum, ElapsedTime ); }
 
+    // Detect collisions between spaceships
+
     for ( auto FirstSpaceship : Spaceships ) {
 
         for ( auto SecondSpaceship : Spaceships ) {
@@ -541,26 +618,28 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                             ParticleSystems.push_back( Explosion ); } } } } } }
 
+    // Update spaceships' state and spaceship controllers
+
     for ( auto ActiveSpaceship : Spaceships ) {
 
         if ( !isPlayer( ActiveSpaceship ) && ActiveSpaceship->getController() != nullptr ) {
 
-            float Distance, Angle;
-            Spaceship * Target = getAngularTarget( ActiveSpaceship, 2.f * PI / 3.f, Distance, Angle );
+            float TargetDistance, TargetAngle;
+            Spaceship * Target = getAngularTarget( ActiveSpaceship, 2.f * PI / 3.f, TargetDistance, TargetAngle );
 
             if ( Target ) {
 
-                ( (AIController*) ActiveSpaceship->getController() )->setTargetIn120Degrees( Target, Distance, Angle );
-                Target = getAngularTarget( ActiveSpaceship, PI / 3.f, Distance, Angle );
+                ( (AIController*) ActiveSpaceship->getController() )->setTargetIn120Degrees( Target, TargetDistance, TargetAngle );
+                Target = getAngularTarget( ActiveSpaceship, PI / 3.f, TargetDistance, TargetAngle );
 
                 if ( Target ) {
 
-                    ( (AIController*) ActiveSpaceship->getController() )->setTargetIn60Degrees( Target, Distance, Angle );
-                    Target = getAngularTarget( ActiveSpaceship, PI / 6.f, Distance, Angle );
+                    ( (AIController*) ActiveSpaceship->getController() )->setTargetIn60Degrees( Target, TargetDistance, TargetAngle );
+                    Target = getAngularTarget( ActiveSpaceship, PI / 6.f, TargetDistance, TargetAngle );
 
                     if ( Target ) {
 
-                        ( (AIController*) ActiveSpaceship->getController() )->setTargetIn30Degrees( Target, Distance, Angle ); }
+                        ( (AIController*) ActiveSpaceship->getController() )->setTargetIn30Degrees( Target, TargetDistance, TargetAngle ); }
 
                     else {
 
@@ -574,9 +653,16 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 ( (AIController*) ActiveSpaceship->getController() )->setTargetIn120Degrees( nullptr ); }
 
-            // TODO SHOW AI POWER UPS
+            float PowerUpDistance, PowerUpAngle;
+            PowerUp * MyPowerUp = detectPowerUp( ActiveSpaceship, PowerUpDistance, PowerUpAngle );
 
-            }
+            if ( MyPowerUp ) {
+
+                ( (AIController*) ActiveSpaceship->getController() )->setPowerUp( MyPowerUp, PowerUpDistance, PowerUpAngle ); }
+
+            else {
+
+                ( (AIController*) ActiveSpaceship->getController() )->setPowerUp( nullptr ); } }
 
         ActiveSpaceship->update( ElapsedTime );
 
@@ -608,8 +694,6 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 }
 
-            // TODO IF MISSILE
-
             if ( Intersection != ActiveSpaceship->getPosition() ) {
 
                 RayShot->enableRendering( Intersection.x ); }
@@ -620,11 +704,24 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             RayShots.push_back( RayShot ); }
 
-        if ( ActiveSpaceship->onMissileShot() ) { std::cout << "MISSILE SHOT\n";
+        if ( ActiveSpaceship->onMissileShot() ) {
 
-            // TODO CREATE MISSILE
+            auto * NewMissile = new Missile ( );
 
-            } }
+            float TargetDistance, TargetAngle;
+            Spaceship * Target = getAngularTarget( ActiveSpaceship, 2.f * PI / 3.f, TargetDistance, TargetAngle );
+
+            sf::Vector2f MissilePosition = ActiveSpaceship->getPosition();
+            MissilePosition.x += ( ActiveSpaceship->getRadius() + NewMissile->getRadius() + 20.f ) * cosf( ActiveSpaceship->getVelocityAngle() );
+            MissilePosition.y += ( ActiveSpaceship->getRadius() + NewMissile->getRadius() + 20.f ) * sinf( ActiveSpaceship->getVelocityAngle() );
+
+            NewMissile->setPosition( MissilePosition );
+            NewMissile->setVelocity( ActiveSpaceship->getVelocity() );
+            NewMissile->setTarget( Target );
+
+            Missiles.push_back( NewMissile ); } }
+
+    // Delete destructed spaceships
 
     for ( auto i = Spaceships.begin(); i != Spaceships.end(); i++ ) {
 
@@ -635,11 +732,119 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
 void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
-    // TODO
+    // Update gravity acceleration, detect collisions with planets, asteroids and spaceships
 
-    }
+    for ( auto ActiveMissile : Missiles ) {
+
+        for ( auto ActivePlanet : Planets ) {
+
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( ActiveMissile->getPosition(), ActivePlanet->getPosition() );
+
+            Acceleration.x -= Gravity * ActivePlanet->getMass() * ( ActiveMissile->getPosition().x - ActivePlanet->getPosition().x ) / ( Distance * Distance );
+            Acceleration.y -= Gravity * ActivePlanet->getMass() * ( ActiveMissile->getPosition().y - ActivePlanet->getPosition().y ) / ( Distance * Distance );
+
+            ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
+
+            if ( Distance <= ( ActiveMissile->getRadius() + ActivePlanet->getRadius() ) ) {
+
+                if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                    ParticleSystem * Explosion = ActiveMissile->onCollision( ActivePlanet );
+
+                    if ( Explosion ) {
+
+                        ParticleSystems.push_back( Explosion ); } } } }
+
+        for ( auto ActiveAsteroid : Asteroids ) {
+
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( ActiveMissile->getPosition(), ActiveAsteroid->getPosition() );
+
+            Acceleration.x -= Gravity * ActiveAsteroid->getMass() * ( ActiveMissile->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance );
+            Acceleration.y -= Gravity * ActiveAsteroid->getMass() * ( ActiveMissile->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance );
+
+            ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
+
+            if ( Distance <= ( ActiveMissile->getRadius() + ActiveAsteroid->getRadius() ) ) {
+
+                if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                    ParticleSystem * Explosion = ActiveMissile->onCollision( ActiveAsteroid );
+
+                    if ( Explosion ) {
+
+                        ParticleSystems.push_back( Explosion ); } } } }
+
+        for ( auto ActiveSpaceship : Spaceships ) {
+
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( ActiveMissile->getPosition(), ActiveSpaceship->getPosition() );
+
+            Acceleration.x -= Gravity * ActiveSpaceship->getMass() * ( ActiveMissile->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance );
+            Acceleration.y -= Gravity * ActiveSpaceship->getMass() * ( ActiveMissile->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance );
+
+            ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
+
+            if ( Distance <= ( ActiveMissile->getRadius() + ActiveSpaceship->getRadius() ) ) {
+
+                if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                    ParticleSystem * Explosion = ActiveMissile->onCollision( ActiveSpaceship );
+
+                    if ( Explosion ) {
+
+                        ParticleSystems.push_back( Explosion ); } } } } }
+
+    // Detect collisions between missiles
+
+    for ( auto FirstMissile : Missiles ) {
+
+        for ( auto SecondMissile : Missiles ) {
+
+            if ( FirstMissile == SecondMissile ) {
+
+                continue; }
+
+            float MinimumDistance = FirstMissile->getRadius() + SecondMissile->getRadius();
+
+            if ( getMinDistance( FirstMissile->getPosition(), SecondMissile->getPosition() ) <= MinimumDistance ) {
+
+                if ( getDistance( FirstMissile->getPosition(), SecondMissile->getPosition() ) <= MinimumDistance ) {
+
+                    if ( true ) { // TODO SUPER ACCURATE CHECK
+
+                        ParticleSystem * Explosion = FirstMissile->onCollision( SecondMissile );
+
+                        if ( Explosion ) {
+
+                            ParticleSystems.push_back( Explosion ); } } } } } }
+
+    // Update missiles' state
+
+    for ( auto ActiveMissile : Missiles ) {
+
+        if ( !ActiveMissile->getTarget() ) {
+
+            float TargetDistance, TargetAngle;
+            Spaceship * Target = getAngularTarget( ActiveMissile, 2.f * PI / 3.f );
+
+            ActiveMissile->setTarget( Target ); }
+
+        ActiveMissile->update( ElapsedTime ); }
+
+    // Delete destructed missiles
+
+    for ( auto i = Missiles.begin(); i != Missiles.end(); i++ ) {
+
+        if ( (*i)->isDestructed() ) {
+
+            destructBody( *i );
+            i = Missiles.erase( i ); } } }
 
 void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
+
+    // Generate power ups
 
     PowerUpPauseTime -= ElapsedTime;
 
@@ -679,13 +884,20 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
         if ( Attempts > 0 ) { // TODO GENERATE DIFFERENT POWER UPS
 
-            auto * NewPowerUp = new PowerUp ( PowerUpRadius, sf::seconds( 30.f ), &Gravity, &AsteroidCount );
+            PowerUp * NewPowerUp = nullptr;
+
+            if ( true ) {
+
+                auto * NewEnergyPowerUp = new EnergyPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount );
+
+                NewPowerUp = NewEnergyPowerUp;
+                }
 
             NewPowerUp->setPosition( Position );
 
-            PowerUps.push_back( NewPowerUp );
+            PowerUps.push_back( NewPowerUp ); } }
 
-            } }
+    // Detect collisions with spaceships
 
     for ( auto ActivePowerUp : PowerUps ) {
 
@@ -717,9 +929,15 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
                             AsteroidPowerUp = ActivePowerUp; }
 
-                        break; } } } }
+                        break; } } } } }
+
+    // Update power ups' state
+
+    for ( auto ActivePowerUp : PowerUps ) {
 
         ActivePowerUp->update( ElapsedTime ); }
+
+    // Delete inactive power ups
 
     for ( auto i = PowerUps.begin(); i != PowerUps.end(); i++ ) {
 
@@ -738,9 +956,13 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
 void GameModule::updateRayShots ( sf::Time ElapsedTime ) {
 
+    // Update ray shots' state
+
     for ( auto ActiveRayShot : RayShots ) {
 
         ActiveRayShot->update( ElapsedTime ); }
+
+    // Delete inactive ray shots
 
     for ( auto i = RayShots.begin(); i != RayShots.end(); i++ ) {
 
@@ -751,9 +973,13 @@ void GameModule::updateRayShots ( sf::Time ElapsedTime ) {
 
 void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
+    // Update particle systems' state
+
     for ( auto ActiveParticleSystem : ParticleSystems ) {
 
         ActiveParticleSystem->update( ElapsedTime ); }
+
+    // Delete inactive particle systems
 
     for ( auto i = ParticleSystems.begin(); i != ParticleSystems.end(); i++ ) {
 

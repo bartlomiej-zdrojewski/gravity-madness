@@ -11,7 +11,9 @@
 #include "ai-controller.hpp"
 #include "asteroid.hpp"
 #include "body.hpp"
+#include "energy-power-up.hpp"
 #include "graphics-module.hpp"
+#include "missile.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
 #include "player-controller.hpp"
@@ -43,8 +45,10 @@ private:
     bool isOnScreen ( sf::Vector2f Center, float Radius );
     bool isOnScreen ( sf::FloatRect Area );
 
-    Spaceship * getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection );
+    Spaceship * getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection, bool AffectMissiles = true );
     Spaceship * getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle );
+    Spaceship * getAngularTarget ( Missile * Requester, float MaximumAngle );
+    PowerUp * detectPowerUp ( Spaceship * Requester, float &Distance, float &Angle );
 
     void updatePlanets ( sf::Time ElapsedTime );
     void updateAsteroids ( sf::Time ElapsedTime );
@@ -88,6 +92,7 @@ private:
     std::list <Planet*> Planets;
     std::list <Asteroid*> Asteroids;
     std::list <Spaceship*> Spaceships;
+    std::list <Missile*> Missiles;
     std::list <PowerUp*> PowerUps;
     std::list <Ray*> RayShots;
     std::list <ParticleSystem*> ParticleSystems;
