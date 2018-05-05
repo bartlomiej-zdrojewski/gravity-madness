@@ -51,6 +51,10 @@ void Spaceship::setHealthLimit ( float HealthLimit ) {
 
 void Spaceship::updateHealth ( float DeltaHealth ) {
 
+    if ( isDestructed() ) {
+
+        return; }
+
     Health += DeltaHealth;
 
     if ( Health <= 0.f ) {
@@ -89,6 +93,10 @@ void Spaceship::setEnergyLimit ( float EnergyLimit ) {
     this->EnergyLimit = EnergyLimit; }
 
 void Spaceship::updateEnergy ( float DeltaEnergy ) {
+
+    if ( isDestructed() ) {
+
+        return; }
 
     Energy += DeltaEnergy;
 
@@ -132,11 +140,19 @@ void Spaceship::setRayPower ( float RayPower ) {
 
 void Spaceship::update ( sf::Event &Event ) {
 
+    if ( isDestructed() ) {
+
+        return; }
+
     if ( Controller ) {
 
         Controller->update( Event ); } }
 
 void Spaceship::update ( sf::Time ElapsedTime ) {
+
+    if ( isDestructed() ) {
+
+        return; }
 
     updateHealth( HealthRestoration * ElapsedTime.asSeconds() );
     updateEnergy( EnergyRestoration * ElapsedTime.asSeconds() );
@@ -161,8 +177,6 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
             Acceleration.x = Thrust * cosf( Angle );
             Acceleration.y = Thrust * sinf( Angle );
 
-            // TODO SOME ANIMATION
-
             updateEnergy( Acceleration, ElapsedTime );
             updateVelocity( Acceleration, ElapsedTime ); }
 
@@ -178,8 +192,6 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
                 sf::Vector2f Acceleration;
                 Acceleration.x = SuppressingFactor * Module * cosf( Angle );
                 Acceleration.y = SuppressingFactor * Module * sinf( Angle );
-
-                // TODO SOME ANIMATION
 
                 updateEnergy( Acceleration, ElapsedTime );
                 updateVelocity( Acceleration, ElapsedTime ); } }
@@ -240,10 +252,6 @@ bool Spaceship::onMissileShot ( ) {
 
 ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
 
-    setHealth( 0.f );
-    setEnergy( 0.f );
-    destruct();
-
     auto * Explosion = new ParticleSystem ( );
     float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
     float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
@@ -256,6 +264,11 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
     Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 3.f ) );
     Explosion->generateParticles( Velocity > 200.f ? 10000 : 5000 );
+
+    setHealth( 0.f );
+    setEnergy( 0.f );
+    setVelocity( sf::Vector2f( 0.f, 0.f ) );
+    destruct();
 
     return Explosion; }
 

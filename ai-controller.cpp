@@ -1,3 +1,4 @@
+#include <iostream>
 #include "ai-controller.hpp"
 
 void AIController::setClosestBodyDistance ( float Distance ) {
@@ -87,7 +88,7 @@ void AIController::update ( sf::Time ElapsedTime ) {
 
             ThrustLeft = true; } }
 
-    else if ( AccelerationModule > ( 0.3f * MySpaceship->getThrust() ) ) {
+    else if ( AccelerationModule > ( 0.2f * MySpaceship->getThrust() ) ) {
 
         if ( AngleDifference >= 0.f && AngleDifference < ( PI / 3.f ) ) {
 

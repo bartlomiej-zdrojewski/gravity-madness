@@ -1,3 +1,4 @@
+#include <iostream>
 #include "player-interface.hpp"
 
 PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
@@ -11,6 +12,16 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
     UnactivatedOpacity = 0.34f;
     TransitionDuration = sf::seconds( 0.3f );
 
+    FadeOut = false;
+    FadeOutTime = sf::seconds( 0.f );
+    FadeOutDelay = sf::seconds( 3.f );
+    FadeOutDuration = sf::seconds( 8.f );
+
+    Health = 0;
+    HealthLimit = 100;
+    Energy = 0;
+    EnergyLimit = 100;
+
     }
 
 void PlayerInterface::setSpaceship ( Spaceship * MySpaceship ) {
@@ -19,9 +30,26 @@ void PlayerInterface::setSpaceship ( Spaceship * MySpaceship ) {
 
 void PlayerInterface::setViewport ( sf::FloatRect Viewport ) {
 
+    Viewport.left = Graphics->getWindowWidth() * Viewport.left;
+    Viewport.top = Graphics->getWindowHeight() * Viewport.top;
+    Viewport.width = Graphics->getWindowWidth() * Viewport.width;
+    Viewport.height = Graphics->getWindowHeight() * Viewport.height;
+
     this->Viewport = Viewport; }
 
+void PlayerInterface::beginFadeOut ( ) {
+
+    FadeOut = true; }
+
+bool PlayerInterface::isFadeOutEnded ( ) {
+
+    return ( FadeOutTime >= FadeOutDuration ); }
+
 void PlayerInterface::update ( sf::Time ElapsedTime ) {
+
+    if ( FadeOut ) {
+
+        FadeOutTime += ElapsedTime; }
 
     if ( MySpaceship ) {
 
@@ -42,12 +70,28 @@ void PlayerInterface::render ( sf::RenderWindow &Window ) {
     sf::View ViewCopy = Window.getView();
     Window.setView( Window.getDefaultView() );
 
-    renderHealthBar( Window );
-    renderEnergyBar( Window );
-    renderMissileBar( Window );
-    renderScoreBar( Window );
+    if ( !FadeOut ) {
+
+        renderHealthBar( Window );
+        renderEnergyBar( Window );
+        renderMissileBar( Window );
+        renderScoreBar( Window ); }
+
+    else if ( !isFadeOutEnded() ) {
+
+        renderHealthBar( Window );
+        renderEnergyBar( Window );
+        renderMissileBar( Window );
+        renderScoreBar( Window );
+        renderFade( Window ); }
 
     Window.setView( ViewCopy ); }
+
+void PlayerInterface::onShot ( ) {
+
+    // ...
+
+    }
 
 void PlayerInterface::updateHealthBar ( sf::Time ElapsedTime ) {
 
@@ -121,7 +165,27 @@ void PlayerInterface::renderScoreBar ( sf::RenderWindow &Window ) {
 
     }
 
+void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
+
+    if ( FadeOutTime.asSeconds() < FadeOutDelay.asSeconds() ) {
+
+        return; }
+
+    sf::RectangleShape Fade;
+
+    Fade.setPosition( 0.f, 0.f );
+    Fade.setSize( sf::Vector2f( Viewport.width, Viewport.height ) );
+    Fade.setFillColor( sf::Color( 0, 0, 0, (sf::Uint8) ( 255.f * ( FadeOutTime.asSeconds() - FadeOutDelay.asSeconds() ) / ( FadeOutDuration.asSeconds() - FadeOutDelay.asSeconds() ) ) ) );
+
+    Window.draw( Fade ); }
+
 void PlayerInterface::updateBar ( sf::Time ElapsedTime, std::vector <float> &Opacity, float BarMargin, float ElementSize, float ElementMargin, float Value, float Limit ) {
+
+    if ( ( Viewport.height - 2.f * BarMargin ) < 0.f ) {
+
+        Opacity.clear();
+
+        return; }
 
     auto BarSize = (unsigned int) ( ( Viewport.height - 2.f * BarMargin ) / ( ElementSize + ElementMargin ) );
 
@@ -157,9 +221,9 @@ void PlayerInterface::updateBar ( sf::Time ElapsedTime, std::vector <float> &Opa
 
 void PlayerInterface::renderBar ( sf::RenderWindow &Window, std::vector <float> Opacity, sf::Color Color, sf::Vector2f BarMargin, sf::Vector2f ElementSize, sf::Vector2f ElementMargin ) {
 
-    ElementSize.y = ( Viewport.height - 2 * BarMargin.y + ElementMargin.y ) / HealthBarOpacity.size() - ElementMargin.y;
+    ElementSize.y = ( Viewport.height - 2 * BarMargin.y + ElementMargin.y ) / Opacity.size() - ElementMargin.y;
 
-    for ( unsigned int i = 0; i < HealthBarOpacity.size(); i++ ) {
+    for ( unsigned int i = 0; i < Opacity.size(); i++ ) {
 
         sf::Vector2f ElementPosition;
         sf::RectangleShape Element;
@@ -169,6 +233,8 @@ void PlayerInterface::renderBar ( sf::RenderWindow &Window, std::vector <float> 
 
         Element.setPosition( ElementPosition );
         Element.setSize( ElementSize );
+        Element.setOutlineThickness( 1.f );
         Element.setFillColor( sf::Color( Color.r, Color.g, Color.b, (sf::Uint8) ( Opacity[i] * 255.f ) ) );
+        Element.setOutlineColor( sf::Color( Color.r, Color.g, Color.b, 127 ) );
 
         Window.draw( Element ); } }

@@ -14,8 +14,13 @@ public:
     void setSpaceship ( Spaceship * MySpaceship );
     void setViewport ( sf::FloatRect Viewport );
 
+    void beginFadeOut ( );
+    bool isFadeOutEnded ( );
+
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
+
+    void onShot ( );
 
 private:
 
@@ -26,6 +31,7 @@ private:
     void renderEnergyBar ( sf::RenderWindow &Window );
     void renderMissileBar ( sf::RenderWindow &Window );
     void renderScoreBar ( sf::RenderWindow &Window );
+    void renderFade ( sf::RenderWindow &Window );
 
     void updateBar ( sf::Time ElapsedTime, std::vector <float> &Opacity, float BarMargin, float ElementSize, float ElementMargin, float Value, float Limit );
     void renderBar ( sf::RenderWindow &Window, std::vector <float> Opacity, sf::Color Color, sf::Vector2f BarMargin, sf::Vector2f ElementSize, sf::Vector2f ElementMargin );
@@ -40,6 +46,11 @@ private:
     float ActivatedOpacity;
     float UnactivatedOpacity;
     sf::Time TransitionDuration;
+
+    bool FadeOut;
+    sf::Time FadeOutTime;
+    sf::Time FadeOutDelay;
+    sf::Time FadeOutDuration;
 
     float Health;
     float HealthLimit;

@@ -12,7 +12,7 @@ public:
 
         MinimumVelocity = 50.f;
         MaximumVelocity = 150.f;
-        MinimumDistance = 50.f;
+        MinimumDistance = 100.f;
         MinimumThrustEnergy = 50.f;
         MinimumRayShotEnergy = 100.f;
 

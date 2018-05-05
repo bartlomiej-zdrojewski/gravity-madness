@@ -53,6 +53,10 @@ void Body::setPosition ( sf::Vector2f Position ) {
 
 void Body::updatePosition ( sf::Time ElapsedTime ) {
 
+    if ( Destructed ) {
+
+        return; }
+
     Position += Velocity * ElapsedTime.asSeconds(); }
 
 sf::Vector2f Body::getVelocity ( ) {
@@ -68,6 +72,10 @@ void Body::setVelocity ( sf::Vector2f Velocity ) {
     this->Velocity = Velocity; }
 
 void Body::updateVelocity ( sf::Vector2f Acceleration, sf::Time ElapsedTime ) {
+
+    if ( Destructed ) {
+
+        return; }
 
     Velocity += Acceleration * ElapsedTime.asSeconds(); }
 

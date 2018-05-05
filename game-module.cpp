@@ -12,12 +12,19 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     AsteroidCount = 5;
 
     AsteroidPauseDuration = sf::seconds( 5.f );
-    AsteroidPauseTime = sf::seconds( 0.f );
+    AsteroidPauseTime = sf::seconds( 30.f );
+
+    PowerUpPauseDuration = sf::seconds( 10.f );
+    PowerUpPauseTime = sf::seconds( 30.f );
 
     for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
 
         PlayerSpaceship[i] = nullptr;
         Interface[i] = new PlayerInterface ( Graphics ); }
+
+    GravityPowerUp = nullptr;
+    AsteroidPowerUp = nullptr;
+    PowerUpRadius = 15.f;
 
     // TEMP ->
 
@@ -56,17 +63,10 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     S->setController( C3 );
     //Spaceships.push_back( S );
 
+    auto * Pu = new PowerUp ( PowerUpRadius, sf::seconds( 30.f ), &Gravity, &AsteroidCount );
+    PowerUps.push_back( Pu );
+
     // -> TEMP
-
-    auto * PS = new ParticleSystem ( );
-    PS->setOriginPosition( sf::Vector2f( 750, 300 ) );
-    PS->generateParticles( 10000 );
-    //ParticleSystems.push_back( PS );
-
-    auto * A = new Asteroid ( 100, 15 );
-    A->setPosition( sf::Vector2f( 900, 200 ) );
-    A->setVelocity( sf::Vector2f( -0, 0 ) );
-    Asteroids.push_back( A );
 
     prepareAreaLimit();
 
@@ -90,11 +90,23 @@ void GameModule::update ( ) {
         updateRayShots( ElapsedTime );
         updateMissiles( ElapsedTime );
         updatePowerUps( ElapsedTime );
-        updateParticleSystems( ElapsedTime ); }
+        updateParticleSystems( ElapsedTime );
 
-    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+        updateViews();
 
-        Interface[i]->update( ElapsedTime ); }
+        for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+            Interface[i]->setViewport( Views[i].getViewport() );
+
+            if ( PlayerSpaceship[i] ) {
+
+                Views[i].setCenter( PlayerSpaceship[i]->getPosition() ); }
+
+            else if ( !Interface[i]->isFadeOutEnded() ) {
+
+                Views[i].setCenter( Views[i].getCenter() + PlayerFinalVelocity[i] * ElapsedTime.asSeconds() ); }
+
+            Interface[i]->update( ElapsedTime ); } }
 
     // TODO CHECK FOR MODE CHANGE
 
@@ -110,67 +122,55 @@ void GameModule::update ( sf::Event &Event ) {
 
     }
 
-void GameModule::render ( sf::RenderWindow &Window ) { // TODO VIEW FOR EACH PLAYER
+void GameModule::render ( sf::RenderWindow &Window ) {
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        float ViewWidth = Graphics->getWindowWidth();
-        float ViewHeight = Graphics->getWindowHeight();
+        Window.setView( Views[i] );
 
-        // TODO SET VIEWPORT
-        Interface[0]->setViewport( sf::FloatRect( 0.f, 0.f, ViewWidth, ViewHeight ) );
+        if ( PlayerSpaceship[i] || !Interface[i]->isFadeOutEnded() ) {
 
-        if ( PlayerSpaceship[i] ) {
+            renderAreaLimit( Window );
 
-            sf::View View = Window.getDefaultView();
-            sf::Vector2f Center = PlayerSpaceship[i]->getPosition();
+            for ( auto ActiveParticleSystem : ParticleSystems ) {
 
-            // Center.x += ( ViewWidth * 0.17f ) * cosf( PlayerSpaceship->getVelocityAngle() );
-            // Center.y += ( ViewHeight * 0.17f ) * sinf( PlayerSpaceship->getVelocityAngle() );
+                if ( isOnScreen( ActiveParticleSystem->getInfluenceArea() ) ) {
 
-            View.setCenter( Center );
-            View.setSize( ViewWidth, ViewHeight );
-            // View.setRotation( ( PlayerSpaceship->getVelocityAngle() * 180.f / 3.14f ) + 90.f );
-            View.zoom( 800.f / Graphics->getWindowHeight() );
+                    ActiveParticleSystem->render( Window ); } }
 
-            Window.setView( View ); }
+            for ( auto ActiveRayShot : RayShots ) {
 
-        // TODO MOVE 'SET VIEW' HERE
+                ActiveRayShot->render( Window ); }
 
-        renderAreaLimit( Window );
+            for ( auto ActivePowerUp : PowerUps ) {
 
-        for ( auto ActiveParticleSystem : ParticleSystems ) {
+                ActivePowerUp->render( Window ); }
 
-            if ( isOnScreen( ActiveParticleSystem->getInfluenceArea() ) ) {
+            for ( auto ActivePlanet : Planets ) {
 
-                ActiveParticleSystem->render( Window ); } }
+                if ( isOnScreen( ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
 
-        for ( auto ActiveRayShot : RayShots ) {
+                    ActivePlanet->render( Window ); } }
 
-            ActiveRayShot->render( Window ); }
+            for ( auto ActiveAsteroid : Asteroids ) {
 
-        for ( auto ActivePlanet : Planets ) {
+                if ( isOnScreen( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
 
-            if ( isOnScreen( ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
+                    ActiveAsteroid->render( Window ); } }
 
-                ActivePlanet->render( Window ); } }
+            for ( auto ActiveSpaceship : Spaceships ) {
 
-        for ( auto ActiveAsteroid : Asteroids ) {
+                if ( isOnScreen( ActiveSpaceship->getPosition(), ActiveSpaceship->getInfluenceRadius() ) ) {
 
-            if ( isOnScreen( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
+                    ActiveSpaceship->render( Window ); } }
 
-                ActiveAsteroid->render( Window ); } }
+            // TODO MISSILES
 
-        for ( auto ActiveSpaceship : Spaceships ) {
+            }
 
-            if ( isOnScreen( ActiveSpaceship->getPosition(), ActiveSpaceship->getInfluenceRadius() ) ) {
+        Interface[i]->render( Window ); }
 
-                ActiveSpaceship->render( Window ); } }
-
-        // TODO MISSILES
-        // TODO POWER UPS
-
-        Interface[i]->render( Window ); } }
+    renderViewsOutline( Window ); }
 
 void GameModule::destructBody ( Body * Object ) {
 
@@ -185,6 +185,8 @@ void GameModule::destructBody ( Body * Object ) {
         if ( Object == PlayerSpaceship[i] ) {
 
             Interface[i]->update( sf::seconds( 0.01f ) );
+            Interface[i]->beginFadeOut();
+            PlayerFinalVelocity[i] = PlayerSpaceship[i]->getVelocity();
 
             PlayerSpaceship[i] = nullptr;
             Interface[i]->setSpaceship( nullptr );
@@ -590,9 +592,13 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 if ( isPlayer( Target ) ) {
 
-                    // TODO SCREEN EFFECT IN INTERFACE
+                    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-                    }
+                        if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                            Interface[i]->onShot();
+
+                            break; } } }
 
                 else if ( ActiveSpaceship->getController() != nullptr ) {
 
@@ -616,11 +622,9 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
         if ( ActiveSpaceship->onMissileShot() ) { std::cout << "MISSILE SHOT\n";
 
-            // TODO
+            // TODO CREATE MISSILE
 
-            }
-
-        }
+            } }
 
     for ( auto i = Spaceships.begin(); i != Spaceships.end(); i++ ) {
 
@@ -628,6 +632,109 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             destructBody( *i );
             i = Spaceships.erase( i ); } } }
+
+void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
+
+    // TODO
+
+    }
+
+void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
+
+    PowerUpPauseTime -= ElapsedTime;
+
+    if ( PowerUpPauseTime.asSeconds() <= 0.f ) {
+
+        PowerUpPauseTime = PowerUpPauseDuration;
+
+        sf::Vector2f Position;
+        float MinimumPlanetDistance = 150.f;
+        float MinimumPowerUpDistance = 50.f;
+        unsigned int Attempts = 25;
+
+        while ( Attempts > 0 && Position == sf::Vector2f ( 0.f, 0.f ) ) {
+
+            float Angle = ( - PI ) + getRandomFloat() * 2.f * PI;
+
+            Position.x = getRandomFloat() * ( AreaRadius - 500.f ) * cosf( Angle );
+            Position.y = getRandomFloat() * ( AreaRadius - 500.f ) * sinf( Angle );
+
+            for ( auto ActivePlanet : Planets ) {
+
+                if ( getMinDistance( Position, ActivePlanet->getPosition() ) <= ( MinimumPlanetDistance + ActivePlanet->getRadius() ) ) {
+
+                    if ( getDistance( Position, ActivePlanet->getPosition() ) <= ( MinimumPlanetDistance + ActivePlanet->getRadius() ) ) {
+
+                        Position = sf::Vector2f ( 0.f, 0.f ); } } }
+
+            for ( auto ActivePowerUp : PowerUps ) {
+
+                if ( getMinDistance( Position, ActivePowerUp->getPosition() ) <= ( MinimumPowerUpDistance + ActivePowerUp->getRadius() ) ) {
+
+                    if ( getDistance( Position, ActivePowerUp->getPosition() ) <= ( MinimumPowerUpDistance + ActivePowerUp->getRadius() ) ) {
+
+                        Position = sf::Vector2f ( 0.f, 0.f ); } } }
+
+            Attempts--; }
+
+        if ( Attempts > 0 ) { // TODO GENERATE DIFFERENT POWER UPS
+
+            auto * NewPowerUp = new PowerUp ( PowerUpRadius, sf::seconds( 30.f ), &Gravity, &AsteroidCount );
+
+            NewPowerUp->setPosition( Position );
+
+            PowerUps.push_back( NewPowerUp );
+
+            } }
+
+    for ( auto ActivePowerUp : PowerUps ) {
+
+        if ( !ActivePowerUp->isCaught() ) {
+
+            for ( auto ActiveSpaceship : Spaceships ) {
+
+                float MinimumDistance = ActivePowerUp->getRadius() + ActiveSpaceship->getRadius();
+
+                if ( getMinDistance( ActivePowerUp->getPosition(), ActiveSpaceship->getPosition() ) <= MinimumDistance ) {
+
+                    if ( getDistance( ActivePowerUp->getPosition(), ActiveSpaceship->getPosition() ) <= MinimumDistance ) {
+
+                        ActivePowerUp->onCatch( ActiveSpaceship );
+
+                        if ( ActivePowerUp->isGravityModifier() ) {
+
+                            if ( GravityPowerUp != nullptr ) {
+
+                                GravityPowerUp->finish(); }
+
+                            GravityPowerUp = ActivePowerUp; }
+
+                        if ( ActivePowerUp->isAsteroidModifier() ) {
+
+                            if ( AsteroidPowerUp != nullptr ) {
+
+                                AsteroidPowerUp->finish(); }
+
+                            AsteroidPowerUp = ActivePowerUp; }
+
+                        break; } } } }
+
+        ActivePowerUp->update( ElapsedTime ); }
+
+    for ( auto i = PowerUps.begin(); i != PowerUps.end(); i++ ) {
+
+        if ( (*i)->isExpired() ) {
+
+            if ( (*i) == GravityPowerUp ) {
+
+                GravityPowerUp = nullptr; }
+
+            if ( (*i) == AsteroidPowerUp ) {
+
+                AsteroidPowerUp = nullptr; }
+
+            delete (*i);
+            i = PowerUps.erase( i ); } } }
 
 void GameModule::updateRayShots ( sf::Time ElapsedTime ) {
 
@@ -642,18 +749,6 @@ void GameModule::updateRayShots ( sf::Time ElapsedTime ) {
             delete (*i);
             i = RayShots.erase( i ); } } }
 
-void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
-
-    // TODO
-
-    }
-
-void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
-
-    // TODO
-
-    }
-
 void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
     for ( auto ActiveParticleSystem : ParticleSystems ) {
@@ -666,6 +761,56 @@ void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
             delete (*i);
             i = ParticleSystems.erase( i ); } } }
+
+void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
+
+    float ViewWidth = ( 800.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
+    float ViewHeight = 800.f;
+
+    if ( PlayerCount == 1 ) {
+
+        Views[0].setSize( ViewWidth, ViewHeight );
+        Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 1.f, 1.f ) ); }
+
+    else if ( PlayerCount == 2 ) {
+
+        if ( ViewWidth >= ViewHeight ) {
+
+            Views[0].setSize( ViewWidth / 2.f, ViewHeight );
+            Views[1].setSize( ViewWidth / 2.f, ViewHeight );
+            Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 0.5f, 1.f ) );
+            Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 1.f ) ); }
+
+        else {
+
+            Views[0].setSize( ViewWidth, ViewHeight / 2.f );
+            Views[1].setSize( ViewWidth, ViewHeight / 2.f );
+            Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 1.f, 0.5f ) );
+            Views[1].setViewport( sf::FloatRect( 0.f, 0.5f, 1.f, 0.5f ) ); } }
+
+    else if ( PlayerCount == 3 ) {
+
+        Views[0].setSize( ViewWidth / 2.f, 0.6f * ViewHeight );
+        Views[1].setSize( ViewWidth / 2.f, 0.6f * ViewHeight );
+        Views[2].setSize( ViewWidth, 0.4f * ViewHeight );
+        Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 0.5f, 0.6f ) );
+        Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 0.6f ) );
+        Views[2].setViewport( sf::FloatRect( 0.f, 0.6f, 1.f, 0.4f ) ); }
+
+    else if ( PlayerCount == 4 ) {
+
+        Views[0].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
+        Views[1].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
+        Views[2].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
+        Views[3].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
+        Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 0.5f, 0.5f ) );
+        Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 0.5f ) );
+        Views[2].setViewport( sf::FloatRect( 0.f, 0.5f, 0.5f, 0.5f ) );
+        Views[3].setViewport( sf::FloatRect( 0.5f, 0.5f, 0.5f, 0.5f ) ); } }
+
+void GameModule::renderViewsOutline ( sf::RenderWindow &Window ) {
+
+    Window.draw( &ViewsOutline[0], ViewsOutline.size(), sf::Lines ); }
 
 void GameModule::prepareAreaLimit ( ) {
 

@@ -1,0 +1,60 @@
+#ifndef GRAVITY_MADNESS_POWER_UP_HPP
+#define GRAVITY_MADNESS_POWER_UP_HPP
+
+#include <SFML/Graphics.hpp>
+#include "spaceship.hpp"
+
+class PowerUp { // TODO TEST
+
+public:
+
+    PowerUp ( float Radius, sf::Time Duration, float * Gravity, unsigned int * AsteroidCount );
+
+    bool isCaught ( );
+    bool isExpired ( );
+
+    bool isGravityModifier ( );
+    bool isAsteroidModifier ( );
+
+    sf::Vector2f getPosition ( );
+    void setPosition ( sf::Vector2f Position );
+
+    float getRadius ( );
+    void setRadius ( float Radius );
+
+    void update ( sf::Time ElapsedTime );
+    void render ( sf::RenderWindow &Window );
+    void finish ( );
+
+    void onCatch ( Spaceship * MySpaceship );
+
+protected:
+
+    virtual void onEffectBegin ( ) { }
+    virtual void onEffectEnd ( ) { }
+
+    virtual void updateEffect ( sf::Time ElapsedTime ) {
+
+        Expired = true; };
+
+    Spaceship * MySpaceship;
+    float * Gravity;
+    unsigned int * AsteroidCount;
+
+    bool GravityModifier;
+    bool AsteroidModifier;
+
+    sf::Texture Texture;
+
+private:
+
+    bool Caught;
+    bool Expired;
+
+    float Radius;
+    sf::Vector2f Position;
+    sf::Time ExistenceTime;
+
+    };
+
+#endif
