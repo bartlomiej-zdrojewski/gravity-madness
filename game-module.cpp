@@ -11,11 +11,11 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     AreaRadius = 1500.f;
     AsteroidCount = 5;
 
-    AsteroidPauseDuration = sf::seconds( 5.f );
-    AsteroidPauseTime = sf::seconds( 30.f );
+    AsteroidPauseDuration = sf::seconds( 2.f );
+    AsteroidPauseTime = sf::seconds( 0.f );
 
     PowerUpPauseDuration = sf::seconds( 5.f );
-    PowerUpPauseTime = sf::seconds( 5.f );
+    PowerUpPauseTime = sf::seconds( 20.f );
 
     for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
 
@@ -29,7 +29,7 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
     // TEMP ->
 
     auto C = new PlayerController ( );
-    auto C2 = new AggressiveAIController ( );
+    auto C2 = new AIController ( );
 
     auto * P = new Planet ( 5000, 100 ); // density 0.0012 -> M = 0.0012 * ( 1.33f * M_PI * R * R * R )
     P->setPosition( sf::Vector2f( 400, 300 ) );
@@ -419,15 +419,16 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         auto * NewAsteroid = new Asteroid ( Mass, Radius );
 
-        float Angle = ( - PI ) + getRandomFloat() * ( 2.f * PI ) + ( - PI / 6.f ) + getRandomFloat() * ( PI / 3.f );
+        float Angle = getRandomFloat() * ( 2.f * PI );
+        float AngleFluctuation = ( - PI / 6.f ) + getRandomFloat() * ( PI / 3.f );
         float Distance = AreaRadius + 1000.f;
 
         NewAsteroid->setPosition( sf::Vector2f( Distance * cosf( Angle ), Distance * sinf( Angle ) ) );
-        NewAsteroid->setVelocity( sf::Vector2f( 50.f * cosf( Angle - PI ), 50.f * sinf( Angle - PI ) ) );
+        NewAsteroid->setVelocity( sf::Vector2f( 50.f * cosf( Angle - PI + AngleFluctuation ), 50.f * sinf( Angle - PI + AngleFluctuation ) ) );
 
         Asteroids.push_back( NewAsteroid ); }
 
-    // Update gravity acceleration, detect collisions with planets and spaceships
+    // Update gravity acceleration, detect collisions with planets
 
     for ( auto ActiveAsteroid : Asteroids ) {
 
@@ -446,26 +447,6 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
                 if ( true ) { // TODO SUPER ACCURATE CHECK
 
                     ParticleSystem * Explosion = ActiveAsteroid->onCollision( ActivePlanet );
-
-                    if ( Explosion ) {
-
-                        ParticleSystems.push_back( Explosion ); } } } }
-
-        for ( auto ActiveSpaceship : Spaceships ) {
-
-            sf::Vector2f Acceleration;
-            float Distance = getDistance( ActiveAsteroid->getPosition(), ActiveSpaceship->getPosition() );
-
-            Acceleration.x -= Gravity * ActiveSpaceship->getMass() * ( ActiveAsteroid->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance );
-            Acceleration.y -= Gravity * ActiveSpaceship->getMass() * ( ActiveAsteroid->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance );
-
-            ActiveAsteroid->updateVelocity( Acceleration, ElapsedTime );
-
-            if ( Distance <= ( ActiveAsteroid->getRadius() + ActiveSpaceship->getRadius() ) ) {
-
-                if ( true ) { // TODO SUPER ACCURATE CHECK
-
-                    ParticleSystem * Explosion = ActiveAsteroid->onCollision( ActiveSpaceship );
 
                     if ( Explosion ) {
 
@@ -500,6 +481,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
                         if ( Explosion ) {
 
                             ParticleSystems.push_back( Explosion ); } } } } } }
+
+    // Update asteroids' state
 
     for ( auto ActiveAsteroid : Asteroids ) {
 
@@ -814,11 +797,16 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
                     if ( true ) { // TODO SUPER ACCURATE CHECK
 
-                        ParticleSystem * Explosion = FirstMissile->onCollision( SecondMissile );
+                        ParticleSystem * FirstExplosion = FirstMissile->onCollision( SecondMissile );
+                        ParticleSystem * SecondExplosion = SecondMissile->onCollision( FirstMissile );
 
-                        if ( Explosion ) {
+                        if ( FirstExplosion ) {
 
-                            ParticleSystems.push_back( Explosion ); } } } } } }
+                            ParticleSystems.push_back( FirstExplosion ); }
+
+                        if ( SecondExplosion ) {
+
+                            ParticleSystems.push_back( SecondExplosion ); } } } } } }
 
     // Update missiles' state
 

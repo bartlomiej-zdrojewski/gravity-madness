@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "body.hpp"
+#include "body-collision.hpp"
 #include "planet.hpp"
 #include "spaceship.hpp"
 
@@ -29,7 +30,6 @@ public:
 
     ParticleSystem * onCollision ( Planet * Other );
     ParticleSystem * onCollision ( Asteroid * Other );
-    ParticleSystem * onCollision ( Spaceship * Other );
 
 private:
 

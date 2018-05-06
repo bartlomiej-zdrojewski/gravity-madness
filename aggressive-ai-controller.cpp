@@ -1,4 +1,3 @@
-#include <iostream>
 #include "aggressive-ai-controller.hpp"
 
 void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {

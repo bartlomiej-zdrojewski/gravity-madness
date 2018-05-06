@@ -11,32 +11,19 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62bf6682-e578-46fe-be45-0f9be21c3950" name="Default" comment="Power Ups">
-      <change afterPath="$PROJECT_DIR$/docs/pl/project/docs/classes.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/pl/project/docs/controllers.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/pl/project/docs/gameplay.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/pl/project/docs/index.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/pl/project/docs/modules.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/pl/project/docs/spaceships.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/pl/project/mkdocs.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/energy-power-up.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/energy-power-up.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/missile.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/missile.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="62bf6682-e578-46fe-be45-0f9be21c3950" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/body-collision.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/body-collision.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aggressive-ai-controller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aggressive-ai-controller.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ai-controller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ai-controller.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ai-controller.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/ai-controller.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asteroid.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/asteroid.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asteroid.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/asteroid.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/graphics-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player-controller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/player-controller.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/player-interface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/player-interface.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/power-up.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/power-up.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/missile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/missile.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/missile.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/missile.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/power-up.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/power-up.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/world-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/world-module.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spaceship.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -52,101 +39,10 @@
     <favorites_list name="gravity_madness" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="game-module.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/game-module.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="819" selection-start-line="819" selection-end-line="819" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="aggressive-ai-controller.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/aggressive-ai-controller.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="54" column="33" selection-start-line="54" selection-start-column="33" selection-end-line="54" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="spaceship.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spaceship.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="33" />
-              <folding>
-                <element signature="e#69#92#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="missile.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/missile.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="38" selection-end-column="54" />
-              <folding>
-                <element signature="e#73#96#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="player-interface.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/player-interface.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1400">
-              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="player-controller.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/player-controller.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="missile.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/missile.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="82" column="52" lean-forward="true" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>tolowe</find>
-      <find>defa</find>
-      <find>iostream</find>
-      <find>rayta</find>
-      <find>getan</find>
-      <find>POWer UPS</find>
-      <find>Angle</find>
-      <find>powerup</find>
-      <find>settar</find>
-      <find>log.txt</find>
-      <find>gamemodule</find>
-      <find>i to</find>
       <find>Poniże</find>
       <find>Body</find>
       <find>SFML</find>
@@ -165,6 +61,18 @@
       <find>MISSILE SH</find>
       <find>updates</find>
       <find>detect co</find>
+      <find>atan2</find>
+      <find>SecondMiss</find>
+      <find>getrayta</find>
+      <find>iostream</find>
+      <find>getdista</find>
+      <find>float getdista</find>
+      <find>float getDistance</find>
+      <find>generat</find>
+      <find>updatevie</find>
+      <find>first</find>
+      <find>0.2</find>
+      <find>TODO</find>
     </findStrings>
     <replaceStrings>
       <replace>Font</replace>
@@ -184,9 +92,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/scripts/settings.xml" />
-        <option value="$PROJECT_DIR$/spaceship-controller.cpp" />
         <option value="$PROJECT_DIR$/ray.cpp" />
         <option value="$PROJECT_DIR$/aggressive-ai-controller.hpp" />
         <option value="$PROJECT_DIR$/player-controller.hpp" />
@@ -203,13 +108,10 @@
         <option value="$PROJECT_DIR$/logger-manager.hpp" />
         <option value="$PROJECT_DIR$/graphics-module.hpp" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/asteroid.hpp" />
-        <option value="$PROJECT_DIR$/asteroid.cpp" />
         <option value="$PROJECT_DIR$/cmake-build-release/scripts/settings.xml" />
         <option value="$PROJECT_DIR$/player-interface.hpp" />
         <option value="$PROJECT_DIR$/body.cpp" />
         <option value="$PROJECT_DIR$/spaceship.hpp" />
-        <option value="$PROJECT_DIR$/spaceship.cpp" />
         <option value="$PROJECT_DIR$/player-interface.cpp" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/power-up.hpp" />
@@ -231,10 +133,16 @@
         <option value="$PROJECT_DIR$/power-up.cpp" />
         <option value="$PROJECT_DIR$/game-module.hpp" />
         <option value="$PROJECT_DIR$/player-controller.cpp" />
-        <option value="$PROJECT_DIR$/game-module.cpp" />
         <option value="$PROJECT_DIR$/docs/pl/project/docs/gameplay.md" />
+        <option value="$PROJECT_DIR$/collision.hpp" />
+        <option value="$PROJECT_DIR$/body-collision.hpp" />
         <option value="$PROJECT_DIR$/missile.hpp" />
         <option value="$PROJECT_DIR$/missile.cpp" />
+        <option value="$PROJECT_DIR$/asteroid.hpp" />
+        <option value="$PROJECT_DIR$/asteroid.cpp" />
+        <option value="$PROJECT_DIR$/body-collision.cpp" />
+        <option value="$PROJECT_DIR$/game-module.cpp" />
+        <option value="$PROJECT_DIR$/spaceship.cpp" />
       </list>
     </option>
   </component>
@@ -258,7 +166,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -270,6 +177,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -338,7 +246,8 @@
       <workItem from="1525461911844" duration="7913000" />
       <workItem from="1525510800791" duration="4458000" />
       <workItem from="1525520632959" duration="118000" />
-      <workItem from="1525524610837" duration="22914000" />
+      <workItem from="1525524610837" duration="23157000" />
+      <workItem from="1525591445301" duration="15074000" />
     </task>
     <task id="LOCAL-00001" summary="Gitignore">
       <created>1523705590203</created>
@@ -445,24 +354,31 @@
       <option name="project" value="LOCAL" />
       <updated>1525516038418</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Missiles and documentation">
+      <created>1525553009980</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1525553009980</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="232359000" />
+    <option name="totallyTimeSpent" value="247676000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Messages" order="0" visible="true" weight="0.32051283" />
+      <window_info active="true" anchor="bottom" id="Messages" order="0" visible="true" weight="0.32051283" />
       <window_info anchor="bottom" id="CMake" order="8" weight="0.32905984" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" weight="0.32915717" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Serial Monitor" order="10" />
       <window_info anchor="bottom" id="Run" order="3" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32905984" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32905984" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.5045558" side_tool="true" weight="0.25725028" />
@@ -498,7 +414,8 @@
     <MESSAGE value="Little bigger clean-up" />
     <MESSAGE value="Asteroids" />
     <MESSAGE value="Power Ups" />
-    <option name="LAST_COMMIT_MESSAGE" value="Power Ups" />
+    <MESSAGE value="Missiles and documentation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Missiles and documentation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -506,13 +423,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/spaceship-controller.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="36" column="28" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/script.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -552,16 +462,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="9" lean-forward="true" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
         </state>
       </provider>
     </entry>
@@ -631,13 +531,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/asteroid.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -690,13 +583,6 @@
           <folding>
             <element signature="e#75#103#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ai-controller.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="54" column="80" selection-start-line="54" selection-start-column="80" selection-end-line="54" selection-end-column="80" />
         </state>
       </provider>
     </entry>
@@ -771,9 +657,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/definitions.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -791,13 +674,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/asteroid.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="37" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/power-up.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -805,64 +681,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/game-module.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="49" column="4" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="77" />
-          <folding>
-            <element signature="e#73#93#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spaceship.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="123">
-          <caret line="293" lean-forward="true" selection-start-line="293" selection-end-line="293" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/aggressive-ai-controller.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="54" column="33" selection-start-line="54" selection-start-column="33" selection-end-line="54" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spaceship.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="33" />
-          <folding>
-            <element signature="e#69#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/player-interface.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1400">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+        <state relative-caret-position="476">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/player-controller.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
+        <state relative-caret-position="561">
           <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game-module.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="819" selection-start-line="819" selection-end-line="819" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -902,22 +731,114 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/aggressive-ai-controller.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="918">
+          <caret line="54" column="33" selection-start-line="54" selection-start-column="33" selection-end-line="54" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spaceship.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="33" />
+          <folding>
+            <element signature="e#69#92#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/missile.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="38" selection-end-column="54" />
+        <state relative-caret-position="582">
+          <caret line="53" column="50" selection-start-line="53" selection-start-column="50" selection-end-line="53" selection-end-column="50" />
           <folding>
             <element signature="e#73#96#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/body-collision.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="4" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/asteroid.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ai-controller.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="918">
+          <caret line="54" column="80" selection-start-line="54" selection-start-column="80" selection-end-line="54" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/missile.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="82" column="52" lean-forward="true" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
+        <state relative-caret-position="1364">
+          <caret line="173" column="42" lean-forward="true" selection-start-line="173" selection-start-column="42" selection-end-line="173" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/body-collision.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-221">
+          <caret line="2" column="76" lean-forward="true" selection-start-line="2" selection-start-column="76" selection-end-line="2" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game-module.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="3" column="54" lean-forward="true" selection-start-line="3" selection-start-column="54" selection-end-line="3" selection-end-column="54" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spaceship.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" column="23" lean-forward="true" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/asteroid.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-78">
+          <caret line="48" column="57" lean-forward="true" selection-start-line="48" selection-start-column="57" selection-end-line="48" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game-module.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="45" column="43" lean-forward="true" selection-start-line="45" selection-start-column="43" selection-end-line="45" selection-end-column="43" />
+          <folding>
+            <element signature="e#73#93#0" expanded="true" />
           </folding>
         </state>
       </provider>

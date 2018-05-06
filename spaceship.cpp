@@ -1,3 +1,4 @@
+#include <iostream>
 #include "spaceship.hpp"
 
 Spaceship::~Spaceship ( ) {
@@ -208,10 +209,7 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
                 MissileShot = true; } } }
 
-    updatePosition( ElapsedTime );
-    // ...
-
-    }
+    updatePosition( ElapsedTime ); }
 
 void Spaceship::render ( sf::RenderWindow &Window ) { // TODO
 
@@ -267,24 +265,84 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
 
     setHealth( 0.f );
     setEnergy( 0.f );
-    setVelocity( sf::Vector2f( 0.f, 0.f ) );
+    setVelocity( sf::Vector2f( 0.f, 0.f ) );// Necessary for PlayerFinalVelocity
     destruct();
 
     return Explosion; }
 
 ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
-    // TODO MAKE DAMAGE AND DESTRUCT IF NECESSARY
-    return nullptr;
+    float Distance;
+    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.7f );
 
-    }
+    setVelocity( Collision.getFirstVelocity() );
+    Other->setVelocity( Collision.getSecondVelocity() );
+
+    updateHealth( - 0.5f * Collision.getReleasedEnergy() );
+
+    if ( getVelocity() == sf::Vector2f( 0.f, 0.f ) && Other->getVelocity() == sf::Vector2f ( 0.f, 0.f ) ) {
+
+        setVelocity( sf::Vector2f( 1.f, 0.f ) );
+        Other->setVelocity( sf::Vector2f( - 1.f, 0.f ) ); }
+
+    do {
+
+        updatePosition( sf::seconds( 0.01f ) );
+        Other->updatePosition( sf::seconds( 0.01f ) );
+
+        float DistanceX = getPosition().x - Other->getPosition().x;
+        float DistanceY = getPosition().y - Other->getPosition().y;
+        Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
+
+    while ( Distance <= ( getRadius() + Other->getRadius() ) );
+
+    if ( isDestructed() ) {
+
+        auto * Explosion = new ParticleSystem ( );
+        float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
+        float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+        ExplosionOnDestruction = false;
+
+        Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( Other->getRadius() * cosf( Normal ), Other->getRadius() * sinf( Normal ) ) );
+        Explosion->setOriginVelocity( getVelocity() );
+        Explosion->setAngleRange( getVelocityAngle(), 2.f * PI / 3.f );
+        Explosion->setVelocityRange( 5.f, 15.f + 0.5f * Velocity );
+        Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
+        Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 4.f ) );
+        Explosion->generateParticles( Velocity > 200.f ? 10000 : 5000 );
+
+        return Explosion; }
+
+    return nullptr; }
 
 ParticleSystem *  Spaceship::onCollision ( Spaceship * Other ) {
 
-    // TODO MAKE DAMAGE AND DESTRUCT IF NECESSARY
-    return nullptr;
+    float Distance;
+    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.7f );
 
-    }
+    setVelocity( Collision.getFirstVelocity() );
+    Other->setVelocity( Collision.getSecondVelocity() );
+
+    updateHealth( - 0.5f * Collision.getReleasedEnergy() );
+    Other->updateHealth( - 0.5f * Collision.getReleasedEnergy() );
+
+    if ( getVelocity() == sf::Vector2f( 0.f, 0.f ) && Other->getVelocity() == sf::Vector2f ( 0.f, 0.f ) ) {
+
+        setVelocity( sf::Vector2f( 1.f, 0.f ) );
+        Other->setVelocity( sf::Vector2f( - 1.f, 0.f ) ); }
+
+    do {
+
+        updatePosition( sf::seconds( 0.01f ) );
+        Other->updatePosition( sf::seconds( 0.01f ) );
+
+        float DistanceX = getPosition().x - Other->getPosition().x;
+        float DistanceY = getPosition().y - Other->getPosition().y;
+        Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
+
+    while ( Distance <= ( getRadius() + Other->getRadius() ) );
+
+    return nullptr; }
 
 ParticleSystem * Spaceship::onDestruction ( ) {
 

@@ -3,6 +3,7 @@
 
 #include "asteroid.hpp"
 #include "body.hpp"
+#include "body-collision.hpp"
 #include "definitions.hpp"
 #include "graphics-module.hpp"
 #include "particle-system.hpp"

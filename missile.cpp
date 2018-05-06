@@ -1,4 +1,3 @@
-#include <iostream>
 #include "missile.hpp"
 
 float Missile::getInfluenceRadius ( ) {
@@ -99,37 +98,89 @@ void Missile::render ( sf::RenderWindow &Window ) { // TODO
 
     }
 
-ParticleSystem * Missile::onCollision ( Planet * Other ) { // TODO
+ParticleSystem * Missile::onCollision ( Planet * Other ) {
+
+    auto * Explosion = new ParticleSystem ( );
+    float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
+    float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+    ExplosionOnDestruction = false;
+
+    Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( Other->getRadius() * cosf( Normal ), Other->getRadius() * sinf( Normal ) ) );
+    Explosion->setOriginVelocity( sf::Vector2f( 0, 0 ) );
+    Explosion->setAngleRange( Normal, PI / 2.f );
+    Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
+    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
+    Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) + Velocity > 200.f ? 1000 : 500 );
 
     destruct();
-    return nullptr;
 
-    }
+    return Explosion; }
 
-ParticleSystem * Missile::onCollision ( Asteroid * Other ) { // TODO
+ParticleSystem * Missile::onCollision ( Asteroid * Other ) {
 
+    BodyCollision Collision ( BodyCollision::Types::Inelastic, this, Other );
+    auto * Explosion = new ParticleSystem ( );
+    float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
+    float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+    ExplosionOnDestruction = false;
+
+    Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( Other->getRadius() * cosf( Normal ), Other->getRadius() * sinf( Normal ) ) );
+    Explosion->setOriginVelocity( Collision.getSecondVelocity() );
+    Explosion->setAngleRange( Normal, PI / 2.f );
+    Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
+    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
+    Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) + Velocity > 200.f ? 1000 : 500 );
+
+    Other->setVelocity( Collision.getSecondVelocity() );
     destruct();
-    return nullptr;
 
-    }
+    return Explosion; }
 
-ParticleSystem * Missile::onCollision ( Spaceship * Other ) { // TODO
+ParticleSystem * Missile::onCollision ( Spaceship * Other ) {
+
+    BodyCollision Collision ( BodyCollision::Types::Inelastic, this, Other );
+    auto * Explosion = new ParticleSystem ( );
+    float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
+    float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+    ExplosionOnDestruction = false;
+
+    Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( Other->getRadius() * cosf( Normal ), Other->getRadius() * sinf( Normal ) ) );
+    Explosion->setOriginVelocity( Collision.getSecondVelocity() );
+    Explosion->setAngleRange( Normal, PI / 3.f );
+    Explosion->setVelocityRange( 10.f, 20.f + 0.8f * Velocity );
+    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
+    Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) );
 
     Other->updateHealth( - ExplosionPower );
-
+    Other->updateHealth( - 0.25f * Collision.getReleasedEnergy() );
+    Other->setVelocity( Collision.getSecondVelocity() );
     destruct();
-    return nullptr;
 
-    }
+    return Explosion; }
 
 ParticleSystem * Missile::onCollision ( Missile * Other ) {
 
+    auto * Explosion = new ParticleSystem ( );
+    float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
+    float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+    ExplosionOnDestruction = false;
+
+    Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( Other->getRadius() * cosf( Normal ), Other->getRadius() * sinf( Normal ) ) );
+    Explosion->setOriginVelocity( sf::Vector2f( 0, 0 ) );
+    Explosion->setAngleRange( Normal, 0.8f * PI );
+    Explosion->setVelocityRange( - 10.f - 0.2f * Velocity, 20.f + 0.8f * Velocity );
+    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setDuration( sf::seconds( 0.2f ), sf::seconds( 2.f ) );
+    Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) );
+
     destruct();
-    return nullptr;
 
-    }
+    return Explosion; }
 
-ParticleSystem * Missile::onDestruction ( ) { // TODO
+ParticleSystem * Missile::onDestruction ( ) {
 
     if ( !ExplosionOnDestruction ) {
 
@@ -143,6 +194,6 @@ ParticleSystem * Missile::onDestruction ( ) { // TODO
     Explosion->setVelocityRange( - 100.f, 100.f );
     Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
     Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
-    Explosion->generateParticles( (unsigned int) ( ExplosionPower * 20 ) );
+    Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) );
 
     return Explosion; }

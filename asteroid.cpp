@@ -41,8 +41,6 @@ void Asteroid::render ( sf::RenderWindow &Window ) { // TODO
 
 ParticleSystem * Asteroid::onCollision ( Planet * Other ) {
 
-    destruct();
-
     auto * Explosion = new ParticleSystem ( );
     float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
     float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
@@ -55,18 +53,32 @@ ParticleSystem * Asteroid::onCollision ( Planet * Other ) {
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 4.f ) );
     Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 20000 : 10000 ) * ( getMass() / 10.f ) ) );
 
+    destruct();
+
     return Explosion; }
 
 ParticleSystem * Asteroid::onCollision ( Asteroid * Other ) {
 
-    // TODO
-    return nullptr;
+    float Distance;
+    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.7f );
 
-    }
+    setVelocity( Collision.getFirstVelocity() );
+    Other->setVelocity( Collision.getSecondVelocity() );
 
-ParticleSystem * Asteroid::onCollision ( Spaceship * Other ) {
+    if ( getVelocity() == sf::Vector2f( 0.f, 0.f ) && Other->getVelocity() == sf::Vector2f ( 0.f, 0.f ) ) {
 
-    // TODO
-    return nullptr;
+        setVelocity( sf::Vector2f( 1.f, 0.f ) );
+        Other->setVelocity( sf::Vector2f( - 1.f, 0.f ) ); }
 
-    }
+    do {
+
+        updatePosition( sf::seconds( 0.01f ) );
+        Other->updatePosition( sf::seconds( 0.01f ) );
+
+        float DistanceX = getPosition().x - Other->getPosition().x;
+        float DistanceY = getPosition().y - Other->getPosition().y;
+        Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
+
+    while ( Distance <= ( getRadius() + Other->getRadius() ) );
+
+    return nullptr; }

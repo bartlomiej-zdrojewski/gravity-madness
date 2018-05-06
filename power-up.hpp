@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "spaceship.hpp"
 
-class PowerUp { // TODO TEST
+class PowerUp {
 
 public:
 
