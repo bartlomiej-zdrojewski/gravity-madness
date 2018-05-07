@@ -2,7 +2,7 @@
 
 TODO
 
-## Kontroler gracza
+## Kontrolery graczy
 
 TODO
 

@@ -2,7 +2,7 @@
 
 TODO
 
-## Bazowe obiekty
+## Obiekty bazowe
 
 TODO
 
@@ -12,9 +12,10 @@ TODO
 
 ### Statki
 
-Szczegółowy opis w sekcji [statki](spaceships/).
+Szczegółowe informace o statkach znajdują sie w dziale
+[Statki](spaceships/).
 
-## Generowane obiekty
+## Obiekty generowane
 
 TODO
 
@@ -22,18 +23,18 @@ TODO
 
 TODO
 
-### Bonusy
-
-TODO
-
 ### Pociski
 
 TODO
 
-## Obszar
+### Bonusy
 
 TODO
 
-## Cel i warunki kończące
+## Obszar gry
+
+TODO
+
+## Warunki kończące
 
 TODO

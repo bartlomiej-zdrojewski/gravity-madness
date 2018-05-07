@@ -12,18 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62bf6682-e578-46fe-be45-0f9be21c3950" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/body-collision.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/body-collision.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aggressive-ai-controller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/aggressive-ai-controller.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asteroid.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/asteroid.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/asteroid.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/asteroid.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/missile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/missile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/missile.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/missile.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/power-up.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/power-up.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spaceship.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/pl/project/docs/controllers.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/pl/project/docs/controllers.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/pl/project/docs/gameplay.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/pl/project/docs/gameplay.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/pl/project/docs/modules.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/pl/project/docs/modules.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -39,7 +32,7 @@
     <favorites_list name="gravity_madness" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -107,7 +100,6 @@
         <option value="$PROJECT_DIR$/world-module.hpp" />
         <option value="$PROJECT_DIR$/logger-manager.hpp" />
         <option value="$PROJECT_DIR$/graphics-module.hpp" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/cmake-build-release/scripts/settings.xml" />
         <option value="$PROJECT_DIR$/player-interface.hpp" />
         <option value="$PROJECT_DIR$/body.cpp" />
@@ -126,14 +118,11 @@
         <option value="$PROJECT_DIR$/docs/pl/project/docs/index.md" />
         <option value="$PROJECT_DIR$/docs/pl/project/docs/board.md" />
         <option value="$PROJECT_DIR$/docs/pl/project/mkdocs.yml" />
-        <option value="$PROJECT_DIR$/docs/pl/project/docs/controllers.md" />
         <option value="$PROJECT_DIR$/docs/pl/project/docs/spaceships.md" />
-        <option value="$PROJECT_DIR$/docs/pl/project/docs/modules.md" />
         <option value="$PROJECT_DIR$/definitions.hpp" />
         <option value="$PROJECT_DIR$/power-up.cpp" />
         <option value="$PROJECT_DIR$/game-module.hpp" />
         <option value="$PROJECT_DIR$/player-controller.cpp" />
-        <option value="$PROJECT_DIR$/docs/pl/project/docs/gameplay.md" />
         <option value="$PROJECT_DIR$/collision.hpp" />
         <option value="$PROJECT_DIR$/body-collision.hpp" />
         <option value="$PROJECT_DIR$/missile.hpp" />
@@ -143,6 +132,10 @@
         <option value="$PROJECT_DIR$/body-collision.cpp" />
         <option value="$PROJECT_DIR$/game-module.cpp" />
         <option value="$PROJECT_DIR$/spaceship.cpp" />
+        <option value="$PROJECT_DIR$/docs/pl/project/docs/controllers.md" />
+        <option value="$PROJECT_DIR$/docs/pl/project/docs/gameplay.md" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/docs/pl/project/docs/modules.md" />
       </list>
     </option>
   </component>
@@ -166,6 +159,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -173,11 +167,36 @@
               <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
               <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="pl" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="pl" type="462c0819:PsiDirectoryNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
+              <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="pl" type="462c0819:PsiDirectoryNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="docs" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -247,7 +266,8 @@
       <workItem from="1525510800791" duration="4458000" />
       <workItem from="1525520632959" duration="118000" />
       <workItem from="1525524610837" duration="23157000" />
-      <workItem from="1525591445301" duration="15074000" />
+      <workItem from="1525591445301" duration="15144000" />
+      <workItem from="1525701318351" duration="11386000" />
     </task>
     <task id="LOCAL-00001" summary="Gitignore">
       <created>1523705590203</created>
@@ -361,26 +381,31 @@
       <option name="project" value="LOCAL" />
       <updated>1525553009980</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Collisions">
+      <created>1525643406318</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1525643406318</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="247676000" />
+    <option name="totallyTimeSpent" value="259132000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info active="true" anchor="bottom" id="Messages" order="0" visible="true" weight="0.32051283" />
       <window_info anchor="bottom" id="CMake" order="8" weight="0.32905984" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" weight="0.32915717" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Serial Monitor" order="10" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32905984" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.32905984" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32905984" />
       <window_info id="Favorites" order="2" sideWeight="0.5045558" side_tool="true" weight="0.25725028" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3988604" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -390,6 +415,8 @@
       <window_info anchor="right" id="Data View" order="3" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32905984" />
+      <window_info active="true" anchor="bottom" id="Messages" order="0" visible="true" weight="0.32051283" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -415,7 +442,8 @@
     <MESSAGE value="Asteroids" />
     <MESSAGE value="Power Ups" />
     <MESSAGE value="Missiles and documentation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Missiles and documentation" />
+    <MESSAGE value="Collisions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Collisions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -563,9 +591,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="43" selection-start-line="13" selection-start-column="43" selection-end-line="13" selection-end-column="43" />
-          <folding>
-            <element signature="e#89#108#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -600,18 +625,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/index.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="153">
-            <caret line="9" column="12" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
-          </first_editor>
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/pl/project/mkdocs.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -620,18 +633,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/classes.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="34">
-            <caret line="2" column="4" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
-          </first_editor>
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/controllers.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="34">
@@ -695,30 +696,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/gameplay.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="510">
-            <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
-          </first_editor>
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/modules.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="493">
-            <caret line="68" column="14" lean-forward="true" selection-start-line="68" selection-start-column="14" selection-end-line="68" selection-end-column="14" />
-          </first_editor>
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/spaceships.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
@@ -741,47 +718,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spaceship.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="33" />
-          <folding>
-            <element signature="e#69#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/missile.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="582">
-          <caret line="53" column="50" selection-start-line="53" selection-start-column="50" selection-end-line="53" selection-end-column="50" />
-          <folding>
-            <element signature="e#73#96#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/body-collision.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="24" column="4" lean-forward="true" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/asteroid.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
         </state>
       </provider>
     </entry>
@@ -835,11 +775,98 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game-module.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
+        <state relative-caret-position="4">
           <caret line="45" column="43" lean-forward="true" selection-start-line="45" selection-start-column="43" selection-end-line="45" selection-end-column="43" />
           <folding>
             <element signature="e#73#93#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/asteroid.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-111">
+          <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="136">
+            <caret line="8" column="4" lean-forward="true" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+          </first_editor>
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/missile.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="53" column="50" selection-start-line="53" selection-start-column="50" selection-end-line="53" selection-end-column="50" />
+          <folding>
+            <element signature="e#73#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/modules.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="3366">
+            <caret line="198" column="4" lean-forward="true" selection-start-line="198" selection-start-column="4" selection-end-line="198" selection-end-column="4" />
+          </first_editor>
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/index.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="578">
+            <caret line="34" column="4" lean-forward="true" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
+          </first_editor>
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/controllers.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="68">
+            <caret line="4" column="20" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="20" />
+          </first_editor>
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spaceship.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-173">
+          <caret line="43" column="4" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="33" />
+          <folding>
+            <element signature="e#69#92#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/gameplay.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="447">
+            <caret line="31" column="4" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="4" />
+          </first_editor>
+          <second_editor>
+            <markdownNavigatorState />
+          </second_editor>
         </state>
       </provider>
     </entry>
