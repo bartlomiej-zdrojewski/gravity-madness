@@ -2,6 +2,7 @@
 #define GRAVITY_MADNESS_WORLD_MODULE
 
 #include "game-module.hpp"
+#include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 #include "logger-manager.hpp"
 #include "script.hpp"
@@ -89,6 +90,7 @@ private:
     GraphicsModule * Graphics;
     // AudioModule * Audio;
     GameModule * Game;
+    GameplaySettings * Gameplay;
 
     sf::Thread * GraphicsThread;
     // sf::Thread * AudioThread;

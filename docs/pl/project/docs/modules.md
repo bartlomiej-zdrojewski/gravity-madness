@@ -232,3 +232,7 @@ TODO
 #### Szybka funkcja obliczania dystansu
 
 TODO
+
+#### Redukcja opóźnień
+
+TODO

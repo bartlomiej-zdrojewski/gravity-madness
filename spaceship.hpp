@@ -16,7 +16,7 @@ class Spaceship : public Body {
 
 public:
 
-    explicit Spaceship ( float Radius ) : Body ( 1.f, Radius ) {
+    explicit Spaceship ( float Mass, float Radius ) : Body ( Mass, Radius ) {
 
         Controller = nullptr;
         RayShot = false;
@@ -32,9 +32,8 @@ public:
         Thrust = 100.f;
         SuppressingFactor = 0.75f;
         RayPower = 25.f;
-        // ...
-
-        }
+        MissileCount = 3;
+        MissileLimit = 5; }
 
     ~ Spaceship ( );
 
@@ -69,6 +68,10 @@ public:
     float getRayPower ( );
     void setRayPower ( float RayPower );
 
+    unsigned int getMissileCount ( );
+    void setMissileCount ( unsigned int MissileCount );
+    void setMissileLimit ( unsigned int MissileLimit );
+
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
@@ -93,11 +96,13 @@ private:
     float HealthRestoration;
     float HealthLimit;
     float Energy;
-    float EnergyLimit;
     float EnergyRestoration;
+    float EnergyLimit;
     float Thrust;
     float SuppressingFactor;
     float RayPower;
+    unsigned int MissileCount;
+    unsigned int MissileLimit;
 
     };
 

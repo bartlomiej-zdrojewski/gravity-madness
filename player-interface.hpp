@@ -15,7 +15,7 @@ public:
     void setViewport ( sf::FloatRect Viewport );
 
     void beginFadeOut ( );
-    bool isFadeOutEnded ( );
+    bool isFadedOut ( );
 
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
@@ -46,6 +46,10 @@ private:
     float ActivatedOpacity;
     float UnactivatedOpacity;
     sf::Time TransitionDuration;
+
+    bool FadeIn;
+    sf::Time FadeInTime;
+    sf::Time FadeInDuration;
 
     bool FadeOut;
     sf::Time FadeOutTime;

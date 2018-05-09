@@ -1,82 +1,155 @@
-#include <iostream>
 #include "game-module.hpp"
 
 GameModule::GameModule ( GraphicsModule * Graphics ) {
 
     this->Graphics = Graphics;
 
-    PlayerCount = 1;
-    Gravity = 1.f;
-    DetectionDistance = 750.f;
-    AreaRadius = 1500.f;
-    AsteroidCount = 5;
-
-    AsteroidPauseDuration = sf::seconds( 2.f );
-    AsteroidPauseTime = sf::seconds( 0.f );
-
-    PowerUpPauseDuration = sf::seconds( 5.f );
-    PowerUpPauseTime = sf::seconds( 20.f );
-
-    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
-
-        PlayerSpaceship[i] = nullptr;
-        Interface[i] = new PlayerInterface ( Graphics ); }
-
-    GravityPowerUp = nullptr;
-    AsteroidPowerUp = nullptr;
-    PowerUpRadius = 15.f;
-
-    // TEMP ->
-
-    auto C = new PlayerController ( );
-    auto C2 = new AIController ( );
-
-    auto * P = new Planet ( 5000, 100 ); // density 0.0012 -> M = 0.0012 * ( 1.33f * M_PI * R * R * R )
-    P->setPosition( sf::Vector2f( 400, 300 ) );
-    Planets.push_back( P );
-
-    auto * P2 = new Planet ( 5000, 100 );
-    P2->setPosition( sf::Vector2f( 100, -100 ) );
-    Planets.push_back( P2 );
-
-    auto * S = new Spaceship ( 10 );
-    S->setPosition( sf::Vector2f( 700, 300 ) );
-    S->setController( C );
-    S->setThrust( 250.f );
-    S->setEnergy( 10000.f );
-    S->setEnergyLimit( 10000.f );
-    Spaceships.push_back( S );
-
-    PlayerSpaceship[0] = S;
-    Interface[0]->setSpaceship( PlayerSpaceship[0] );
-
-    S = new Spaceship ( 10 );
-    S->setPosition( sf::Vector2f( -700, -300 ) );
-    S->setController( C2 );
-    S->setEnergy( 10000.f );
-    S->setEnergyLimit( 10000.f );
-    Spaceships.push_back( S );
-
-    auto C3 = new AggressiveAIController ( );
-    S = new Spaceship ( 10 );
-    S->setPosition( sf::Vector2f( -700, -200 ) );
-    S->setController( C3 );
-    //Spaceships.push_back( S );
-
-    auto * Pu = new PowerUp ( PowerUpRadius, sf::seconds( 30.f ), &Gravity, &AsteroidCount );
-    PowerUps.push_back( Pu );
-
-    // -> TEMP
-
-    prepareAreaLimit();
-
-    }
+    reset(); }
 
 GameModule::~GameModule ( ) {
 
-    // TODO RELEASE MEMORY
+    reset(); }
 
-    }
+void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
+
+    reset();
+
+    this->Gameplay = Gameplay;
+    EndingCondition = false;
+    AreaRadius = Gameplay->getAreaSize();
+    PlayerCount = Gameplay->getPlayerCount();
+    AsteroidCount = Gameplay->getAsteroidCount(); // TODO SHOULD I MAKE IT DEPENDENT FROM RADIUS?
+    PowerUpPauseDuration = sf::seconds( 60.f / ( powf( AreaRadius / 1000.f, 2 ) * Gameplay->getSpaceshipCount() ) );
+
+    prepareAreaLimit();
+
+    unsigned int Attempts = 1000;
+    auto PlanetCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 2.f );
+
+    for ( unsigned int i = 0; i < PlanetCount && Attempts > 0; i++ ) {
+
+        float Mass = 3000.f + getRandomFloat() * 4000.f;
+        float Radius = sqrtf( Mass / PI / 0.075f );
+
+        auto NewPlanet = new Planet ( Mass, Radius );
+        sf::Vector2f Position ( 1000000.f, 1000000.f );
+
+        while ( Attempts > 0 && Position == sf::Vector2f( 1000000.f, 1000000.f ) ) {
+
+            float Angle = getRandomFloat() * ( 2.f * PI );
+            float Module = getRandomFloat() * ( AreaRadius - 500.f - Radius );
+
+            Position.x = Module * cosf( Angle );
+            Position.y = Module * sinf( Angle );
+
+            for ( auto ActivePlanet : Planets ) {
+
+                float MinimumDistance = 250.f + Radius + ActivePlanet->getRadius();
+
+                if ( getMinDistance( Position, ActivePlanet->getPosition() ) <= MinimumDistance ) {
+
+                    if ( getDistance(Position, ActivePlanet->getPosition() ) <= MinimumDistance ) {
+
+                        Position = sf::Vector2f( 1000000.f, 1000000.f );
+
+                        break; } } } }
+
+        if ( Attempts > 0 ) {
+
+            NewPlanet->setPosition( Position );
+
+            Planets.push_back( NewPlanet ); } }
+
+    auto * SpaceshipOrder = new unsigned int [ Gameplay->getSpaceshipCount() ];
+
+    for ( unsigned int i = 0; i < Gameplay->getSpaceshipCount(); i++ ) {
+
+        SpaceshipOrder[i] = i; }
+
+    std::random_shuffle( &SpaceshipOrder[0], &SpaceshipOrder[ Gameplay->getSpaceshipCount() ] );
+
+    for ( unsigned int i = 0; i < Gameplay->getSpaceshipCount(); i++ ) {
+
+        auto Prototype = Gameplay->getSpaceshipPrototype( i );
+        auto * NewSpaceship = new Spaceship ( Prototype.Mass, Prototype.Radius );
+
+        NewSpaceship->setHealthLimit( Prototype.HealthLimit );
+        NewSpaceship->setHealth( Prototype.HealthLimit );
+        NewSpaceship->setHealthRestoration( Prototype.HealthRestoration );
+        NewSpaceship->setEnergyLimit( Prototype.EnergyLimit );
+        NewSpaceship->setEnergy( Prototype.EnergyLimit );
+        NewSpaceship->setEnergyRestoration( Prototype.EnergyRestoration );
+        NewSpaceship->setThrust( Prototype.Thrust );
+        NewSpaceship->setSuppressingFactor( Prototype.SuppressingFactor );
+        NewSpaceship->setRayPower( Prototype.RayPower );
+        NewSpaceship->setMissileLimit( Prototype.MissileLimit );
+        NewSpaceship->setMissileCount( Prototype.MissileCount );
+
+        float PositionAngle = ( (float) SpaceshipOrder[i] / (float) Gameplay->getSpaceshipCount() ) * ( 2.f * PI );
+        float PositionModule = AreaRadius - 200.f;
+        float VelocityAngle = PI + PositionAngle;
+        float VelocityModule = 25.f;
+
+        NewSpaceship->setPosition( sf::Vector2f( PositionModule * cosf( PositionAngle ), PositionModule * sinf( PositionAngle  ) ) );
+        NewSpaceship->setVelocity( sf::Vector2f( VelocityModule * cosf( VelocityAngle ), VelocityModule * sinf( VelocityAngle  ) ) );
+
+        if ( i < PlayerCount ) {
+
+            PlayerSpaceship[i] = NewSpaceship;
+            PlayerSpaceship[i]->setController( new PlayerController ( ) ); }
+
+        else {
+
+            switch ( Gameplay->getAIPersonality() ) {
+
+                case GameplaySettings::AIPersonalities::Random: {
+
+                    auto Personality = (unsigned int) ( rand() % 3 );
+
+                    if ( Personality == 0 ) {
+
+                        NewSpaceship->setController( new AggressiveAIController ( ) ); }
+
+                    else if ( Personality == 1 ) {
+
+                        // TODO REASONABLE PERSONALITY
+
+                        }
+
+                    else {
+
+                        // TODO PASSIVE PERSONALITY
+
+                        }
+
+                    break; }
+
+                case GameplaySettings::AIPersonalities::Aggressive: {
+
+                    NewSpaceship->setController( new AggressiveAIController ( ) );
+
+                    break; }
+
+                // TODO OTHR PERSONALITIES
+
+                default: {
+
+                    NewSpaceship->setController( new AIController ( ) );
+
+                    break; } } }
+
+        Spaceships.push_back( NewSpaceship ); }
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        Interface[i] = new PlayerInterface ( Graphics );
+        Interface[i]->setSpaceship( PlayerSpaceship[i] ); }
+
+    delete SpaceshipOrder; }
+
+GameplaySettings * GameModule::getGameplay ( ) {
+
+    return Gameplay; }
 
 void GameModule::update ( ) {
 
@@ -102,25 +175,65 @@ void GameModule::update ( ) {
 
                 Views[i].setCenter( PlayerSpaceship[i]->getPosition() ); }
 
-            else if ( !Interface[i]->isFadeOutEnded() ) {
+            else if ( !Interface[i]->isFadedOut() ) {
 
                 Views[i].setCenter( Views[i].getCenter() + PlayerFinalVelocity[i] * ElapsedTime.asSeconds() ); }
 
             Interface[i]->update( ElapsedTime ); } }
 
-    // TODO CHECK FOR MODE CHANGE
+    if ( Gameplay && !EndingCondition ) {
 
-    }
+        bool AlivePlayer = false;
+
+        for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+            if ( PlayerSpaceship[i] != nullptr ) {
+
+                AlivePlayer = true;
+
+                break; } }
+
+        if ( !AlivePlayer ) {
+
+            EndingCondition = true; }
+
+        else {
+
+            switch ( Gameplay->getEndingCondition() ) {
+
+                // TODO
+
+                default: {
+
+                    break; } } }
+
+        if ( EndingCondition ) {
+
+            auto * ScoreCopy = new unsigned int [ PlayerCount ];
+
+            for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                ScoreCopy[i] = PlayerScore[i];
+
+                if ( !Interface[i]->isFadedOut() ) {
+
+                    Interface[i]->beginFadeOut(); } }
+
+            Gameplay->setScore( ScoreCopy ); } } }
 
 void GameModule::update ( sf::Event &Event ) {
 
-    for ( auto ActiveSpaceship : Spaceships ) {
+    if ( Event.type == sf::Event::KeyPressed ) {
 
-        ActiveSpaceship->update( Event ); }
+        if ( Event.key.code == sf::Keyboard::Escape ) {
 
-    // TODO PAUSE MENU
+            Pause = true;
 
-    }
+            return; } }
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        PlayerSpaceship[i]->update( Event ); } }
 
 void GameModule::render ( sf::RenderWindow &Window ) {
 
@@ -128,7 +241,7 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
         Window.setView( Views[i] );
 
-        if ( PlayerSpaceship[i] || !Interface[i]->isFadeOutEnded() ) {
+        if ( PlayerSpaceship[i] || !Interface[i]->isFadedOut() ) {
 
             renderAreaLimit( Window );
 
@@ -174,6 +287,89 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
     renderViewsOutline( Window ); }
 
+void GameModule::reset ( ) {
+
+    Gameplay = nullptr;
+
+    Pause = false;
+    EndingCondition = false;
+
+    Gravity = 1.f;
+    DetectionDistance = 750.f;
+    AreaRadius = 1500.f;
+    PlayerCount = 0;
+
+    AsteroidCount = 5;
+    AsteroidPauseDuration = sf::seconds( 5.f );
+    AsteroidPauseTime = sf::seconds( 30.f );
+
+    PowerUpPauseDuration = sf::seconds( 5.f );
+    PowerUpPauseTime = sf::seconds( 30.f );
+    GravityPowerUp = nullptr;
+    AsteroidPowerUp = nullptr;
+
+    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
+
+        delete Interface[i];
+
+        PlayerSpaceship[i] = nullptr;
+        PlayerScore[i] = 0;
+        Interface[i] = nullptr; }
+
+    for ( auto i = Planets.begin(); i != Planets.end(); i++ ) {
+
+        delete *i;
+        i = Planets.erase( i ); }
+
+    for ( auto i = Asteroids.begin(); i != Asteroids.end(); i++ ) {
+
+        delete *i;
+        i = Asteroids.erase( i ); }
+
+    for ( auto i = Spaceships.begin(); i != Spaceships.end(); i++ ) {
+
+        delete *i;
+        i = Spaceships.erase( i ); }
+
+    for ( auto i = Missiles.begin(); i != Missiles.end(); i++ ) {
+
+        delete *i;
+        i = Missiles.erase( i ); }
+
+    for ( auto i = RayShots.begin(); i != RayShots.end(); i++ ) {
+
+        delete *i;
+        i = RayShots.erase( i ); }
+
+    for ( auto i = ParticleSystems.begin(); i != ParticleSystems.end(); i++ ) {
+
+        delete *i;
+        i = ParticleSystems.erase( i ); } }
+
+void GameModule::terminate ( ) {
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        PlayerSpaceship[i]->destruct(); } }
+
+bool GameModule::onPause ( ) {
+
+    return Pause; }
+
+bool GameModule::onEndingCondition ( ) {
+
+    bool FadedOut = true;
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        if ( !Interface[i]->isFadedOut() ) {
+
+            FadedOut = false;
+
+            break; } }
+
+    return EndingCondition && FadedOut; }
+
 void GameModule::destructBody ( Body * Object ) {
 
     ParticleSystem * Explosion = Object->onDestruction();
@@ -186,9 +382,11 @@ void GameModule::destructBody ( Body * Object ) {
 
         if ( Object == PlayerSpaceship[i] ) {
 
+            PlayerFinalVelocity[i] = PlayerSpaceship[i]->getVelocity();
             Interface[i]->update( sf::seconds( 0.01f ) );
             Interface[i]->beginFadeOut();
-            PlayerFinalVelocity[i] = PlayerSpaceship[i]->getVelocity();
+
+            delete PlayerSpaceship[i]->getController();
 
             PlayerSpaceship[i] = nullptr;
             Interface[i]->setSpaceship( nullptr );
@@ -391,6 +589,8 @@ PowerUp * GameModule::detectPowerUp ( Spaceship * Requester, float &Distance, fl
 
 void GameModule::updatePlanets ( sf::Time ElapsedTime ) {
 
+    // Update planets' state
+
     for ( auto ActivePlanet : Planets ) {
 
         ActivePlanet->update( ElapsedTime ); }
@@ -402,7 +602,7 @@ void GameModule::updatePlanets ( sf::Time ElapsedTime ) {
         if ( (*i)->isDestructed() ) {
 
             destructBody( *i );
-            Planets.erase( i ); } } }
+            i = Planets.erase( i ); } } }
 
 void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
@@ -444,7 +644,7 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveAsteroid->getRadius() + ActivePlanet->getRadius() ) ) {
 
-                if ( true ) { // TODO SUPER ACCURATE CHECK
+                if ( true ) { // TODO ACCURATE CHECK
 
                     ParticleSystem * Explosion = ActiveAsteroid->onCollision( ActivePlanet );
 
@@ -474,7 +674,7 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
                 if ( getDistance( FirstAsteroid->getPosition(), SecondAsteroid->getPosition() ) <= MinimumDistance ) {
 
-                    if ( true ) { // TODO SUPER ACCURATE CHECK
+                    if ( true ) { // TODO ACCURATE CHECK
 
                         ParticleSystem * Explosion = FirstAsteroid->onCollision( SecondAsteroid );
 
@@ -525,7 +725,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveSpaceship->getRadius() + ActivePlanet->getRadius() ) ) {
 
-                if ( true ) { // TODO SUPER ACCURATE CHECK
+                if ( true ) { // TODO ACCURATE CHECK
 
                     ParticleSystem * Explosion = ActiveSpaceship->onCollision( ActivePlanet );
 
@@ -550,7 +750,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveSpaceship->getRadius() + ActiveAsteroid->getRadius() ) ) {
 
-                if ( true ) { // TODO SUPER ACCURATE CHECK
+                if ( true ) { // TODO ACCURATE CHECK
 
                     ParticleSystem * Explosion = ActiveSpaceship->onCollision( ActiveAsteroid );
 
@@ -567,7 +767,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             float Distance = getDistance( sf::Vector2f ( 0.f, 0.f ), ActiveSpaceship->getPosition() );
 
-            if ( Distance > ( AreaRadius - 0.3f * DetectionDistance ) && !isPlayer( ActiveSpaceship ) && ActiveSpaceship->getController() != nullptr ) {
+            if ( Distance > ( AreaRadius - 150.f ) && !isPlayer( ActiveSpaceship ) && ActiveSpaceship->getController() != nullptr ) {
 
                 ( (AIController*) ActiveSpaceship->getController() )->enableLimitPanic(); }
 
@@ -593,7 +793,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 if ( getDistance( FirstSpaceship->getPosition(), SecondSpaceship->getPosition() ) <= MinimumDistance ) {
 
-                    if ( true ) { // TODO SUPER ACCURATE CHECK
+                    if ( true ) { // TODO ACCURATE CHECK
 
                         ParticleSystem * Explosion = FirstSpaceship->onCollision( SecondSpaceship );
 
@@ -731,7 +931,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveMissile->getRadius() + ActivePlanet->getRadius() ) ) {
 
-                if ( true ) { // TODO SUPER ACCURATE CHECK
+                if ( true ) { // TODO ACCURATE CHECK
 
                     ParticleSystem * Explosion = ActiveMissile->onCollision( ActivePlanet );
 
@@ -751,7 +951,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveMissile->getRadius() + ActiveAsteroid->getRadius() ) ) {
 
-                if ( true ) { // TODO SUPER ACCURATE CHECK
+                if ( true ) { // TODO ACCURATE CHECK
 
                     ParticleSystem * Explosion = ActiveMissile->onCollision( ActiveAsteroid );
 
@@ -771,7 +971,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveMissile->getRadius() + ActiveSpaceship->getRadius() ) ) {
 
-                if ( true ) { // TODO SUPER ACCURATE CHECK
+                if ( true ) { // TODO ACCURATE CHECK
 
                     ParticleSystem * Explosion = ActiveMissile->onCollision( ActiveSpaceship );
 
@@ -795,7 +995,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
                 if ( getDistance( FirstMissile->getPosition(), SecondMissile->getPosition() ) <= MinimumDistance ) {
 
-                    if ( true ) { // TODO SUPER ACCURATE CHECK
+                    if ( true ) { // TODO ACCURATE CHECK
 
                         ParticleSystem * FirstExplosion = FirstMissile->onCollision( SecondMissile );
                         ParticleSystem * SecondExplosion = SecondMissile->onCollision( FirstMissile );
@@ -845,7 +1045,7 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
         float MinimumPowerUpDistance = 50.f;
         unsigned int Attempts = 25;
 
-        while ( Attempts > 0 && Position == sf::Vector2f ( 0.f, 0.f ) ) {
+        while ( Attempts > 0 && Position == sf::Vector2f ( 1000000.f, 1000000.f ) ) {
 
             float Angle = ( - PI ) + getRandomFloat() * 2.f * PI;
 
@@ -858,7 +1058,9 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
                     if ( getDistance( Position, ActivePlanet->getPosition() ) <= ( MinimumPlanetDistance + ActivePlanet->getRadius() ) ) {
 
-                        Position = sf::Vector2f ( 0.f, 0.f ); } } }
+                        Position = sf::Vector2f ( 1000000.f, 1000000.f );
+
+                        break; } } }
 
             for ( auto ActivePowerUp : PowerUps ) {
 
@@ -866,7 +1068,9 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
                     if ( getDistance( Position, ActivePowerUp->getPosition() ) <= ( MinimumPowerUpDistance + ActivePowerUp->getRadius() ) ) {
 
-                        Position = sf::Vector2f ( 0.f, 0.f ); } } }
+                        Position = sf::Vector2f ( 1000000.f, 1000000.f );
+
+                        break; } } }
 
             Attempts--; }
 

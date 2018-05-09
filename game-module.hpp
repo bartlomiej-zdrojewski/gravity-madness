@@ -12,6 +12,7 @@
 #include "asteroid.hpp"
 #include "body.hpp"
 #include "energy-power-up.hpp"
+#include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 #include "missile.hpp"
 #include "particle-system.hpp"
@@ -29,9 +30,18 @@ public:
     explicit GameModule ( GraphicsModule * Graphics );
     ~ GameModule ( );
 
+    void setGameplay ( GameplaySettings * Gameplay );
+    GameplaySettings * getGameplay ( );
+
     void update ( );
     void update ( sf::Event &Event );
     void render ( sf::RenderWindow &Window );
+
+    void reset ( );
+    void terminate ( );
+
+    bool onPause ( );
+    bool onEndingCondition ( );
 
 private:
 
@@ -67,27 +77,33 @@ private:
 private:
 
     GraphicsModule * Graphics;
+    GameplaySettings * Gameplay;
 
-    unsigned int PlayerCount;
-    const static int MaximumPlayerCount = 4;
-
-    Spaceship * PlayerSpaceship [MaximumPlayerCount];
-    PlayerInterface * Interface [MaximumPlayerCount];
-    sf::View Views [MaximumPlayerCount];
-    sf::Vector2f PlayerFinalVelocity [MaximumPlayerCount];
+    bool Pause;
+    bool EndingCondition;
 
     sf::Clock Clock;
     float Gravity;
     float DetectionDistance;
     float AreaRadius;
+
+    unsigned int PlayerCount;
+    const static int MaximumPlayerCount = 4;
+    Spaceship * PlayerSpaceship [MaximumPlayerCount];
+    unsigned int PlayerScore [MaximumPlayerCount];
+    sf::Vector2f PlayerFinalVelocity [MaximumPlayerCount];
+    sf::View Views [MaximumPlayerCount];
+    PlayerInterface * Interface [MaximumPlayerCount];
+
     unsigned int AsteroidCount;
     sf::Time AsteroidPauseTime;
     sf::Time AsteroidPauseDuration;
+
     sf::Time PowerUpPauseTime;
     sf::Time PowerUpPauseDuration;
     PowerUp * GravityPowerUp;
     PowerUp * AsteroidPowerUp;
-    float PowerUpRadius;
+    const float PowerUpRadius = 15.f;
 
     std::list <Planet*> Planets;
     std::list <Asteroid*> Asteroids;

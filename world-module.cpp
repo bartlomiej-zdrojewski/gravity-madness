@@ -2,6 +2,7 @@
 
 WorldModule::~WorldModule ( ) {
 
+    delete Gameplay;
     delete Game;
     delete Log;
     delete Graphics;
@@ -71,6 +72,14 @@ void WorldModule::update ( ) {
 
             Game->update();
 
+            if ( Game->onPause() ) {
+
+                setMode( Modes::PauseMenuMode ); }
+
+            else if ( Game->onEndingCondition() ) {
+
+                setMode( Modes::ScoreBoardMode ); }
+
             break; }
 
         // ...
@@ -89,11 +98,27 @@ void WorldModule::update ( sf::Event &Event ) {
 
     switch ( Mode ) {
 
+        case IdleMode: {
+
+            return; }
+
+        case InitMode: {
+
+            return; }
+
         // ...
 
         case GameMode: {
 
             Game->update( Event );
+
+            if ( Game->onPause() ) {
+
+                setMode( Modes::PauseMenuMode ); }
+
+            else if ( Game->onEndingCondition() ) {
+
+                setMode( Modes::ScoreBoardMode ); }
 
             break; }
 
@@ -121,7 +146,14 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 
             break; }
 
-            // ...
+        case PauseMenuMode: {
+
+            Game->render( Window );
+            // TODO PauseMenu->render( Window );
+
+            break; }
+
+        // ...
 
         default: {
 
@@ -225,6 +257,9 @@ void WorldModule::init ( ) {
         else {
 
             Game = new GameModule ( Graphics );
+            Gameplay = new GameplaySettings ( );
+
+            // TODO Gameplay->loadSpaceshipPrototypes( ... );
 
             if ( Log->wasWarningLogged() ) {
 

@@ -139,6 +139,18 @@ void Spaceship::setRayPower ( float RayPower ) {
 
     this->RayPower = RayPower; }
 
+unsigned int Spaceship::getMissileCount ( ) {
+
+    return MissileCount; }
+
+void Spaceship::setMissileCount ( unsigned int MissileCount ) {
+
+    this->MissileCount = MissileCount; }
+
+void Spaceship::setMissileLimit ( unsigned int MissileLimit ) {
+
+    this->MissileLimit = MissileLimit; }
+
 void Spaceship::update ( sf::Event &Event ) {
 
     if ( isDestructed() ) {

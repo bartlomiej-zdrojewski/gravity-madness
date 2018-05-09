@@ -11,6 +11,10 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
     UnactivatedOpacity = 0.34f;
     TransitionDuration = sf::seconds( 0.3f );
 
+    FadeIn = true;
+    FadeInDuration = sf::seconds( 2.f );
+    FadeInTime = FadeInDuration;
+
     FadeOut = false;
     FadeOutTime = sf::seconds( 0.f );
     FadeOutDelay = sf::seconds( 3.f );
@@ -40,15 +44,27 @@ void PlayerInterface::beginFadeOut ( ) {
 
     FadeOut = true; }
 
-bool PlayerInterface::isFadeOutEnded ( ) {
+bool PlayerInterface::isFadedOut ( ) {
 
     return ( FadeOutTime >= FadeOutDuration ); }
 
 void PlayerInterface::update ( sf::Time ElapsedTime ) {
 
-    if ( FadeOut ) {
+    if ( FadeIn ) {
 
-        FadeOutTime += ElapsedTime; }
+        FadeInTime -= ElapsedTime;
+
+        if ( FadeInTime.asSeconds() <= 0.f ) {
+
+            FadeIn = false; } }
+
+    else if ( FadeOut ) {
+
+        FadeOutTime += ElapsedTime;
+
+        if ( FadeOutTime >= FadeOutDuration ) {
+
+            FadeOut = false; } }
 
     if ( MySpaceship ) {
 
@@ -69,20 +85,11 @@ void PlayerInterface::render ( sf::RenderWindow &Window ) {
     sf::View ViewCopy = Window.getView();
     Window.setView( Window.getDefaultView() );
 
-    if ( !FadeOut ) {
-
-        renderHealthBar( Window );
-        renderEnergyBar( Window );
-        renderMissileBar( Window );
-        renderScoreBar( Window ); }
-
-    else if ( !isFadeOutEnded() ) {
-
-        renderHealthBar( Window );
-        renderEnergyBar( Window );
-        renderMissileBar( Window );
-        renderScoreBar( Window );
-        renderFade( Window ); }
+    renderHealthBar( Window );
+    renderEnergyBar( Window );
+    renderMissileBar( Window );
+    renderScoreBar( Window );
+    renderFade( Window );
 
     Window.setView( ViewCopy ); }
 
@@ -166,15 +173,26 @@ void PlayerInterface::renderScoreBar ( sf::RenderWindow &Window ) {
 
 void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
 
-    if ( FadeOutTime.asSeconds() < FadeOutDelay.asSeconds() ) {
-
-        return; }
-
     sf::RectangleShape Fade;
 
     Fade.setPosition( 0.f, 0.f );
     Fade.setSize( sf::Vector2f( Viewport.width, Viewport.height ) );
-    Fade.setFillColor( sf::Color( 0, 0, 0, (sf::Uint8) ( 255.f * ( FadeOutTime.asSeconds() - FadeOutDelay.asSeconds() ) / ( FadeOutDuration.asSeconds() - FadeOutDelay.asSeconds() ) ) ) );
+
+    if ( FadeIn ) {
+
+        Fade.setFillColor( sf::Color( 0, 0, 0, (sf::Uint8) ( 255.f * FadeInTime.asSeconds() / FadeInDuration.asSeconds() ) ) ); }
+
+    else if ( FadeOut ) {
+
+        if ( FadeOutTime.asSeconds() < FadeOutDelay.asSeconds() ) {
+
+            return; }
+
+        Fade.setFillColor( sf::Color( 0, 0, 0, (sf::Uint8) ( 255.f * ( FadeOutTime.asSeconds() - FadeOutDelay.asSeconds() ) / ( FadeOutDuration.asSeconds() - FadeOutDelay.asSeconds() ) ) ) ); }
+
+    else {
+
+        return; }
 
     Window.draw( Fade ); }
 
