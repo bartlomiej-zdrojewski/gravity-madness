@@ -24,6 +24,8 @@ private:
 
     float getLength ( sf::Vector2f Vector );
 
+private:
+
     sf::Vector2f FirstVelocity;
     sf::Vector2f SecondVelocity;
     float ReleasedEnergy;

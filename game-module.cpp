@@ -1,3 +1,4 @@
+#include "debug-module.hpp"
 #include "game-module.hpp"
 
 GameModule::GameModule ( GraphicsModule * Graphics ) {
@@ -18,8 +19,34 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
     EndingCondition = false;
     AreaRadius = Gameplay->getAreaSize();
     PlayerCount = Gameplay->getPlayerCount();
-    AsteroidCount = Gameplay->getAsteroidCount(); // TODO SHOULD I MAKE IT DEPENDENT FROM RADIUS?
     PowerUpPauseDuration = sf::seconds( 60.f / ( powf( AreaRadius / 1000.f, 2 ) * Gameplay->getSpaceshipCount() ) );
+    GameplayTime = Gameplay->getTimeLimit();
+
+    switch ( Gameplay->getAsteroidFrequency() ) {
+
+        case GameplaySettings::AsteroidFrequencies::Rarely: {
+
+            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 2.f );
+
+            break; }
+
+        case GameplaySettings::AsteroidFrequencies::Occasionally: {
+
+            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 4.f );
+
+            break; }
+
+        case GameplaySettings::AsteroidFrequencies::Often: {
+
+            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 6.f );
+
+            break; }
+
+        default: {
+
+            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 2.f );
+
+            break; } }
 
     prepareAreaLimit();
 
@@ -96,7 +123,10 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         if ( i < PlayerCount ) {
 
             PlayerSpaceship[i] = NewSpaceship;
-            PlayerSpaceship[i]->setController( new PlayerController ( ) ); }
+            PlayerSpaceship[i]->setController( new PlayerController ( ) );
+            PlayerScoreMultiplier[i] = Prototype.ScoreMultiplier;
+            Interface[i] = new PlayerInterface ( Graphics );
+            Interface[i]->setSpaceship( PlayerSpaceship[i] ); }
 
         else {
 
@@ -130,7 +160,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
                     break; }
 
-                // TODO OTHR PERSONALITIES
+                // TODO OTHER PERSONALITIES
 
                 default: {
 
@@ -139,11 +169,6 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
                     break; } } }
 
         Spaceships.push_back( NewSpaceship ); }
-
-    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
-
-        Interface[i] = new PlayerInterface ( Graphics );
-        Interface[i]->setSpaceship( PlayerSpaceship[i] ); }
 
     delete SpaceshipOrder; }
 
@@ -156,6 +181,14 @@ void GameModule::update ( ) {
     sf::Time ElapsedTime = Clock.restart();
 
     if ( ElapsedTime.asSeconds() < 0.1f ) {
+
+        if ( Gameplay->getEndingCondition() == GameplaySettings::EndingConditions::Time ) {
+
+            GameplayTime -= ElapsedTime; }
+
+        else {
+
+            GameplayTime += ElapsedTime; }
 
         updatePlanets( ElapsedTime );
         updateAsteroids( ElapsedTime );
@@ -183,17 +216,17 @@ void GameModule::update ( ) {
 
     if ( Gameplay && !EndingCondition ) {
 
-        bool AlivePlayer = false;
+        unsigned int AlivePlayers = 0;
+        int LastAlivePlayer = -1;
 
         for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
             if ( PlayerSpaceship[i] != nullptr ) {
 
-                AlivePlayer = true;
+                AlivePlayers++;
+                LastAlivePlayer = i; } }
 
-                break; } }
-
-        if ( !AlivePlayer ) {
+        if ( !AlivePlayers ) {
 
             EndingCondition = true; }
 
@@ -201,7 +234,40 @@ void GameModule::update ( ) {
 
             switch ( Gameplay->getEndingCondition() ) {
 
-                // TODO
+                case GameplaySettings::EndingConditions::Time: {
+
+                    if ( GameplayTime.asSeconds() <= 0.f ) {
+
+                        EndingCondition = true;
+                        Gameplay->setWinner( LastAlivePlayer ); }
+
+                    break; }
+
+                case GameplaySettings::EndingConditions::NoEnemies: {
+
+                    if ( AlivePlayers == Spaceships.size() ) {
+
+                        EndingCondition = true; }
+
+                    break; }
+
+                case GameplaySettings::EndingConditions::LastPlayer: {
+
+                    if ( AlivePlayers == 1 ) {
+
+                        EndingCondition = true;
+                        Gameplay->setWinner( LastAlivePlayer ); }
+
+                    break; }
+
+                case GameplaySettings::EndingConditions::LastSpaceship: {
+
+                    if ( AlivePlayers == 1 && Spaceships.size() == 1 ) {
+
+                        EndingCondition = true;
+                        Gameplay->setWinner( LastAlivePlayer ); }
+
+                    break; }
 
                 default: {
 
@@ -314,6 +380,7 @@ void GameModule::reset ( ) {
 
         PlayerSpaceship[i] = nullptr;
         PlayerScore[i] = 0;
+        PlayerScoreMultiplier[i] = 1.f;
         Interface[i] = nullptr; }
 
     for ( auto i = Planets.begin(); i != Planets.end(); i++ ) {

@@ -23,7 +23,11 @@
 #include "ray.hpp"
 #include "spaceship.hpp"
 
+class DebugModule;
+
 class GameModule {
+
+    friend class DebugModule;
 
 public:
 
@@ -86,11 +90,13 @@ private:
     float Gravity;
     float DetectionDistance;
     float AreaRadius;
+    sf::Time GameplayTime;
 
     unsigned int PlayerCount;
     const static int MaximumPlayerCount = 4;
     Spaceship * PlayerSpaceship [MaximumPlayerCount];
     unsigned int PlayerScore [MaximumPlayerCount];
+    float PlayerScoreMultiplier [MaximumPlayerCount];
     sf::Vector2f PlayerFinalVelocity [MaximumPlayerCount];
     sf::View Views [MaximumPlayerCount];
     PlayerInterface * Interface [MaximumPlayerCount];

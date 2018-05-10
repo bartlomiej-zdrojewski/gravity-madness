@@ -50,9 +50,12 @@ moduł świata przejdzie w tryb `Debug`.
 * Jeśli w ustawieniach wartość `Debug` została ustawiona na `false`,
 moduł świata przejdzie w tryb `MainMenu`.
 
-Szczegółowy opis inicjalizacji modułu graficznego, modułu audio i
-modułu gry znajduje się w podsekcji `Inicjalizajca` sekcji
-poszczególnych modułów.
+Moduł debugowania zostanie zaincjalizowany tylko wtedy, gdy w
+ustawieniach wartość `Debug` została ustawiona na `true`.
+
+Szczegółowy opis inicjalizacji modułu graficznego, modułu audio,
+modułu gry i modułu debugowania znajduje się w podsekcjach
+`Inicjalizajca` sekcji poszczególnych modułów.
 
 ### Tryby
 
@@ -234,5 +237,17 @@ TODO
 TODO
 
 #### Redukcja opóźnień
+
+TODO
+
+## Moduł debugowania
+
+TODO
+
+### Inicjalizajca
+
+TODO
+
+### Testy
 
 TODO

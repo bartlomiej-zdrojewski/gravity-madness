@@ -2,11 +2,16 @@
 
 WorldModule::~WorldModule ( ) {
 
+    delete MyMessage;
+    delete MyScoreBoard;
+    delete MyMainMenu;
+    delete MyPauseMenu;
     delete Gameplay;
+    delete Debug;
     delete Game;
-    delete Log;
     delete Graphics;
     // delete Audio;
+    delete Log;
 
     }
 
@@ -24,7 +29,7 @@ bool WorldModule::hasVideoChanged ( ) {
 
         VideoChanged = false;
 
-        return true;}
+        return true; }
 
     return false; }
 
@@ -61,10 +66,47 @@ void WorldModule::update ( ) {
 
             break; }
 
+        case InitTimeWarningMode: {
+
+            // TODO
+
+            if ( Debugging ) {
+
+                Debug = new DebugModule ( Graphics, Game );
+                Log->manage( Debug->getLogger() );
+
+                setMode( Modes::DebugMode ); }
+
+            else {
+
+                MyMainMenu = new MainMenu ( Graphics, Gameplay );
+                MyPauseMenu = new PauseMenu ( Graphics );
+                MyScoreBoard = new ScoreBoard ( Graphics );
+
+                setMode( Modes::MainMenuMode ); }
+
+            break; }
+
+        case InitTimeErrorMode: {
+
+            // TODO
+
+            break; }
+
+        case RunTimeErrorMode: {
+
+            // TODO
+
+            break; }
+
         case MainMenuMode: {
 
+            MyMainMenu->update();
+
+            // TODO DELETE
             setMode( Modes::GameMode );
-            // ...
+
+            // TODO
 
             break; }
 
@@ -82,7 +124,27 @@ void WorldModule::update ( ) {
 
             break; }
 
-        // ...
+        case PauseMenuMode: {
+
+            MyPauseMenu->update();
+
+            // TODO
+
+            break; }
+
+        case ScoreBoardMode: {
+
+            MyScoreBoard->update();
+
+            // TODO
+
+            break; }
+
+        case DebugMode: {
+
+            // TODO
+
+            break; }
 
         default: {
 
@@ -106,7 +168,31 @@ void WorldModule::update ( sf::Event &Event ) {
 
             return; }
 
-        // ...
+        case InitTimeWarningMode: {
+
+            // TODO
+
+            break; }
+
+        case InitTimeErrorMode: {
+
+            // TODO
+
+            break; }
+
+        case RunTimeErrorMode: {
+
+            // TODO
+
+            break; }
+
+        case MainMenuMode: {
+
+            MyMainMenu->update( Event );
+
+            // TODO
+
+            break; }
 
         case GameMode: {
 
@@ -122,13 +208,31 @@ void WorldModule::update ( sf::Event &Event ) {
 
             break; }
 
-        // ...
+        case PauseMenuMode: {
+
+            MyPauseMenu->update( Event );
+
+            // TODO
+
+            break; }
+
+        case ScoreBoardMode: {
+
+            MyScoreBoard->update( Event );
+
+            // TODO
+
+            break; }
+
+        case DebugMode: {
+
+            // TODO
+
+            break; }
 
         default: {
 
-            return; } }
-
-    }
+            return; } } }
 
 void WorldModule::render ( sf::RenderWindow &Window ) {
 
@@ -138,7 +242,35 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 
             return; }
 
-        // ...
+        case InitMode: {
+
+            init( &Window );
+
+            return; }
+
+        case InitTimeWarningMode: {
+
+            // TODO
+
+            break; }
+
+        case InitTimeErrorMode: {
+
+            // TODO
+
+            break; }
+
+        case RunTimeErrorMode: {
+
+            // TODO
+
+            break; }
+
+        case MainMenuMode: {
+
+            MyMainMenu->render( Window );
+
+            break; }
 
         case GameMode: {
 
@@ -149,11 +281,21 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
         case PauseMenuMode: {
 
             Game->render( Window );
-            // TODO PauseMenu->render( Window );
+            MyPauseMenu->render( Window );
 
             break; }
 
-        // ...
+        case ScoreBoardMode: {
+
+            MyScoreBoard->render( Window );
+
+            break; }
+
+        case DebugMode: {
+
+            // TODO
+
+            break; }
 
         default: {
 
@@ -163,32 +305,34 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 
 bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
+    LogPath = "log.txt";
     InitWindowWidth = 0;
     InitWindowHeight = 0;
     InitAntyaliasing = 0;
     InitFullScreen = false;
     HighScore = 0;
+    Debugging = false;
 
-    pugi::xml_node * Root = Config.getRoot();
+    pugi::xml_node * Root = Config->getRoot();
 
     if ( !Root ) {
 
         return false; }
 
-    auto SettingsNode = Config.getChildren( *Root );
+    auto SettingsNode = Config->getChildren( *Root );
 
     if ( SettingsNode.empty() ) {
 
         return false; }
 
-    auto SettingNodes = Config.getChildren( SettingsNode[0] );
+    auto SettingNodes = Config->getChildren( SettingsNode[0] );
 
     for ( auto Setting : SettingNodes ) {
 
         if ( std::string( Setting.name() ) == "GraphicsSettings" ) {
 
             delete *GraphicsConfig;
-            *GraphicsConfig = new Script ( Config.getTextValue( Setting ) ); }
+            *GraphicsConfig = new Script ( Config->getTextValue( Setting ) ); }
 
         else if ( std::string( Setting.name() ) == "AudioSettings" ) {
 
@@ -197,33 +341,42 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
             }
 
+        else if ( std::string( Setting.name() ) == "SpaceshipsSettings" ) {
+
+            delete SpaceshipsConfig;
+            SpaceshipsConfig = new Script ( Config->getTextValue( Setting ) ); }
+
+        else if ( std::string( Setting.name() ) == "Log" ) {
+
+            LogPath = Config->getTextValue( Setting ); }
+
         else if ( std::string( Setting.name() ) == "WindowWidth" ) {
 
-            InitWindowWidth = (unsigned int) Config.getIntegerValue( Setting ); }
+            InitWindowWidth = (unsigned int) Config->getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "WindowHeight" ) {
 
-            InitWindowHeight = (unsigned int) Config.getIntegerValue( Setting ); }
+            InitWindowHeight = (unsigned int) Config->getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "FullScreen" ) {
 
-            InitFullScreen = Config.getBooleanValue( Setting ); }
+            InitFullScreen = Config->getBooleanValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "Antyaliasing" ) {
 
-            InitAntyaliasing = (unsigned int) Config.getIntegerValue( Setting ); }
+            InitAntyaliasing = (unsigned int) Config->getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "HighScore" ) {
 
-            HighScore = (unsigned int) Config.getIntegerValue( Setting ); }
+            HighScore = (unsigned int) Config->getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "Debug" ) {
 
-            Debugging = Config.getBooleanValue( Setting ); } }
+            Debugging = Config->getBooleanValue( Setting ); } }
 
     return !( InitWindowWidth == 0 || InitWindowHeight == 0 ); }
 
-void WorldModule::init ( ) {
+void WorldModule::init ( sf::RenderWindow * Window ) {
 
     if ( InitState == 0 ) {
 
@@ -235,13 +388,15 @@ void WorldModule::init ( ) {
 
         InitState++; }
 
-    else if ( InitState < 2 ) { // 3 with sounds module
+    else if ( InitState < 2 ) { // TODO 3 with sounds module
 
         Graphics->initContext();
 
-        // TODO UPDATE LOADING SCREEN
+        if ( Window ) {
 
-        }
+            // TODO UPDATE LOADING SCREEN
+
+            } }
 
     else {
 
@@ -252,6 +407,8 @@ void WorldModule::init ( ) {
 
         if ( Log->wasErrorLogged() ) {
 
+            MyMessage = new Message ( Graphics );
+
             setMode( Modes::InitTimeErrorMode ); }
 
         else {
@@ -259,16 +416,29 @@ void WorldModule::init ( ) {
             Game = new GameModule ( Graphics );
             Gameplay = new GameplaySettings ( );
 
-            // TODO Gameplay->loadSpaceshipPrototypes( ... );
+            Log->manage( Gameplay->getLogger() );
+            Gameplay->loadSpaceshipPrototypes( SpaceshipsConfig );
+            Log->update();
 
             if ( Log->wasWarningLogged() ) {
+
+                MyMessage = new Message ( Graphics );
 
                 setMode( Modes::InitTimeWarningMode ); }
 
             else if ( Debugging ) {
 
+                MyMessage = new Message ( Graphics );
+                Debug = new DebugModule ( Graphics, Game );
+                Log->manage( Debug->getLogger() );
+
                 setMode( Modes::DebugMode ); }
 
             else {
+
+                MyMainMenu = new MainMenu ( Graphics, Gameplay );
+                MyPauseMenu = new PauseMenu ( Graphics );
+                MyScoreBoard = new ScoreBoard ( Graphics );
+                MyMessage = new Message ( Graphics );
 
                 setMode( Modes::MainMenuMode ); } } } }

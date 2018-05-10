@@ -1,0 +1,25 @@
+<Spaceships>
+
+    <Spaceship>
+
+        std::string Name;
+        std::string Texture;
+        std::string AccentTexture;
+        float Mass;
+        float Radius;
+        float HealthLimit;
+        float HealthRestoration;
+        float EnergyLimit;
+        float EnergyRestoration;
+        float Thrust;
+        float SuppressingFactor;
+        sf::Color ExhaustColor;
+        float RayPower;
+        sf::Color RayColor;
+        unsigned int MissileCount;
+        unsigned int MissileLimit;
+        float ScoreMultiplier;
+
+    </Spaceship>
+
+</Spaceships>

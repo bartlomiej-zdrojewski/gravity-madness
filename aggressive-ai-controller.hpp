@@ -19,6 +19,8 @@ private:
     void onSafeOrbit ( sf::Time ElapsedTime );
     void onUnsafeOrbit ( sf::Time ElapsedTime );
 
+private:
+
     sf::Time RayShotRestorationTime;
     sf::Time RayShotRestorationDuration;
 

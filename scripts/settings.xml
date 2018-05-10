@@ -1,6 +1,8 @@
 <Settings>
     <GraphicsSettings>scripts/graphics.xml</GraphicsSettings>
     <AudioSettings>scripts/audio.xml</AudioSettings>
+    <SpaceshipsSettings>scripts/spaceships.xml</SpaceshipsSettings>
+    <Log>log.txt</Log>
     <WindowWidth>800</WindowWidth>
     <WindowHeight>600</WindowHeight>
     <FullScreen>false</FullScreen>

@@ -50,6 +50,8 @@ private:
 
         };
 
+private:
+
     Script * Config;
     int8_t * InitState;
 

@@ -1,10 +1,15 @@
 #ifndef GRAVITY_MADNESS_WORLD_MODULE
 #define GRAVITY_MADNESS_WORLD_MODULE
 
+#include "debug-module.hpp"
 #include "game-module.hpp"
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 #include "logger-manager.hpp"
+#include "main-menu.hpp"
+#include "message.hpp"
+#include "pause-menu.hpp"
+#include "score-board.hpp"
 #include "script.hpp"
 
 class WorldModule : public Logger {
@@ -26,17 +31,29 @@ public:
 
         };
 
-    explicit WorldModule ( Script Config ) : Config ( Config ), Logger ( ) {
+    explicit WorldModule ( Script * Config ) : Logger ( ) {
 
-        Mode = Modes::InitMode;
+        this->Config = Config;
+        SpaceshipsConfig = nullptr;
 
         Log = nullptr;
         Graphics = nullptr;
         // Audio = nullptr;
         Game = nullptr;
+        Debug = nullptr;
+        Gameplay = nullptr;
+        MyMainMenu = nullptr;
+        MyPauseMenu = nullptr;
+        MyScoreBoard = nullptr;
+        MyMessage = nullptr;
+
+        GraphicsThread = nullptr;
+        // AudioThread = nullptr;
 
         Script * GraphicsConfig = nullptr;
         Script * AudioConfig = nullptr;
+
+        Mode = Modes::InitMode;
 
         if ( !config( &GraphicsConfig, &AudioConfig ) ) {
 
@@ -44,7 +61,7 @@ public:
 
             return; }
 
-        Log = new LoggerManager ( "log.txt" );
+        Log = new LoggerManager ( LogPath );
         Graphics = new GraphicsModule ( GraphicsConfig, &InitState );
         // Audio = new AudioModule ( );
 
@@ -80,17 +97,23 @@ public:
 private:
 
     bool config ( Script ** GraphicsConfig, Script ** AudioConfig );
-    void init ( );
+    void init ( sf::RenderWindow * Window = nullptr );
 
 private:
 
-    Script Config;
+    Script * Config;
+    Script * SpaceshipsConfig;
 
     LoggerManager * Log;
     GraphicsModule * Graphics;
     // AudioModule * Audio;
     GameModule * Game;
+    DebugModule * Debug;
     GameplaySettings * Gameplay;
+    MainMenu * MyMainMenu;
+    PauseMenu * MyPauseMenu;
+    ScoreBoard * MyScoreBoard;
+    Message * MyMessage;
 
     sf::Thread * GraphicsThread;
     // sf::Thread * AudioThread;
@@ -99,6 +122,7 @@ private:
     int8_t InitState;
     bool VideoChanged;
 
+    std::string LogPath;
     unsigned int InitWindowWidth;
     unsigned int InitWindowHeight;
     unsigned int InitAntyaliasing;
