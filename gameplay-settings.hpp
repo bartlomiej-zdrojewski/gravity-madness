@@ -102,11 +102,12 @@ public:
     void setNextAsteroidFrequency ( );
     void setPreviousAsteroidFrequency ( );
 
-    unsigned int getSpaceshipCount ( );
-    void setSpaceshipCount ( unsigned int SpaceshipCount );
-
+    unsigned int getMaximumPlayerCount ( );
     unsigned int getPlayerCount ( );
     void setPlayerCount ( unsigned int PlayerCount );
+
+    unsigned int getSpaceshipCount ( );
+    void setSpaceshipCount ( unsigned int SpaceshipCount );
 
     AIPersonalities getAIPersonality ( );
     std::string getAIPersonalityText ( );
@@ -135,10 +136,13 @@ private:
 
 private:
 
+
+
     AreaSizes AreaSize;
     AsteroidFrequencies AsteroidFrequency;
-    unsigned int SpaceshipCount;
+    const static int MaximumPlayerCount = 4;
     unsigned int PlayerCount;
+    unsigned int SpaceshipCount;
     AIPersonalities AIPersonality;
     EndingConditions EndingCondition;
     sf::Time TimeLimit;

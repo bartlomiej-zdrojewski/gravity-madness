@@ -17,12 +17,22 @@ public:
         this->Graphics = Graphics;
         this->Game = Game;
 
+        Terminate = false;
+
         }
+
+    void update ( );
+    void update ( sf::Event &Event );
+    void render ( sf::RenderWindow &Window );
+
+    bool onTerminate ( );
 
 private:
 
     GraphicsModule * Graphics;
     GameModule * Game;
+
+    bool Terminate;
 
     };
 

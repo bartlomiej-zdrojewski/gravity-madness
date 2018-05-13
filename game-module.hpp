@@ -45,7 +45,7 @@ public:
     void terminate ( );
 
     bool onPause ( );
-    bool onEndingCondition ( );
+    bool onTerminate ( );
 
 private:
 

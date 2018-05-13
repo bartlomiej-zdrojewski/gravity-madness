@@ -16,8 +16,8 @@
         <Path>assets/graphics/fonts/</Path>
 
         <Font>
-            <Name>Test</Name>
-            <Path>test.ttf</Path>
+            <Name>MainMenu</Name>
+            <Path>RobotoCondensed-Light.ttf</Path>
         </Font>
 
     </Fonts>

@@ -12,6 +12,7 @@ int main ( ) {
         sf::RenderWindow Window ( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
         Window.setFramerateLimit( 60 );
         Window.setVerticalSyncEnabled( true );
+        Window.setMouseCursorVisible( false );
 
         while ( Window.isOpen() ) {
 

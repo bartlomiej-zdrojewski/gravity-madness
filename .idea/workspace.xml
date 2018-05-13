@@ -12,30 +12,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62bf6682-e578-46fe-be45-0f9be21c3950" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/debug-module.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main-menu.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/message.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pause-menu.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/score-board.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/debug-module.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/main-menu.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/message.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pause-menu.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/score-board.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aggressive-ai-controller.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/aggressive-ai-controller.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/body-collision.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/body-collision.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/spaceships.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/pl/project/docs/modules.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/pl/project/docs/modules.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/debug-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/debug-module.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gameplay-settings.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/gameplay-settings.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gameplay-settings.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/gameplay-settings.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/graphics-module.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/loger-manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/loger-manager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main-menu.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main-menu.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/script.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/script.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sounds.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/message.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/message.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pause-menu.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/pause-menu.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/score-board.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/score-board.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/graphics.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/graphics.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/world-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/world-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/world-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/world-module.hpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -51,69 +46,27 @@
     <favorites_list name="gravity_madness" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="world-module.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/world-module.hpp">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="main-menu.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main-menu.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="42" column="24" selection-start-line="42" selection-start-column="24" selection-end-line="42" selection-end-column="24" />
+            <state relative-caret-position="1326">
+              <caret line="78" column="23" selection-start-line="78" selection-start-column="23" selection-end-line="78" selection-end-column="23" />
               <folding>
-                <element signature="e#75#102#0" expanded="true" />
+                <element signature="e#77#92#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="debug-module.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/debug-module.hpp">
+      <file leaf-file-name="main-menu.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main-menu.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="323">
-              <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+              <caret line="25" column="55" selection-start-line="25" selection-start-column="55" selection-end-line="25" selection-end-column="55" />
               <folding>
-                <element signature="e#83#111#0" expanded="true" />
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="game-module.hpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/game-module.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1243">
-              <caret line="90" column="4" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="4" />
-              <folding>
-                <element signature="e#73#93#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gameplay-settings.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gameplay-settings.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="469">
-              <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
-              <folding>
-                <element signature="e#0#32#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="world-module.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/world-module.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="23" selection-start-column="23" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -122,36 +75,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>powerup</find>
-      <find>interface</find>
-      <find>reset</find>
-      <find>onend</find>
-      <find>destructbo</find>
-      <find>att</find>
-      <find>attem</find>
-      <find>cout</find>
-      <find>getrandom</find>
-      <find>se</find>
-      <find>M</find>
-      <find>Gameplay</find>
-      <find>MyGameplay</find>
-      <find>gamemod</find>
-      <find>~</find>
-      <find>ending</find>
-      <find>update</find>
-      <find>endi</find>
-      <find>PlayerSco</find>
-      <find>private</find>
       <find>termina</find>
-      <find>settings</find>
-      <find>graphicsco</find>
-      <find>gamepla</find>
-      <find />
-      <find>Logger</find>
-      <find>getend</find>
+      <find>onend</find>
       <find>TODO</find>
-      <find>space</find>
-      <find>inittime</find>
+      <find>sErr</find>
+      <find>paus</find>
+      <find>messa</find>
+      <find>runtim</find>
+      <find>update( sf::ev</find>
+      <find>asteroids</find>
+      <find>fadein</find>
+      <find>&lt; 0.1f</find>
+      <find>PREPARE</find>
+      <find>video</find>
+      <find>VideoChanged</find>
+      <find>mainmen</find>
+      <find>index</find>
+      <find>get</find>
+      <find>getSpaceshipPrototype</find>
+      <find>getplayerc</find>
+      <find>setorigi`</find>
+      <find>adjus</find>
+      <find>getrandomfloat (</find>
+      <find>updateba</find>
+      <find>25</find>
+      <find>rectangle</find>
+      <find>gra</find>
+      <find>rende</find>
+      <find>factor</find>
+      <find>Vertic</find>
+      <find>reset</find>
     </findStrings>
     <replaceStrings>
       <replace>Font</replace>
@@ -176,14 +129,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/body.cpp" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/power-up.hpp" />
-        <option value="$PROJECT_DIR$/energy-power-up.cpp" />
-        <option value="$PROJECT_DIR$/energy-power-up.hpp" />
-        <option value="$PROJECT_DIR$/graphics-module.cpp" />
-        <option value="$PROJECT_DIR$/ai-controller.hpp" />
-        <option value="$PROJECT_DIR$/ai-controller.cpp" />
         <option value="$PROJECT_DIR$/aggressive-ai-controller.cpp" />
         <option value="$PROJECT_DIR$/docs/pl/project/docs/classes.md" />
         <option value="$PROJECT_DIR$/docs/pl/project/docs/index.md" />
@@ -211,22 +156,30 @@
         <option value="$PROJECT_DIR$/spaceship.hpp" />
         <option value="$PROJECT_DIR$/loger-manager.cpp" />
         <option value="$PROJECT_DIR$/scripts/settings.xml" />
-        <option value="$PROJECT_DIR$/game-module.cpp" />
         <option value="$PROJECT_DIR$/script.hpp" />
         <option value="$PROJECT_DIR$/script.cpp" />
         <option value="$PROJECT_DIR$/scripts/spaceships.xml" />
-        <option value="$PROJECT_DIR$/gameplay-settings.hpp" />
-        <option value="$PROJECT_DIR$/pause-menu.hpp" />
-        <option value="$PROJECT_DIR$/score-board.hpp" />
-        <option value="$PROJECT_DIR$/message.hpp" />
-        <option value="$PROJECT_DIR$/main-menu.hpp" />
         <option value="$PROJECT_DIR$/docs/pl/project/docs/modules.md" />
         <option value="$PROJECT_DIR$/world-module.hpp" />
+        <option value="$PROJECT_DIR$/debug-module.hpp" />
+        <option value="$PROJECT_DIR$/debug-module.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/pause-menu.hpp" />
+        <option value="$PROJECT_DIR$/message.hpp" />
+        <option value="$PROJECT_DIR$/message.cpp" />
+        <option value="$PROJECT_DIR$/score-board.hpp" />
+        <option value="$PROJECT_DIR$/score-board.cpp" />
+        <option value="$PROJECT_DIR$/pause-menu.cpp" />
+        <option value="$PROJECT_DIR$/game-module.cpp" />
         <option value="$PROJECT_DIR$/world-module.cpp" />
         <option value="$PROJECT_DIR$/gameplay-settings.cpp" />
-        <option value="$PROJECT_DIR$/main.cpp" />
-        <option value="$PROJECT_DIR$/debug-module.hpp" />
         <option value="$PROJECT_DIR$/game-module.hpp" />
+        <option value="$PROJECT_DIR$/gameplay-settings.hpp" />
+        <option value="$PROJECT_DIR$/scripts/graphics.xml" />
+        <option value="$PROJECT_DIR$/main-menu.hpp" />
+        <option value="$PROJECT_DIR$/cmake-build-release/scripts/settings.xml" />
+        <option value="$PROJECT_DIR$/main-menu.cpp" />
+        <option value="$PROJECT_DIR$/main.cpp" />
       </list>
     </option>
   </component>
@@ -250,7 +203,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -261,33 +213,13 @@
             <path>
               <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
               <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
-              <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
-              <item name="pl" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
-              <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
-              <item name="pl" type="462c0819:PsiDirectoryNode" />
-              <item name="project" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="gravity_madness" type="b2602c69:ProjectViewProjectNode" />
-              <item name="gravity-madness" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
-              <item name="pl" type="462c0819:PsiDirectoryNode" />
-              <item name="project" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -359,7 +291,10 @@
       <workItem from="1525524610837" duration="23157000" />
       <workItem from="1525591445301" duration="15144000" />
       <workItem from="1525701318351" duration="12009000" />
-      <workItem from="1525763104914" duration="31000000" />
+      <workItem from="1525763104914" duration="31562000" />
+      <workItem from="1526054439384" duration="17628000" />
+      <workItem from="1526224371281" duration="15333000" />
+      <workItem from="1526245736418" duration="596000" />
     </task>
     <task id="LOCAL-00001" summary="Gitignore">
       <created>1523705590203</created>
@@ -494,27 +429,32 @@
       <option name="project" value="LOCAL" />
       <updated>1525867084344</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Gameplay settings and bunch of other classes">
+      <created>1525989185406</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1525989185406</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="290755000" />
+    <option name="totallyTimeSpent" value="324874000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
       <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info active="true" anchor="bottom" id="Messages" order="0" visible="true" weight="0.32051283" />
       <window_info anchor="bottom" id="CMake" order="8" weight="0.32905984" />
       <window_info anchor="bottom" id="Event Log" order="12" side_tool="true" weight="0.32915717" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Serial Monitor" order="10" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32905984" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.32905984" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32905984" />
       <window_info id="Favorites" order="2" sideWeight="0.5045558" side_tool="true" weight="0.25725028" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3988604" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -522,8 +462,10 @@
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" id="Data View" order="3" />
+      <window_info active="true" anchor="bottom" id="Messages" order="0" visible="true" weight="0.32051283" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32905984" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -552,51 +494,22 @@
     <MESSAGE value="Collisions" />
     <MESSAGE value="Documentation update" />
     <MESSAGE value="Gameplay settings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Gameplay settings" />
+    <MESSAGE value="Gameplay settings and bunch of other classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Gameplay settings and bunch of other classes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="7" />
+      <option name="time" value="8" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/spaceship-controller.hpp">
+    <entry file="file://$PROJECT_DIR$/main-menu.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="11" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/pl/project/mkdocs.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/classes.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="34">
-            <caret line="2" column="4" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="4" />
-          </first_editor>
-          <second_editor>
-            <markdownNavigatorState />
-          </second_editor>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/definitions.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/power-up.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="70" column="37" selection-start-line="70" selection-start-column="37" selection-end-line="70" selection-end-column="37" />
+        <state relative-caret-position="425">
+          <caret line="25" column="55" lean-forward="true" selection-start-line="25" selection-start-column="55" selection-end-line="25" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -616,9 +529,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="918">
           <caret line="54" column="33" selection-start-line="54" selection-start-column="33" selection-end-line="54" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -676,16 +586,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/missile.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="53" column="50" selection-start-line="53" selection-start-column="50" selection-end-line="53" selection-end-column="50" />
-          <folding>
-            <element signature="e#73#96#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/pl/project/docs/controllers.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
@@ -710,30 +610,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/player-controller.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ai-controller.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="433">
           <caret line="44" column="4" selection-start-line="44" selection-start-column="4" selection-end-line="44" selection-end-column="90" />
-          <folding>
-            <element signature="e#77#103#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spaceship.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="151" column="39" selection-start-line="151" selection-start-column="39" selection-end-line="151" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -744,36 +624,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/audio.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/audio.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/player-interface.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6">
-          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/player-interface.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="46" column="32" selection-start-line="46" selection-start-column="32" selection-end-line="46" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/audio.xml" />
     <entry file="file://$PROJECT_DIR$/graphics-module.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -781,47 +632,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/settings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="11" lean-forward="true" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/loger-manager.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="918">
           <caret line="54" selection-start-line="54" selection-end-line="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spaceship.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="18" column="54" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
-          <folding>
-            <element signature="e#69#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/game-module.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="748">
-          <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logger.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logger.hpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/graphics-module.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="49" column="35" selection-start-line="49" selection-start-column="35" selection-end-line="49" selection-end-column="35" />
         </state>
       </provider>
     </entry>
@@ -843,50 +657,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="290">
           <caret line="48" column="41" selection-start-line="48" selection-start-column="41" selection-end-line="48" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gameplay-settings.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="535">
-          <caret line="44" column="21" selection-start-line="44" selection-start-column="8" selection-end-line="44" selection-end-column="21" />
-          <folding>
-            <element signature="e#75#92#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/score-board.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="28" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pause-menu.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="38" lean-forward="true" selection-start-column="38" selection-end-column="38" />
-          <folding>
-            <element signature="e#79#107#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main-menu.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/message.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="14" selection-end-column="45" />
-          <folding>
-            <element signature="e#73#101#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -914,33 +684,131 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/player-interface.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logger.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/debug-module.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="472">
+          <caret line="32" column="58" lean-forward="true" selection-start-line="32" selection-start-column="58" selection-end-line="32" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pause-menu.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/message.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="38" lean-forward="true" selection-start-line="13" selection-start-column="38" selection-end-line="13" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/message.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="37" lean-forward="true" selection-start-line="24" selection-start-column="37" selection-end-line="24" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pause-menu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/score-board.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/score-board.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="22" column="32" selection-start-line="22" selection-start-column="32" selection-end-line="22" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spaceship.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="151" column="39" selection-start-line="151" selection-start-column="39" selection-end-line="151" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/missile.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="898">
+          <caret line="53" column="50" selection-start-line="53" selection-start-column="50" selection-end-line="53" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spaceship.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="18" column="54" selection-start-line="18" selection-start-column="54" selection-end-line="18" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/debug-module.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="26" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
+          <folding>
+            <element signature="e#83#111#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/world-module.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="23" selection-start-column="23" selection-end-column="23" />
+        <state relative-caret-position="-625">
+          <caret line="268" column="38" selection-start-line="268" selection-start-column="38" selection-end-line="268" selection-end-column="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
+    <entry file="file://$PROJECT_DIR$/scripts/settings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="25" selection-start-line="7" selection-start-column="25" selection-end-line="7" selection-end-column="25" />
+        <state relative-caret-position="187">
+          <caret line="11" column="11" lean-forward="true" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gameplay-settings.cpp">
+    <entry file="file://$PROJECT_DIR$/graphics-module.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="73" lean-forward="true" selection-start-line="73" selection-end-line="73" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="161">
+          <caret line="230" column="32" selection-start-line="230" selection-start-column="29" selection-end-line="230" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/world-module.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
+        <state relative-caret-position="-92">
           <caret line="42" column="24" selection-start-line="42" selection-start-column="24" selection-end-line="42" selection-end-column="24" />
           <folding>
             <element signature="e#75#102#0" expanded="true" />
@@ -948,22 +816,91 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/debug-module.hpp">
+    <entry file="file://$PROJECT_DIR$/gameplay-settings.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+        <state relative-caret-position="395">
+          <caret line="122" lean-forward="true" selection-start-line="122" selection-end-line="122" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gameplay-settings.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6069">
+          <caret line="357" selection-start-line="357" selection-end-line="357" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/graphics.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/game-module.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="477" column="81" selection-start-line="477" selection-start-column="4" selection-end-line="477" selection-end-column="81" />
           <folding>
-            <element signature="e#83#111#0" expanded="true" />
+            <element signature="e#0#27#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/player-interface.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="106" column="4" lean-forward="true" selection-start-line="106" selection-start-column="4" selection-end-line="112" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/player-controller.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-release/scripts/settings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/game-module.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1243">
-          <caret line="90" column="4" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="4" />
+        <state relative-caret-position="72">
+          <caret line="104" column="4" lean-forward="true" selection-start-line="104" selection-start-column="4" selection-end-line="105" selection-end-column="35" />
           <folding>
             <element signature="e#73#93#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main-menu.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1326">
+          <caret line="78" column="23" selection-start-line="78" selection-start-column="23" selection-end-line="78" selection-end-column="23" />
+          <folding>
+            <element signature="e#77#92#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main-menu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="25" column="55" selection-start-line="25" selection-start-column="55" selection-end-line="25" selection-end-column="55" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

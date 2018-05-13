@@ -120,6 +120,20 @@ GameplaySettings::SpaceshipPrototype GameplaySettings::getSpaceshipPrototype ( u
 
     unsigned int PrototypeIndex = 0;
 
+    if ( Index < MaximumPlayerCount ) {
+
+        if ( Index < SpaceshipAssignment.size() ) {
+
+            return SpaceshipPrototypes[ SpaceshipAssignment[Index] ]; }
+
+        else {
+
+            PrototypeIndex = (unsigned int) ( rand() % SpaceshipPrototypes.size() );
+
+            return SpaceshipPrototypes[ PrototypeIndex ]; } }
+
+    Index -= MaximumPlayerCount;
+
     while ( PrototypeIndex < SpaceshipPrototypes.size() && PrototypeIndex < SpaceshipAssignment.size() ) {
 
         if ( Index < SpaceshipAssignment[ PrototypeIndex ] ) {
@@ -338,13 +352,9 @@ void GameplaySettings::setPreviousAsteroidFrequency ( ) {
 
             break; } } }
 
-unsigned int GameplaySettings::getSpaceshipCount ( ) {
+unsigned int GameplaySettings::getMaximumPlayerCount ( ) {
 
-    return SpaceshipCount; }
-
-void GameplaySettings::setSpaceshipCount ( unsigned int SpaceshipCount ) {
-
-    this->SpaceshipCount = SpaceshipCount; }
+    return MaximumPlayerCount; }
 
 unsigned int GameplaySettings::getPlayerCount ( ) {
 
@@ -353,6 +363,14 @@ unsigned int GameplaySettings::getPlayerCount ( ) {
 void GameplaySettings::setPlayerCount ( unsigned int PlayerCount ) {
 
     this->PlayerCount = PlayerCount; }
+
+unsigned int GameplaySettings::getSpaceshipCount ( ) {
+
+    return SpaceshipCount; }
+
+void GameplaySettings::setSpaceshipCount ( unsigned int SpaceshipCount ) {
+
+    this->SpaceshipCount = SpaceshipCount; }
 
 GameplaySettings::AIPersonalities GameplaySettings::getAIPersonality ( ) {
 
@@ -586,7 +604,22 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
 
     SpaceshipPrototype Prototype;
 
-    Prototype.Name = "";
-    // TODO ...
+    Prototype.Name = "Testowy";
+    Prototype.Texture = "default";
+    Prototype.AccentTexture = "default";
+    Prototype.Mass = 4.f;
+    Prototype.Radius = 20.f;
+    Prototype.HealthLimit = 250;
+    Prototype.HealthRestoration = 1.f;
+    Prototype.EnergyLimit = 5000;
+    Prototype.EnergyRestoration = 100;
+    Prototype.Thrust = 250;
+    Prototype.SuppressingFactor = 0.75;
+    Prototype.ExhaustColor = sf::Color::Blue;
+    Prototype.RayPower = 25;
+    Prototype.RayColor = sf::Color::Red;
+    Prototype.MissileCount = 3;
+    Prototype.MissileLimit = 5;
+    Prototype.ScoreMultiplier = 0.f;
 
     SpaceshipPrototypes.push_back( Prototype ); }

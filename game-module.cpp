@@ -423,7 +423,7 @@ bool GameModule::onPause ( ) {
 
     return Pause; }
 
-bool GameModule::onEndingCondition ( ) {
+bool GameModule::onTerminate ( ) {
 
     bool FadedOut = true;
 

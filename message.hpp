@@ -8,15 +8,32 @@ class Message {
 
 public:
 
-    Message ( GraphicsModule * Graphics );
+    enum Types {
+
+        None,
+        InitTimeWarning,
+        InitTimeError,
+        RunTimeError
+
+        };
+
+    explicit Message ( GraphicsModule * Graphics );
+
+    void setType ( Types Type );
 
     void update ( );
     void update ( sf::Event &Event );
     void render ( sf::RenderWindow &Window );
 
+    bool onClose ( );
+
 private:
 
     GraphicsModule * Graphics;
+
+    bool Close;
+    Types Type;
+    std::string Text [3];
 
     };
 

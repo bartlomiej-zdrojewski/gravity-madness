@@ -8,15 +8,21 @@ class PauseMenu {
 
 public:
 
-    PauseMenu ( GraphicsModule * Graphics );
+    explicit PauseMenu ( GraphicsModule * Graphics );
 
     void update ( );
     void update ( sf::Event &Event );
     void render ( sf::RenderWindow &Window );
 
+    bool onClose ( );
+    bool onTerminate ( );
+
 private:
 
     GraphicsModule * Graphics;
+
+    bool Close;
+    bool Terminate;
 
     };
 

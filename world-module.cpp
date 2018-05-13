@@ -68,34 +68,46 @@ void WorldModule::update ( ) {
 
         case InitTimeWarningMode: {
 
-            // TODO
+            MyMessage->update();
 
-            if ( Debugging ) {
+            if ( MyMessage->onClose() ) {
 
-                Debug = new DebugModule ( Graphics, Game );
-                Log->manage( Debug->getLogger() );
+                MyMessage->setType( Message::Types::None );
 
-                setMode( Modes::DebugMode ); }
+                if ( Debugging ) {
 
-            else {
+                    Debug = new DebugModule ( Graphics, Game );
+                    Log->manage( Debug->getLogger() );
 
-                MyMainMenu = new MainMenu ( Graphics, Gameplay );
-                MyPauseMenu = new PauseMenu ( Graphics );
-                MyScoreBoard = new ScoreBoard ( Graphics );
+                    setMode( Modes::DebugMode ); }
 
-                setMode( Modes::MainMenuMode ); }
+                else {
+
+                    MyMainMenu = new MainMenu ( Graphics, Gameplay );
+                    MyPauseMenu = new PauseMenu ( Graphics );
+                    MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );
+
+                    setMode( Modes::MainMenuMode ); } }
 
             break; }
 
         case InitTimeErrorMode: {
 
-            // TODO
+            MyMessage->update();
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::IdleMode ); }
 
             break; }
 
         case RunTimeErrorMode: {
 
-            // TODO
+            MyMessage->update();
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::IdleMode ); }
 
             break; }
 
@@ -103,10 +115,19 @@ void WorldModule::update ( ) {
 
             MyMainMenu->update();
 
-            // TODO DELETE
-            setMode( Modes::GameMode );
+            if ( MyMainMenu->onLaunch() ) {
 
-            // TODO
+                Game->setGameplay( Gameplay );
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyMainMenu->onTerminate() ) {
+
+                setMode( Modes::IdleMode ); }
+
+            if ( MyMainMenu->onVideoChanged() ) {
+
+                VideoChanged = true; }
 
             break; }
 
@@ -118,7 +139,7 @@ void WorldModule::update ( ) {
 
                 setMode( Modes::PauseMenuMode ); }
 
-            else if ( Game->onEndingCondition() ) {
+            else if ( Game->onTerminate() ) {
 
                 setMode( Modes::ScoreBoardMode ); }
 
@@ -128,7 +149,15 @@ void WorldModule::update ( ) {
 
             MyPauseMenu->update();
 
-            // TODO
+            if ( MyPauseMenu->onClose() ) {
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyPauseMenu->onTerminate() ) {
+
+                Game->terminate();
+
+                setMode( Modes::GameMode ); }
 
             break; }
 
@@ -136,13 +165,19 @@ void WorldModule::update ( ) {
 
             MyScoreBoard->update();
 
-            // TODO
+            if ( MyScoreBoard->onClose() ) {
+
+                setMode( Modes::MainMenuMode ); }
 
             break; }
 
         case DebugMode: {
 
-            // TODO
+            Debug->update();
+
+            if ( Debug->onTerminate() ) {
+
+                setMode( Modes::IdleMode ); }
 
             break; }
 
@@ -153,6 +188,8 @@ void WorldModule::update ( ) {
     Log->update();
 
     if ( Mode > Modes::RunTimeErrorMode && Log->wasErrorLogged() ) {
+
+        MyMessage->setType( Message::Types::RunTimeError );
 
         setMode( Modes::RunTimeErrorMode ); } }
 
@@ -170,19 +207,46 @@ void WorldModule::update ( sf::Event &Event ) {
 
         case InitTimeWarningMode: {
 
-            // TODO
+            MyMessage->update( Event );
+
+            if ( MyMessage->onClose() ) {
+
+                MyMessage->setType( Message::Types::None );
+
+                if ( Debugging ) {
+
+                    Debug = new DebugModule ( Graphics, Game );
+                    Log->manage( Debug->getLogger() );
+
+                    setMode( Modes::DebugMode ); }
+
+                else {
+
+                    MyMainMenu = new MainMenu ( Graphics, Gameplay );
+                    MyPauseMenu = new PauseMenu ( Graphics );
+                    MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );
+
+                    setMode( Modes::MainMenuMode ); } }
 
             break; }
 
         case InitTimeErrorMode: {
 
-            // TODO
+            MyMessage->update( Event );
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::IdleMode ); }
 
             break; }
 
         case RunTimeErrorMode: {
 
-            // TODO
+            MyMessage->update( Event );
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::IdleMode ); }
 
             break; }
 
@@ -190,7 +254,19 @@ void WorldModule::update ( sf::Event &Event ) {
 
             MyMainMenu->update( Event );
 
-            // TODO
+            if ( MyMainMenu->onLaunch() ) {
+
+                Game->setGameplay( Gameplay );
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyMainMenu->onTerminate() ) {
+
+                setMode( Modes::IdleMode ); }
+
+            if ( MyMainMenu->onVideoChanged() ) {
+
+                VideoChanged = true; }
 
             break; }
 
@@ -202,7 +278,7 @@ void WorldModule::update ( sf::Event &Event ) {
 
                 setMode( Modes::PauseMenuMode ); }
 
-            else if ( Game->onEndingCondition() ) {
+            else if ( Game->onTerminate() ) {
 
                 setMode( Modes::ScoreBoardMode ); }
 
@@ -212,7 +288,15 @@ void WorldModule::update ( sf::Event &Event ) {
 
             MyPauseMenu->update( Event );
 
-            // TODO
+            if ( MyPauseMenu->onClose() ) {
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyPauseMenu->onTerminate() ) {
+
+                Game->terminate();
+
+                setMode( Modes::GameMode ); }
 
             break; }
 
@@ -220,13 +304,19 @@ void WorldModule::update ( sf::Event &Event ) {
 
             MyScoreBoard->update( Event );
 
-            // TODO
+            if ( MyScoreBoard->onClose() ) {
+
+                setMode( Modes::MainMenuMode ); }
 
             break; }
 
         case DebugMode: {
 
-            // TODO
+            Debug->update( Event );
+
+            if ( Debug->onTerminate() ) {
+
+                setMode( Modes::IdleMode ); }
 
             break; }
 
@@ -250,19 +340,19 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 
         case InitTimeWarningMode: {
 
-            // TODO
+            MyMessage->render( Window );
 
             break; }
 
         case InitTimeErrorMode: {
 
-            // TODO
+            MyMessage->render( Window );
 
             break; }
 
         case RunTimeErrorMode: {
 
-            // TODO
+            MyMessage->render( Window );
 
             break; }
 
@@ -293,15 +383,13 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 
         case DebugMode: {
 
-            // TODO
+            Debug->render( Window );
 
             break; }
 
         default: {
 
-            return; } }
-
-    }
+            return; } } }
 
 bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
@@ -408,6 +496,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
         if ( Log->wasErrorLogged() ) {
 
             MyMessage = new Message ( Graphics );
+            MyMessage->setType( Message::Types::InitTimeError );
 
             setMode( Modes::InitTimeErrorMode ); }
 
@@ -423,6 +512,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
             if ( Log->wasWarningLogged() ) {
 
                 MyMessage = new Message ( Graphics );
+                MyMessage->setType( Message::Types::InitTimeWarning );
 
                 setMode( Modes::InitTimeWarningMode ); }
 
@@ -438,7 +528,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
 
                 MyMainMenu = new MainMenu ( Graphics, Gameplay );
                 MyPauseMenu = new PauseMenu ( Graphics );
-                MyScoreBoard = new ScoreBoard ( Graphics );
+                MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );
                 MyMessage = new Message ( Graphics );
 
                 setMode( Modes::MainMenuMode ); } } } }
