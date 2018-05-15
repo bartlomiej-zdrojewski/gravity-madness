@@ -18,40 +18,40 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
     this->Gameplay = Gameplay;
     EndingCondition = false;
     AreaRadius = Gameplay->getAreaSize();
-    PlayerCount = Gameplay->getPlayerCount();
-    PowerUpPauseDuration = sf::seconds( 60.f / ( powf( AreaRadius / 1000.f, 2 ) * Gameplay->getSpaceshipCount() ) );
     GameplayTime = Gameplay->getTimeLimit();
+    PlayerCount = Gameplay->getPlayerCount();
+    PowerUpLimit = (unsigned int) ( 5.f * powf( AreaRadius / 1000.f, 2 ) );
 
     switch ( Gameplay->getAsteroidFrequency() ) {
 
         case GameplaySettings::AsteroidFrequencies::Rarely: {
 
-            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 2.f );
+            AsteroidCount = (unsigned int) ( 2.f * powf( AreaRadius / 1000.f, 2 ) );
 
             break; }
 
         case GameplaySettings::AsteroidFrequencies::Occasionally: {
 
-            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 4.f );
+            AsteroidCount = (unsigned int) ( 4.f * powf( AreaRadius / 1000.f, 2 ) );
 
             break; }
 
         case GameplaySettings::AsteroidFrequencies::Often: {
 
-            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 6.f );
+            AsteroidCount = (unsigned int) ( 6.f * powf( AreaRadius / 1000.f, 2 ) );
 
             break; }
 
         default: {
 
-            AsteroidCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 2.f );
+            AsteroidCount = (unsigned int) ( 2.f * powf( AreaRadius / 1000.f, 2 ) );
 
             break; } }
 
     prepareAreaLimit();
 
     unsigned int Attempts = 1000;
-    auto PlanetCount = (unsigned int) ( powf( AreaRadius / 1000.f, 2 ) * 2.f );
+    auto PlanetCount = (unsigned int) ( 2.f * powf( AreaRadius / 1000.f, 2 ) );
 
     for ( unsigned int i = 0; i < PlanetCount && Attempts > 0; i++ ) {
 
@@ -71,7 +71,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
             for ( auto ActivePlanet : Planets ) {
 
-                float MinimumDistance = 250.f + Radius + ActivePlanet->getRadius();
+                float MinimumDistance = 500.f + Radius + ActivePlanet->getRadius();
 
                 if ( getMinDistance( Position, ActivePlanet->getPosition() ) <= MinimumDistance ) {
 
@@ -143,12 +143,14 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
                     else if ( Personality == 1 ) {
 
                         // TODO REASONABLE PERSONALITY
+                        NewSpaceship->setController( new AIController ( ) );
 
                         }
 
                     else {
 
                         // TODO PASSIVE PERSONALITY
+                        NewSpaceship->setController( new AIController ( ) );
 
                         }
 
@@ -299,7 +301,9 @@ void GameModule::update ( sf::Event &Event ) {
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        PlayerSpaceship[i]->update( Event ); } }
+        if ( PlayerSpaceship[i] ) {
+
+            PlayerSpaceship[i]->update( Event ); } } }
 
 void GameModule::render ( sf::RenderWindow &Window ) {
 
@@ -369,6 +373,7 @@ void GameModule::reset ( ) {
     AsteroidPauseDuration = sf::seconds( 5.f );
     AsteroidPauseTime = sf::seconds( 30.f );
 
+    PowerUpLimit = 10;
     PowerUpPauseDuration = sf::seconds( 5.f );
     PowerUpPauseTime = sf::seconds( 30.f );
     GravityPowerUp = nullptr;
@@ -1107,7 +1112,7 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
         PowerUpPauseTime = PowerUpPauseDuration;
 
-        sf::Vector2f Position;
+        sf::Vector2f Position ( 1000000.f, 1000000.f );
         float MinimumPlanetDistance = 150.f;
         float MinimumPowerUpDistance = 50.f;
         unsigned int Attempts = 25;
@@ -1116,8 +1121,8 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
             float Angle = ( - PI ) + getRandomFloat() * 2.f * PI;
 
-            Position.x = getRandomFloat() * ( AreaRadius - 500.f ) * cosf( Angle );
-            Position.y = getRandomFloat() * ( AreaRadius - 500.f ) * sinf( Angle );
+            Position.x = getRandomFloat() * ( AreaRadius - 200.f ) * cosf( Angle );
+            Position.y = getRandomFloat() * ( AreaRadius - 200.f ) * sinf( Angle );
 
             for ( auto ActivePlanet : Planets ) {
 
@@ -1249,8 +1254,8 @@ void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
 void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
 
-    float ViewWidth = ( 800.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
-    float ViewHeight = 800.f;
+    float ViewWidth = ( 1200.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
+    float ViewHeight = 1200.f;
 
     if ( PlayerCount == 1 ) {
 

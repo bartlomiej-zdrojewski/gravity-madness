@@ -1,6 +1,7 @@
 #ifndef GRAVITY_MADNESS_MAIN_MENU_HPP
 #define GRAVITY_MADNESS_MAIN_MENU_HPP
 
+#include <cmath>
 #include <list>
 #include <SFML/Graphics.hpp>
 #include "definitions.hpp"
@@ -32,6 +33,7 @@ public:
     bool onLaunch ( );
     bool onTerminate ( );
     bool onVideoChanged ( );
+    bool onSettingsChanged ( );
 
 private:
 
@@ -46,6 +48,7 @@ private:
     void updateGameplaySection ( sf::Event &Event );
     void renderGameplaySection ( sf::RenderWindow &Window );
 
+    void updateSettingsSection ( sf::Time ElapsedTime );
     void updateSettingsSection ( sf::Event &Event );
     void renderSettingsSection ( sf::RenderWindow &Window );
 
@@ -60,6 +63,7 @@ private:
     bool Launch;
     bool Terminate;
     bool VideoChanged;
+    bool SettingsChanged;
     Modes Mode;
     sf::Clock Clock;
 
@@ -72,12 +76,18 @@ private:
     sf::Vector2f MenuOptionPointerPosition;
     float MenuOptionPointerVelocity;
 
+    unsigned int SettingsOption;
+    unsigned int SettingsOptionCount;
+    std::string SettingsOptionText [6];
+    unsigned int SettingsOptionFontSize;
+    sf::Vector2f SettingsOptionPosition [6];
+
     std::vector <sf::Vertex> Background;
     std::vector <unsigned int> ParticleIndexes;
     std::vector <sf::Vector2f> ParticleVelocities;
     sf::Time BackgroundPauseTime;
     sf::Time BackgroundPauseDuration;
-    std::vector <sf::Color> FancyColors;
+    std::vector <sf::Color> RedPalette;
 
     };
 

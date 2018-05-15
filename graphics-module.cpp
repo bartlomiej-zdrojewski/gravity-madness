@@ -249,13 +249,13 @@ void GraphicsModule::disableFullScreen ( ) {
 
     FullScreen = false; }
 
-unsigned int GraphicsModule::getAntyaliasingLevel ( ) {
+unsigned int GraphicsModule::getAntialiasingLevel ( ) {
 
-    return AntyaliasingLevel; }
+    return AntialiasingLevel; }
 
-void GraphicsModule::setAntyaliasingLevel ( unsigned int AntyaliasingLevel ) {
+void GraphicsModule::setAntialiasingLevel ( unsigned int AntialiasingLevel ) {
 
-    this->AntyaliasingLevel = AntyaliasingLevel; }
+    this->AntialiasingLevel = AntialiasingLevel; }
 
 sf::Texture& GraphicsModule::getTexture ( std::string Name ) {
 

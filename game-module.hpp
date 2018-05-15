@@ -105,6 +105,7 @@ private:
     sf::Time AsteroidPauseTime;
     sf::Time AsteroidPauseDuration;
 
+    unsigned int PowerUpLimit;
     sf::Time PowerUpPauseTime;
     sf::Time PowerUpPauseDuration;
     PowerUp * GravityPowerUp;

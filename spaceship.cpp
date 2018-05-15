@@ -209,7 +209,7 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
                 updateEnergy( Acceleration, ElapsedTime );
                 updateVelocity( Acceleration, ElapsedTime ); } }
 
-        if ( Controller->onRayShot() && Energy >= RayPower ) {
+        if ( Controller->onRayShot() && !RayShot && Energy >= RayPower ) {
 
             RayShot = true;
 
@@ -217,9 +217,11 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
         if ( Controller->onMissileShot() ) {
 
-            if ( true ) { // TODO CHECK MISSILES
+            if ( !MissileShot && MissileCount > 0 ) {
 
-                MissileShot = true; } } }
+                MissileShot = true;
+
+                MissileCount--; } } }
 
     updatePosition( ElapsedTime ); }
 

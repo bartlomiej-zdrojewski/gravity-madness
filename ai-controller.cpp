@@ -96,6 +96,18 @@ void AIController::update ( sf::Time ElapsedTime ) {
 
             ThrustLeft = true; } }
 
+    else if ( Distance < ( 2.5f * MinimumDistance ) && fabsf( AngleDifference ) < ( PI / 8.f ) ) {
+
+        ThrustForward = true;
+
+        if ( AngleDifference >= 0.f ) {
+
+            ThrustRight = true; }
+
+        else {
+
+            ThrustLeft = true; } }
+
     else if ( AccelerationModule > ( 0.2f * MySpaceship->getThrust() ) ) {
 
         if ( AngleDifference >= 0.f && AngleDifference < ( PI / 3.f ) ) {

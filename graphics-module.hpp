@@ -16,7 +16,7 @@ public:
         WindowWidth = 0;
         WindowHeight = 0;
         FullScreen = false;
-        AntyaliasingLevel = 0;
+        AntialiasingLevel = 0;
 
         initDefault(); }
 
@@ -33,8 +33,8 @@ public:
     void enableFullScreen ( );
     void disableFullScreen ( );
 
-    unsigned int getAntyaliasingLevel ( );
-    void setAntyaliasingLevel ( unsigned int AntyaliasingLevel );
+    unsigned int getAntialiasingLevel ( );
+    void setAntialiasingLevel ( unsigned int AntialiasingLevel );
 
     sf::Texture& getTexture ( std::string Name );
     sf::Font& getFont ( std::string Name );
@@ -62,7 +62,7 @@ private:
     unsigned int WindowWidth;
     unsigned int WindowHeight;
     bool FullScreen;
-    unsigned int AntyaliasingLevel;
+    unsigned int AntialiasingLevel;
 
     std::unordered_map <std::string, sf::Texture*> Textures;
     std::unordered_map <std::string, sf::Font*> Fonts;

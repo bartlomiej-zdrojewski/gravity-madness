@@ -136,8 +136,6 @@ private:
 
 private:
 
-
-
     AreaSizes AreaSize;
     AsteroidFrequencies AsteroidFrequency;
     const static int MaximumPlayerCount = 4;

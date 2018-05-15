@@ -48,7 +48,7 @@ uint32_t WorldModule::getVideoStyle ( ) {
 sf::ContextSettings WorldModule::getVideoContext ( ) {
 
     sf::ContextSettings Context;
-    Context.antialiasingLevel = Graphics->getAntyaliasingLevel();
+    Context.antialiasingLevel = Graphics->getAntialiasingLevel();
 
     return Context; }
 
@@ -128,6 +128,12 @@ void WorldModule::update ( ) {
             if ( MyMainMenu->onVideoChanged() ) {
 
                 VideoChanged = true; }
+
+            if ( MyMainMenu->onSettingsChanged() ) {
+
+                // TODO UPDATE CONFIG
+
+                }
 
             break; }
 
@@ -396,7 +402,7 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
     LogPath = "log.txt";
     InitWindowWidth = 0;
     InitWindowHeight = 0;
-    InitAntyaliasing = 0;
+    InitAntialiasing = 0;
     InitFullScreen = false;
     HighScore = 0;
     Debugging = false;
@@ -450,9 +456,9 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
             InitFullScreen = Config->getBooleanValue( Setting ); }
 
-        else if ( std::string( Setting.name() ) == "Antyaliasing" ) {
+        else if ( std::string( Setting.name() ) == "Antialiasing" ) {
 
-            InitAntyaliasing = (unsigned int) Config->getIntegerValue( Setting ); }
+            InitAntialiasing = (unsigned int) Config->getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "HighScore" ) {
 

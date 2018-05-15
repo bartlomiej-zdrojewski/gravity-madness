@@ -74,7 +74,7 @@ public:
 
         Graphics->setWindowSize( InitWindowWidth, InitWindowHeight );
         InitFullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
-        Graphics->setAntyaliasingLevel( InitAntyaliasing );
+        Graphics->setAntialiasingLevel( InitAntialiasing );
 
         // Audio options
 
@@ -125,7 +125,7 @@ private:
     std::string LogPath;
     unsigned int InitWindowWidth;
     unsigned int InitWindowHeight;
-    unsigned int InitAntyaliasing;
+    unsigned int InitAntialiasing;
     bool InitFullScreen;
     unsigned int HighScore;
     bool Debugging;

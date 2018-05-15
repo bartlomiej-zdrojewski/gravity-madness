@@ -6,7 +6,7 @@
     <WindowWidth>800</WindowWidth>
     <WindowHeight>600</WindowHeight>
     <FullScreen>false</FullScreen>
-    <Antyaliasing>4</Antyaliasing>
+    <Antialiasing>4</Antialiasing>
     <HighScore>0</HighScore>
     <Debug>false</Debug>
 </Settings>
