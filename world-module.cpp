@@ -173,6 +173,8 @@ void WorldModule::update ( ) {
 
             if ( MyScoreBoard->onClose() ) {
 
+                MyMainMenu->reset();
+
                 setMode( Modes::MainMenuMode ); }
 
             break; }
@@ -311,6 +313,8 @@ void WorldModule::update ( sf::Event &Event ) {
             MyScoreBoard->update( Event );
 
             if ( MyScoreBoard->onClose() ) {
+
+                MyMainMenu->reset();
 
                 setMode( Modes::MainMenuMode ); }
 

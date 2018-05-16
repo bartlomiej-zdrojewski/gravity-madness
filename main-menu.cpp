@@ -136,6 +136,11 @@ void MainMenu::render ( sf::RenderWindow &Window ) {
 
 void MainMenu::reset ( ) {
 
+    WindowWidth = Graphics->getWindowWidth();
+    WindowHeight = Graphics->getWindowHeight();
+    FullScreen = Graphics->isFullScreenEnabled();
+    AntialiasingLevel = Graphics->getAntialiasingLevel();
+
     MenuOptionPointerVelocity = 50.f;
     MenuOptionPointerPosition.y = -25.f;
 
@@ -166,7 +171,6 @@ bool MainMenu::onLaunch ( ) {
         Launch = false;
         Terminate = false;
 
-        reset();
         setMode( Modes::MenuMode );
 
         return true; }
@@ -186,11 +190,14 @@ bool MainMenu::onTerminate ( ) {
 
 bool MainMenu::onVideoChanged ( ) {
 
-    if ( VideoChanged ) {
+    if ( VideoChanged && Mode != Modes::SettingsMode ) {
+
+        Graphics->setWindowSize( WindowWidth, WindowHeight );
+        FullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
+        Graphics->setAntialiasingLevel( AntialiasingLevel );
+        reset();
 
         VideoChanged = false;
-
-        reset();
 
         return true; }
 
@@ -198,7 +205,7 @@ bool MainMenu::onVideoChanged ( ) {
 
 bool MainMenu::onSettingsChanged ( ) {
 
-    if ( SettingsChanged ) {
+    if ( SettingsChanged && Mode != Modes::SettingsMode ) {
 
         SettingsChanged = false;
 
@@ -262,11 +269,21 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
     for ( unsigned int i = 0; i < MenuOptionCount; i++ ) {
 
+        size_t LineSeparator = 0;
+        unsigned int LineCount = 0;
+
         TextPrototype.setString( MenuOptionText[i] );
         TextPrototype.setFont( Graphics->getFont( "MainMenu" ) );
         TextPrototype.setCharacterSize( MenuOptionFontSize );
 
-        while ( TextPrototype.getLocalBounds().height > ( 0.1f * SectionSize.y ) ) {
+        do {
+
+            LineCount++;
+            LineSeparator = MenuOptionText[i].find( '\n', LineSeparator + 1 ); }
+
+        while ( LineSeparator != std::string::npos );
+
+        while ( TextPrototype.getLocalBounds().height > ( LineCount * 0.06f * SectionSize.y ) ) {
 
             TextPrototype.setCharacterSize( --MenuOptionFontSize ); }
 
@@ -313,20 +330,20 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
     if ( std::fabs( SignedDistance ) > 5.f ) {
 
-        float Factor = 10.f;
+        float Factor = 600.f;
         float MaximumDistance = std::fabs( MenuOptionPosition[ MenuOption ].y - MenuOptionPositionCenter[ MenuOption ] );
 
         if ( Graphics->getWindowHeight() < 600.f ) {
 
-            Factor = 8.f; }
+            Factor = 480.f; }
 
         else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
-            Factor = 20.f; }
+            Factor = 1200.f; }
 
         else if ( Graphics->getWindowHeight() > 1000 ) {
 
-            Factor = 30.f; }
+            Factor = 1800.f; }
 
         if ( std::fabs( SignedDistance ) > MaximumDistance ) {
 
@@ -340,7 +357,7 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
                 MenuOptionPointerVelocity = 0.f; } }
 
-        MenuOptionPointerVelocity += Factor / SignedDistance; }
+        MenuOptionPointerVelocity += ( Factor / SignedDistance ) * ElapsedTime.asSeconds(); }
 
     MenuOptionPointerPosition.x = 0.1f * Graphics->getWindowWidth();
     MenuOptionPointerPosition.y += MenuOptionPointerVelocity * ElapsedTime.asSeconds(); }
@@ -382,8 +399,6 @@ void MainMenu::updateMenu ( sf::Event &Event ) {
                     MenuOption++; }
 
                 break; }
-
-                // ...
 
             case sf::Keyboard::Return: {
 
@@ -463,9 +478,7 @@ void MainMenu::updateMenu ( sf::Event &Event ) {
 
             default: {
 
-                break; } } }
-
-    }
+                break; } } } }
 
 void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
 
@@ -544,24 +557,24 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
 
 void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
-    SettingsOptionText[ SettingsOptionCount + 0 ] = std::to_string( Graphics->getWindowWidth() ) + " x " + std::to_string( Graphics->getWindowHeight() );
-    SettingsOptionText[ SettingsOptionCount + 1 ] = Graphics->isFullScreenEnabled() ? "true" : "false";
+    SettingsOptionText[ SettingsOptionCount + 0 ] = std::to_string( WindowWidth ) + " x " + std::to_string( WindowHeight );
+    SettingsOptionText[ SettingsOptionCount + 1 ] = FullScreen ? "true" : "false";
 
-    if ( Graphics->getAntialiasingLevel() == 0 ) {
+    if ( AntialiasingLevel == 0 ) {
 
         SettingsOptionText[ SettingsOptionCount + 2 ] = "none"; }
 
-    else if ( Graphics->getAntialiasingLevel() == 1 ) {
+    else if ( AntialiasingLevel == 1 ) {
 
         SettingsOptionText[ SettingsOptionCount + 2 ] = "1st level"; }
 
-    else if ( Graphics->getAntialiasingLevel() == 2 ) {
+    else if ( AntialiasingLevel == 2 ) {
 
         SettingsOptionText[ SettingsOptionCount + 2 ] = "2nd level"; }
 
     else { // 4th or 8th
 
-        SettingsOptionText[ SettingsOptionCount + 2 ] = std::to_string( Graphics->getAntialiasingLevel() ) + "th level"; }
+        SettingsOptionText[ SettingsOptionCount + 2 ] = std::to_string( AntialiasingLevel ) + "th level"; }
 
     sf::Vector2f SectionMargin = sf::Vector2f ( 20.f, 30.f );
     sf::Vector2f OptionMargin = sf::Vector2f ( 10.f, 15.f );
@@ -587,7 +600,7 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
     float OptionHeight = 0.f;
 
     SettingsOptionFontSize = MenuOptionFontSize;
-    float SmallFontScale = 0.75f;
+    float SmallFontScale = 0.85f;
 
     for ( unsigned int i = 0; i < ( 2 * SettingsOptionCount ); i++ ) {
 
@@ -595,7 +608,7 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
         TextPrototype.setFont( Graphics->getFont( "MainMenu" ) );
         TextPrototype.setCharacterSize( i < SettingsOptionCount ? SettingsOptionFontSize : (unsigned int) ( SmallFontScale * SettingsOptionFontSize ) );
 
-        while ( TextPrototype.getLocalBounds().height > ( 0.1f * SectionSize.y ) ) {
+        while ( TextPrototype.getLocalBounds().height > ( 0.06f * SectionSize.y ) ) {
 
             TextPrototype.setCharacterSize( --SettingsOptionFontSize ); }
 
@@ -614,12 +627,10 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
         size_t Index = SettingsOptionCount - i - 1;
 
-        SettingsOptionPosition[ Index ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - ( 1.f + SmallFontScale ) * OptionHeight );
+        SettingsOptionPosition[ Index ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - 2.f * OptionHeight - 0.5f * OptionMargin.y );
         SettingsOptionPosition[ Index + SettingsOptionCount ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - OptionHeight );
 
-        OptionPosition.y -= ( 1.f + SmallFontScale ) * OptionHeight + 2.f * OptionMargin.y; }
-
-    }
+        OptionPosition.y -= 2.f * OptionHeight + 1.5f * OptionMargin.y; } }
 
 void MainMenu::updateSettingsSection ( sf::Event &Event ) {
 
@@ -643,6 +654,18 @@ void MainMenu::updateSettingsSection ( sf::Event &Event ) {
 
                 break; }
 
+            case sf::Keyboard::Left: {
+
+                updateSettingsSection_BindLeft();
+
+                break; }
+
+            case sf::Keyboard::Right: {
+
+                updateSettingsSection_BindRight();
+
+                break; }
+
             case sf::Keyboard::W: {
 
                 if ( SettingsOption > 0 ) {
@@ -659,7 +682,17 @@ void MainMenu::updateSettingsSection ( sf::Event &Event ) {
 
                 break; }
 
-            // ...
+            case sf::Keyboard::A: {
+
+                updateSettingsSection_BindLeft();
+
+                break; }
+
+            case sf::Keyboard::D: {
+
+                updateSettingsSection_BindRight();
+
+                break; }
 
             case sf::Keyboard::BackSpace: {
 
@@ -675,9 +708,189 @@ void MainMenu::updateSettingsSection ( sf::Event &Event ) {
 
             default: {
 
-                break; } } }
+                break; } } } }
 
-    }
+void MainMenu::updateSettingsSection_BindLeft ( ) {
+
+    switch ( SettingsOption ) {
+
+        case 0: {
+
+            std::vector <sf::VideoMode> Resolutions = sf::VideoMode::getFullscreenModes();
+            size_t Index = 0;
+
+            while ( Index < Resolutions.size() && WindowWidth < Resolutions[Index].width ) {
+
+                Index++; }
+
+            while ( Index < Resolutions.size() && WindowHeight < Resolutions[Index].height ) {
+
+                Index++; }
+
+            if ( Index != Resolutions.size() && WindowWidth == Resolutions[Index].width && WindowHeight == Resolutions[Index].height ) {
+
+                Index++; }
+
+            if ( Index == Resolutions.size() ) {
+
+                Index = 0; }
+
+            WindowWidth = Resolutions[Index].width;
+            WindowHeight = Resolutions[Index].height;
+
+            VideoChanged = true;
+            SettingsChanged = true;
+
+            break; }
+
+        case 1: {
+
+            FullScreen = !FullScreen;
+
+            VideoChanged = true;
+            SettingsChanged = true;
+
+            break; }
+
+        case 2: {
+
+            switch ( AntialiasingLevel ) {
+
+                case 0: {
+
+                    AntialiasingLevel = 8;
+
+                    break; }
+
+                case 1: {
+
+                    AntialiasingLevel = 0;
+
+                    break; }
+
+                case 2: {
+
+                    AntialiasingLevel = 1;
+
+                    break; }
+
+                case 4: {
+
+                    AntialiasingLevel = 2;
+
+                    break; }
+
+                case 8: {
+
+                    AntialiasingLevel = 4;
+
+                    break; }
+
+                default: {
+
+                    AntialiasingLevel = 0;
+
+                    break; } }
+
+            VideoChanged = true;
+            SettingsChanged = true;
+
+            break; }
+
+        default: {
+
+            break; } } }
+
+void MainMenu::updateSettingsSection_BindRight ( ) {
+
+    switch ( SettingsOption ) {
+
+        case 0: {
+
+            std::vector <sf::VideoMode> Resolutions = sf::VideoMode::getFullscreenModes();
+            size_t Index = Resolutions.size();
+
+            while ( Index > 0 && WindowWidth > Resolutions[ Index - 1 ].width ) {
+
+                Index--; }
+
+            while ( Index > 0 && WindowHeight > Resolutions[ Index - 1 ].height ) {
+
+                Index--; }
+
+            if ( Index != 0 && WindowWidth == Resolutions[ Index - 1 ].width && WindowHeight == Resolutions[ Index - 1 ].height ) {
+
+                Index--; }
+
+            if ( Index == 0 ) {
+
+                Index = Resolutions.size(); }
+
+            WindowWidth = Resolutions[ Index - 1 ].width;
+            WindowHeight = Resolutions[ Index - 1 ].height;
+
+            VideoChanged = true;
+            SettingsChanged = true;
+
+            break; }
+
+        case 1: {
+
+            FullScreen = !FullScreen;
+
+            VideoChanged = true;
+            SettingsChanged = true;
+
+            break; }
+
+        case 2: {
+
+            switch ( AntialiasingLevel ) {
+
+                case 0: {
+
+                    AntialiasingLevel = 1;
+
+                    break; }
+
+                case 1: {
+
+                    AntialiasingLevel = 2;
+
+                    break; }
+
+                case 2: {
+
+                    AntialiasingLevel = 4;
+
+                    break; }
+
+                case 4: {
+
+                    AntialiasingLevel = 8;
+
+                    break; }
+
+                case 8: {
+
+                    AntialiasingLevel = 0;
+
+                    break; }
+
+                default: {
+
+                    AntialiasingLevel = 0;
+
+                    break; } }
+
+            VideoChanged = true;
+            SettingsChanged = true;
+
+            break; }
+
+        default: {
+
+            break; } } }
 
 void MainMenu::renderSettingsSection ( sf::RenderWindow &Window ) {
 
@@ -713,7 +926,7 @@ void MainMenu::renderSettingsSection ( sf::RenderWindow &Window ) {
 
         Window.draw( Text ); }
 
-    Text.setCharacterSize( (unsigned int) ( 0.9f * SettingsOptionFontSize ) );
+    Text.setCharacterSize( (unsigned int) ( 0.85f * SettingsOptionFontSize ) );
 
     for ( unsigned int i = SettingsOptionCount; i < ( 2 * SettingsOptionCount ); i++ ) {
 

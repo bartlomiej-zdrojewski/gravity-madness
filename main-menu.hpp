@@ -50,6 +50,8 @@ private:
 
     void updateSettingsSection ( sf::Time ElapsedTime );
     void updateSettingsSection ( sf::Event &Event );
+    void updateSettingsSection_BindLeft ( );
+    void updateSettingsSection_BindRight ( );
     void renderSettingsSection ( sf::RenderWindow &Window );
 
     void updateBackground ( sf::Time ElapsedTime );
@@ -66,6 +68,11 @@ private:
     bool SettingsChanged;
     Modes Mode;
     sf::Clock Clock;
+
+    unsigned int WindowWidth;
+    unsigned int WindowHeight;
+    bool FullScreen;
+    unsigned int AntialiasingLevel;
 
     unsigned int MenuOption;
     unsigned int MenuOptionCount;

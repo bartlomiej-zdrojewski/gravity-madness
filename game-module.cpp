@@ -529,6 +529,12 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
                 TargetDistance = Distance;
                 TargetIntersection = Intersection; } } }
 
+    if ( AffectMissiles ) {
+
+        // TODO DESTROY MISSILES
+
+        }
+
     for ( auto ActivePlanet : Planets ) {
 
         if ( RayShot.getIntersection( ActivePlanet->getPosition(), ActivePlanet->getRadius(), Intersection, Distance ) ) {
@@ -548,9 +554,6 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
                 Target = nullptr;
                 TargetDistance = Distance;
                 TargetIntersection = Intersection; } } }
-
-    // TODO MISSILES
-    // if ( AffectMissiles ) then ...
 
     Intersection = TargetIntersection;
 

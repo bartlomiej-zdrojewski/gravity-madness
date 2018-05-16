@@ -13,18 +13,11 @@
   <component name="ChangeListManager">
     <list default="true" id="62bf6682-e578-46fe-be45-0f9be21c3950" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ai-controller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ai-controller.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/game-module.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gameplay-settings.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/gameplay-settings.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/graphics-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/graphics-module.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main-menu.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main-menu.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main-menu.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/main-menu.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spaceship.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/spaceship.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/world-module.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/world-module.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/world-module.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/world-module.hpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -41,26 +34,32 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main-menu.hpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main-menu.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main-menu.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="80" column="39" selection-start-line="80" selection-start-column="39" selection-end-line="80" selection-end-column="39" />
+            <state relative-caret-position="344">
+              <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="53" selection-end-column="45" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main-menu.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main-menu.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="816" column="40" lean-forward="true" selection-start-line="816" selection-start-column="40" selection-end-line="816" selection-end-column="40" />
               <folding>
-                <element signature="e#77#94#0" expanded="true" />
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main-menu.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main-menu.cpp">
+      <file leaf-file-name="world-module.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/world-module.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="725" column="40" selection-start-line="725" selection-start-column="40" selection-end-line="725" selection-end-column="40" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="127">
+              <caret line="317" selection-start-line="317" selection-end-line="317" />
             </state>
           </provider>
         </entry>
@@ -69,36 +68,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>rectangle</find>
-      <find>gra</find>
-      <find>rende</find>
-      <find>factor</find>
-      <find>Vertic</find>
-      <find>13, 71, 161</find>
-      <find>particles</find>
-      <find>updateview</find>
-      <find>destructbody</find>
-      <find>out</find>
-      <find>&quot;IN</find>
-      <find>EVENT IN`</find>
-      <find>missile</find>
-      <find>poweru</find>
-      <find>powerup</find>
       <find>AreaRadius -</find>
       <find>PowerUpPauseDu</find>
       <find>antialiasing</find>
       <find>antyaliasing</find>
-      <find>reset</find>
       <find>updatesettings</find>
-      <find>mainmenu</find>
       <find>onvide</find>
-      <find>update</find>
       <find>Antyaliasing</find>
       <find>0.5f * Sec</find>
-      <find>0.2f * Sec</find>
       <find>updateSettingsSection</find>
       <find>= 100</find>
       <find>antia</find>
+      <find>0.2f * Sec</find>
+      <find>FancyColors</find>
+      <find>rest</find>
+      <find>fullsc</find>
+      <find>update</find>
+      <find>mainmenu</find>
+      <find>Mainme</find>
+      <find>MAinmenu</find>
+      <find>updatem</find>
+      <find>updatesett</find>
+      <find>updatesetti</find>
+      <find>reset</find>
+      <find>MenuOptionPointerVelocity</find>
+      <find>updatemen</find>
+      <find>fontsize</find>
+      <find>.height &gt;</find>
+      <find>0.12</find>
+      <find>resol</find>
+      <find>TODO</find>
     </findStrings>
     <replaceStrings>
       <replace>Font</replace>
@@ -113,6 +112,7 @@
       <replace>GameplaySettings</replace>
       <replace>Gameplay</replace>
       <replace>Antialiasing</replace>
+      <replace>RedPalette</replace>
     </replaceStrings>
     <dirStrings>
       <dir>C:\Users\Mastermind\Documents\Repositories\gravity-madness\assets</dir>
@@ -165,16 +165,16 @@
         <option value="$PROJECT_DIR$/pause-menu.cpp" />
         <option value="$PROJECT_DIR$/gameplay-settings.cpp" />
         <option value="$PROJECT_DIR$/scripts/graphics.xml" />
-        <option value="$PROJECT_DIR$/main.cpp" />
-        <option value="$PROJECT_DIR$/cmake-build-release/scripts/settings.xml" />
         <option value="$PROJECT_DIR$/spaceship.cpp" />
         <option value="$PROJECT_DIR$/game-module.hpp" />
         <option value="$PROJECT_DIR$/game-module.cpp" />
         <option value="$PROJECT_DIR$/ai-controller.cpp" />
         <option value="$PROJECT_DIR$/gameplay-settings.hpp" />
         <option value="$PROJECT_DIR$/world-module.cpp" />
-        <option value="$PROJECT_DIR$/main-menu.cpp" />
+        <option value="$PROJECT_DIR$/main.cpp" />
+        <option value="$PROJECT_DIR$/cmake-build-release/scripts/settings.xml" />
         <option value="$PROJECT_DIR$/main-menu.hpp" />
+        <option value="$PROJECT_DIR$/main-menu.cpp" />
       </list>
     </option>
   </component>
@@ -198,7 +198,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -215,6 +214,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -290,7 +290,8 @@
       <workItem from="1526054439384" duration="17628000" />
       <workItem from="1526224371281" duration="15333000" />
       <workItem from="1526245736418" duration="693000" />
-      <workItem from="1526389515601" duration="10842000" />
+      <workItem from="1526389515601" duration="11100000" />
+      <workItem from="1526482907168" duration="10509000" />
     </task>
     <task id="LOCAL-00001" summary="Gitignore">
       <created>1523705590203</created>
@@ -439,11 +440,18 @@
       <option name="project" value="LOCAL" />
       <updated>1526246711369</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Main menu update">
+      <created>1526412479148</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1526412479148</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="335813000" />
+    <option name="totallyTimeSpent" value="346580000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -457,10 +465,10 @@
       <window_info anchor="bottom" id="Serial Monitor" order="10" />
       <window_info anchor="bottom" id="Run" order="3" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32905984" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49544418" visible="true" weight="0.26040977" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49266246" visible="true" weight="0.26040977" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.32905984" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" sideWeight="0.5045558" side_tool="true" weight="0.25725028" />
+      <window_info id="Favorites" order="2" sideWeight="0.5073375" side_tool="true" weight="0.26040977" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3988604" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -499,7 +507,8 @@
     <MESSAGE value="Gameplay settings" />
     <MESSAGE value="Gameplay settings and bunch of other classes" />
     <MESSAGE value="Main menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="Main menu" />
+    <MESSAGE value="Main menu update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Main menu update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -805,20 +814,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="46" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmake-build-release/scripts/settings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="34" lean-forward="true" selection-start-line="7" selection-start-column="34" selection-end-line="7" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gameplay-settings.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6069">
@@ -894,29 +889,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/world-module.cpp">
+    <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="132" selection-start-line="132" selection-end-line="132" />
+        <state relative-caret-position="378">
+          <caret line="41" column="24" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="24" />
+          <folding>
+            <element signature="e#1739#1760#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main-menu.cpp">
+    <entry file="file://$PROJECT_DIR$/cmake-build-release/scripts/settings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="725" column="40" selection-start-line="725" selection-start-column="40" selection-end-line="725" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="170">
+          <caret line="10" column="24" lean-forward="true" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/world-module.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="317" selection-start-line="317" selection-end-line="317" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main-menu.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="80" column="39" selection-start-line="80" selection-start-column="39" selection-end-line="80" selection-end-column="39" />
+        <state relative-caret-position="344">
+          <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="53" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main-menu.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="816" column="40" lean-forward="true" selection-start-line="816" selection-start-column="40" selection-end-line="816" selection-end-column="40" />
           <folding>
-            <element signature="e#77#94#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

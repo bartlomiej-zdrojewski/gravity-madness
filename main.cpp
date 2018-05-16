@@ -10,6 +10,7 @@ int main ( ) {
     if ( World.getMode() != WorldModule::Modes::IdleMode ) {
 
         sf::RenderWindow Window ( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
+
         Window.setFramerateLimit( 60 );
         Window.setVerticalSyncEnabled( true );
         Window.setMouseCursorVisible( false );
@@ -36,7 +37,11 @@ int main ( ) {
 
                     if ( World.hasVideoChanged() ) {
 
-                        Window.create( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() ); }
+                        Window.create( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
+
+                        Window.setFramerateLimit( 60 );
+                        Window.setVerticalSyncEnabled( true );
+                        Window.setMouseCursorVisible( false ); }
 
                     Window.clear();
                     World.render( Window );
