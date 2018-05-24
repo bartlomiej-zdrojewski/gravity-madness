@@ -1,13 +1,13 @@
-#include "aggressive-ai-controller.hpp"
+#include "passive-ai-controller.hpp"
 
-void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
+void PassiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
     RayShotRestorationTime -= ElapsedTime;
     MissileRestorationTime -= ElapsedTime;
 
     if ( TargetIn30Degrees ) {
 
-        if ( TargetDistance > 50.f ) {
+        if ( TargetDistance > 150.f ) {
 
             ThrustForward = true;
 
@@ -28,16 +28,16 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
             RayShot = true;
             RayShotRestorationTime = RayShotRestorationDuration; }
 
-        if ( TargetDistance < 250.f ) {
+        if ( TargetDistance < 200.f ) {
 
             if ( MissileRestorationTime.asSeconds() <= 0.f ) {
 
                 MissileShot = true;
                 MissileRestorationTime = MissileRestorationDuration; } } }
 
-    else if ( TargetIn60Degrees || TargetIn120Degrees ) {
+    else if ( MySpaceship->getEnergy() >= MinimumRayShotEnergy && ( TargetIn60Degrees || TargetIn120Degrees ) ) {
 
-        if ( TargetDistance < 500.f ) {
+        if ( TargetDistance < 300.f ) {
 
             ThrustForward = true;
 
@@ -63,23 +63,16 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
                 ThrustLeft = true; } } } }
 
-void AggressiveAIController::onUnsafeOrbit ( sf::Time ElapsedTime ) {
+void PassiveAIController::onUnsafeOrbit ( sf::Time ElapsedTime ) {
 
     RayShotRestorationTime -= ElapsedTime;
     MissileRestorationTime -= ElapsedTime;
 
     if ( TargetIn30Degrees ) {
 
-        if ( MySpaceship->getEnergy() >= MinimumRayShotEnergy && RayShotRestorationTime.asSeconds() <= 0.f ) {
+        if ( TargetDistance < 200.f ) {
 
-            RayShot = true;
-            RayShotRestorationTime = RayShotRestorationDuration; } }
+            if ( MySpaceship->getEnergy() >= MinimumRayShotEnergy && RayShotRestorationTime.asSeconds() <= 0.f ) {
 
-    else if ( TargetIn60Degrees ) {
-
-        if ( TargetDistance < 500.f ) {
-
-            if ( MissileRestorationTime.asSeconds() <= 0.f ) {
-
-                MissileShot = true;
-                MissileRestorationTime = MissileRestorationDuration; } } } }
+                RayShot = true;
+                RayShotRestorationTime = RayShotRestorationDuration; } } } }

@@ -9,7 +9,7 @@ class PlayerInterface {
 
 public:
 
-    PlayerInterface ( GraphicsModule * Graphics );
+    explicit PlayerInterface ( GraphicsModule * Graphics );
 
     void setSpaceship ( Spaceship * MySpaceship );
     void setViewport ( sf::FloatRect Viewport );

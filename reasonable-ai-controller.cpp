@@ -1,13 +1,13 @@
-#include "aggressive-ai-controller.hpp"
+#include "reasonable-ai-controller.hpp"
 
-void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
+void ReasonableAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
     RayShotRestorationTime -= ElapsedTime;
     MissileRestorationTime -= ElapsedTime;
 
     if ( TargetIn30Degrees ) {
 
-        if ( TargetDistance > 50.f ) {
+        if ( TargetDistance > 100.f ) {
 
             ThrustForward = true;
 
@@ -35,7 +35,7 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
                 MissileShot = true;
                 MissileRestorationTime = MissileRestorationDuration; } } }
 
-    else if ( TargetIn60Degrees || TargetIn120Degrees ) {
+    else if ( MySpaceship->getEnergy() >= MinimumRayShotEnergy && ( TargetIn60Degrees || TargetIn120Degrees ) ) {
 
         if ( TargetDistance < 500.f ) {
 
@@ -63,7 +63,7 @@ void AggressiveAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
                 ThrustLeft = true; } } } }
 
-void AggressiveAIController::onUnsafeOrbit ( sf::Time ElapsedTime ) {
+void ReasonableAIController::onUnsafeOrbit ( sf::Time ElapsedTime ) {
 
     RayShotRestorationTime -= ElapsedTime;
     MissileRestorationTime -= ElapsedTime;
@@ -77,7 +77,7 @@ void AggressiveAIController::onUnsafeOrbit ( sf::Time ElapsedTime ) {
 
     else if ( TargetIn60Degrees ) {
 
-        if ( TargetDistance < 500.f ) {
+        if ( TargetDistance < 250.f ) {
 
             if ( MissileRestorationTime.asSeconds() <= 0.f ) {
 

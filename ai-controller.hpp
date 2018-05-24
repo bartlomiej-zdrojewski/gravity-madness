@@ -24,7 +24,7 @@ public:
         TargetAngle = PI;
 
         MyPowerUp = nullptr;
-        PowerUpDistace = 1000000.f;;
+        PowerUpDistace = 1000000.f;
         PowerUpAngle = PI;
 
         ClosestBodyDistance = 1000000.f;

@@ -39,8 +39,6 @@ private:
 
     float getRandomFloat ( );
 
-    void renderSectionBackground ( sf::RenderWindow &Window, unsigned int Position );
-
     void updateMenu ( sf::Time ElapsedTime );
     void updateMenu ( sf::Event &Event );
     void renderMenu ( sf::RenderWindow &Window );
@@ -56,6 +54,7 @@ private:
 
     void updateBackground ( sf::Time ElapsedTime );
     void renderBackground ( sf::RenderWindow &Window );
+    void renderSectionBackground ( sf::RenderWindow &Window, unsigned int Position );
 
 private:
 

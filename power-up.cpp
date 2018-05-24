@@ -91,3 +91,7 @@ void PowerUp::onCatch ( Spaceship * MySpaceship ) {
     this->MySpaceship = MySpaceship;
 
     onEffectBegin(); }
+
+float PowerUp::getRandomFloat ( ) {
+
+    return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }

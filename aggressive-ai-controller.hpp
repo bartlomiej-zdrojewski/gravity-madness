@@ -9,6 +9,8 @@ public:
 
     AggressiveAIController ( ) : AIController ( ) {
 
+        MaximumVelocity = 200.f;
+
         RayShotRestorationDuration = sf::seconds( 0.25f );
         MissileRestorationDuration = sf::seconds( 5.f );
 

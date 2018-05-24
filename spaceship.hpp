@@ -25,13 +25,14 @@ public:
 
         Health = 250.f;
         HealthLimit = 250.f;
-        HealthRestoration = 1.f;
+        HealthRestoration = 2.f;
         Energy = 5000.f;
         EnergyLimit = 5000.f;
-        EnergyRestoration = 5.f;
-        Thrust = 100.f;
+        EnergyRestoration = 40.f;
+        Thrust = 120.f;
         SuppressingFactor = 0.75f;
-        RayPower = 25.f;
+        RayPower = 30.f;
+        RayColor = sf::Color( 255, 0, 0 );
         MissileCount = 3;
         MissileLimit = 5; }
 
@@ -67,6 +68,8 @@ public:
 
     float getRayPower ( );
     void setRayPower ( float RayPower );
+    sf::Color getRayColor ( );
+    void setRayColor ( sf::Color RayColor );
 
     unsigned int getMissileCount ( );
     void setMissileCount ( unsigned int MissileCount );
@@ -101,6 +104,7 @@ private:
     float Thrust;
     float SuppressingFactor;
     float RayPower;
+    sf::Color RayColor;
     unsigned int MissileCount;
     unsigned int MissileLimit;
 

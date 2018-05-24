@@ -46,7 +46,7 @@ void PlayerInterface::beginFadeOut ( ) {
 
 bool PlayerInterface::isFadedOut ( ) {
 
-    return ( FadeOutTime >= FadeOutDuration ); }
+    return ( FadeOutTime >= ( FadeOutDuration + sf::seconds( 1.f ) ) ); }
 
 void PlayerInterface::update ( sf::Time ElapsedTime ) {
 
@@ -60,11 +60,7 @@ void PlayerInterface::update ( sf::Time ElapsedTime ) {
 
     else if ( FadeOut ) {
 
-        FadeOutTime += ElapsedTime;
-
-        if ( FadeOutTime >= FadeOutDuration ) {
-
-            FadeOut = false; } }
+        FadeOutTime += ElapsedTime; }
 
     if ( MySpaceship ) {
 
@@ -82,20 +78,15 @@ void PlayerInterface::update ( sf::Time ElapsedTime ) {
 
 void PlayerInterface::render ( sf::RenderWindow &Window ) {
 
-    sf::View ViewCopy = Window.getView();
-    Window.setView( Window.getDefaultView() );
-
     renderHealthBar( Window );
     renderEnergyBar( Window );
     renderMissileBar( Window );
     renderScoreBar( Window );
-    renderFade( Window );
-
-    Window.setView( ViewCopy ); }
+    renderFade( Window ); }
 
 void PlayerInterface::onShot ( ) {
 
-    // ...
+    // TODO
 
     }
 
@@ -188,7 +179,13 @@ void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
 
             return; }
 
-        Fade.setFillColor( sf::Color( 0, 0, 0, (sf::Uint8) ( 255.f * ( FadeOutTime.asSeconds() - FadeOutDelay.asSeconds() ) / ( FadeOutDuration.asSeconds() - FadeOutDelay.asSeconds() ) ) ) ); }
+        if ( FadeOutTime < FadeOutDuration ) {
+
+            Fade.setFillColor( sf::Color( 0, 0, 0, (sf::Uint8) ( 255.f * ( FadeOutTime.asSeconds() - FadeOutDelay.asSeconds() ) / ( FadeOutDuration.asSeconds() - FadeOutDelay.asSeconds() ) ) ) ); }
+
+        else {
+
+            Fade.setFillColor( sf::Color( 0, 0, 0, 255 ) ); } }
 
     else {
 

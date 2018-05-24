@@ -1,4 +1,3 @@
-#include <iostream>
 #include "main-menu.hpp"
 
 MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
@@ -216,29 +215,6 @@ bool MainMenu::onSettingsChanged ( ) {
 float MainMenu::getRandomFloat ( ) {
 
     return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }
-
-void MainMenu::renderSectionBackground ( sf::RenderWindow &Window, unsigned int Position ) {
-
-    sf::RectangleShape Rectangle;
-
-    if ( Position == 0 ) {
-
-        Rectangle.setPosition( 0.1f * Graphics->getWindowWidth(), 0.f ); }
-
-    else if ( Position == 1 ) {
-
-        Rectangle.setPosition( 0.55f * Graphics->getWindowWidth(), 0.f ); }
-
-    else {
-
-        return; }
-
-    Rectangle.setSize( sf::Vector2f( 0.35f * Graphics->getWindowWidth(), Graphics->getWindowHeight() ) );
-    Rectangle.setFillColor( sf::Color( 0, 0, 0 ) );
-    Rectangle.setOutlineThickness( 2.f );
-    Rectangle.setOutlineColor( sf::Color ( 13, 71, 161 ) ); // #0D47A1
-
-    Window.draw( Rectangle ); }
 
 void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
@@ -577,7 +553,7 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
         SettingsOptionText[ SettingsOptionCount + 2 ] = std::to_string( AntialiasingLevel ) + "th level"; }
 
     sf::Vector2f SectionMargin = sf::Vector2f ( 20.f, 30.f );
-    sf::Vector2f OptionMargin = sf::Vector2f ( 10.f, 15.f );
+    sf::Vector2f OptionMargin = sf::Vector2f ( 0.f, 15.f );
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
@@ -1025,3 +1001,26 @@ void MainMenu::renderBackground ( sf::RenderWindow &Window ) {
         Circle.setFillColor( Background[ ParticleIndexes[i] * 2 + 1 ].color );
 
         Window.draw( Circle ); } }
+
+void MainMenu::renderSectionBackground ( sf::RenderWindow &Window, unsigned int Position ) {
+
+    sf::RectangleShape Rectangle;
+
+    if ( Position == 0 ) {
+
+        Rectangle.setPosition( 0.1f * Graphics->getWindowWidth(), 0.f ); }
+
+    else if ( Position == 1 ) {
+
+        Rectangle.setPosition( 0.55f * Graphics->getWindowWidth(), 0.f ); }
+
+    else {
+
+        return; }
+
+    Rectangle.setSize( sf::Vector2f( 0.35f * Graphics->getWindowWidth(), Graphics->getWindowHeight() ) );
+    Rectangle.setFillColor( sf::Color( 0, 0, 0 ) );
+    Rectangle.setOutlineThickness( 2.f );
+    Rectangle.setOutlineColor( sf::Color ( 13, 71, 161 ) ); // #0D47A1
+
+    Window.draw( Rectangle ); }

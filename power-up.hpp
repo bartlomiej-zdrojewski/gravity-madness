@@ -30,6 +30,8 @@ public:
 
 protected:
 
+    float getRandomFloat ( );
+
     virtual void onEffectBegin ( ) { }
     virtual void onEffectEnd ( ) { }
 

@@ -99,16 +99,23 @@ sf::Color Script::getColorValue ( pugi::xml_node Node ) {
     int Red, Green, Blue, Alpha;
     std::string Text = Node.text().get();
 
-    if ( Text.size() != 8 ) {
+    if ( Text.size() != 7 && Text.size() != 9 ) {
 
         return { 0, 0, 0, 0 }; }
 
     try {
 
-        Red = std::stoi( Text.substr( 0, 2 ), nullptr, 16 );
-        Green = std::stoi( Text.substr( 2, 2 ), nullptr, 16 );
-        Blue = std::stoi( Text.substr( 4, 2 ), nullptr, 16 );
-        Alpha = std::stoi( Text.substr( 6, 2 ), nullptr, 16 ); }
+        Red = std::stoi( Text.substr( 1, 2 ), nullptr, 16 );
+        Green = std::stoi( Text.substr( 3, 2 ), nullptr, 16 );
+        Blue = std::stoi( Text.substr( 5, 2 ), nullptr, 16 );
+
+        if ( Text.size() == 9 ) {
+
+            Alpha = std::stoi( Text.substr( 7, 2 ), nullptr, 16 ); }
+
+        else {
+
+            Alpha = 255; } }
 
     catch ( ... ) {
 
@@ -121,7 +128,7 @@ sf::Color Script::getColorValue ( pugi::xml_node Node ) {
 
 void Script::setValue ( pugi::xml_node Node, std::string Value ) {
 
-    Node.set_value( Value.c_str() ); }
+    Node.text().set( Value.c_str() ); }
 
 void Script::setValue ( pugi::xml_node Node, bool Value ) {
 
@@ -131,19 +138,19 @@ void Script::setValue ( pugi::xml_node Node, bool Value ) {
 
     if ( Value ) {
 
-        Node.set_value( "true" ); }
+        setValue( Node, std::string( "true" ) ); }
 
     else {
 
-        Node.set_value( "false" ); } }
+        setValue( Node, std::string( "false" ) ); } }
 
 void Script::setValue ( pugi::xml_node Node, int Value ) {
 
-    Node.set_value( std::to_string( Value ).c_str() ); }
+    setValue( Node, std::to_string( Value ) ); }
 
 void Script::setValue ( pugi::xml_node Node, float Value ) {
 
-    Node.set_value( std::to_string( Value ).c_str() ); }
+    setValue( Node, std::to_string( Value ) ); }
 
 void Script::setColorValue ( pugi::xml_node Node, sf::Color Value ) {
 
@@ -164,7 +171,7 @@ void Script::setColorValue ( pugi::xml_node Node, sf::Color Value ) {
     Blue = ( Blue.size() == 2 ? Blue : "00" );
     Alpha = ( Alpha.size() == 2 ? Alpha : "00" );
 
-    Node.set_value( std::string( Red + Green + Blue + Alpha ).c_str() ); }
+    setValue( Node, std::string( Red + Green + Blue + Alpha ) ); }
 
 std::string Script::toHex ( unsigned int Value ) {
 

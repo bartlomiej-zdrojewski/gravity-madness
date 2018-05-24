@@ -76,7 +76,7 @@ public:
         PlayerCount = 1;
         AIPersonality = AIPersonalities::Random;
         EndingCondition = EndingConditions::NoEnemies;
-        TimeLimit = sf::seconds( 60.f * 5.f );
+        TimeLimit = sf::seconds( 300.f );
         Score = nullptr;
         Winner = -1;
 

@@ -30,6 +30,8 @@ Ray::Ray ( sf::Vector2f Position, float Angle ) {
     b = Position.y - a * Position.x;
     x0 = Position.x;
 
+    Color = sf::Color ( 255, 255, 255 );
+
     RenderingTime = sf::seconds( 0.f );
     RenderingDuration = sf::seconds( 1.f );
 
@@ -51,6 +53,14 @@ void Ray::enableRendering ( float Limit ) {
 bool Ray::isRenderingEnabled ( ) {
 
     return RenderingTime.asSeconds() > 0.f; }
+
+sf::Color Ray::getColor ( ) {
+
+    return Color; }
+
+void Ray::setColor ( sf::Color Color ) {
+
+    this->Color = Color; }
 
 bool Ray::getIntersection ( sf::Vector2f Center, float Radius, sf::Vector2f &Intersection, float &Distance ) {
 
@@ -123,8 +133,8 @@ void Ray::render ( sf::RenderWindow &Window ) {
 
     std::vector <sf::Vertex> Vertices;
 
-    Vertices.push_back( sf::Vertex( RayBegin, sf::Color( 0, 255, 0, (sf::Uint8) ( RayOpacity * 255.f ) ) ) );
-    Vertices.push_back( sf::Vertex( RayEnd, sf::Color( 0, 255, 0, (sf::Uint8) ( RayOpacity * 255.f ) ) ) );
+    Vertices.emplace_back( sf::Vertex( RayBegin, sf::Color( Color.r, Color.g, Color.b, (sf::Uint8) ( RayOpacity * 255.f ) ) ) );
+    Vertices.emplace_back( sf::Vertex( RayEnd, sf::Color( Color.r, Color.g, Color.b, (sf::Uint8) ( RayOpacity * 255.f ) ) ) );
 
     Window.draw( &Vertices[0], Vertices.size(), sf::Lines );
 

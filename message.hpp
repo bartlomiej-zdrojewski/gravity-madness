@@ -33,7 +33,14 @@ private:
 
     bool Close;
     Types Type;
-    std::string Text [3];
+
+    std::string Text [4];
+    unsigned int FontSize;
+    float FontFix;
+    float LineHeight;
+    sf::Vector2f FrameSize;
+    sf::Vector2f FramePosition;
+    sf::Vector2f FrameMargin;
 
     };
 

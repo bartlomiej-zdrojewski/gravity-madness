@@ -2,6 +2,6 @@
 
 void EnergyPowerUp::updateEffect ( sf::Time ElapsedTime ) {
 
-    MySpaceship->updateEnergy( 1000.f );
+    MySpaceship->updateEnergy( 2500.f );
 
     Expired = true; }

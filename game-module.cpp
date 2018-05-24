@@ -1,3 +1,4 @@
+#include <iostream>
 #include "debug-module.hpp"
 #include "game-module.hpp"
 
@@ -48,18 +49,37 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
             break; } }
 
+    switch ( Gameplay->getAIPersonality() ) {
+
+        case GameplaySettings::AIPersonalities::Aggressive: {
+
+            ScoreMultiplier *= 2.f;
+
+            break; }
+
+        case GameplaySettings::AIPersonalities::Passive: {
+
+            ScoreMultiplier *= 0.5f;
+
+            break; }
+
+        default: {
+
+            break; } }
+
     prepareAreaLimit();
 
-    unsigned int Attempts = 1000;
     auto PlanetCount = (unsigned int) ( 2.f * powf( AreaRadius / 1000.f, 2 ) );
 
-    for ( unsigned int i = 0; i < PlanetCount && Attempts > 0; i++ ) {
+    for ( unsigned int i = 0; i < PlanetCount; i++ ) {
 
         float Mass = 3000.f + getRandomFloat() * 4000.f;
         float Radius = sqrtf( Mass / PI / 0.075f );
 
         auto NewPlanet = new Planet ( Mass, Radius );
         sf::Vector2f Position ( 1000000.f, 1000000.f );
+
+        unsigned int Attempts = 25;
 
         while ( Attempts > 0 && Position == sf::Vector2f( 1000000.f, 1000000.f ) ) {
 
@@ -79,7 +99,9 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
                         Position = sf::Vector2f( 1000000.f, 1000000.f );
 
-                        break; } } } }
+                        break; } } }
+
+            Attempts--; }
 
         if ( Attempts > 0 ) {
 
@@ -109,6 +131,8 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setThrust( Prototype.Thrust );
         NewSpaceship->setSuppressingFactor( Prototype.SuppressingFactor );
         NewSpaceship->setRayPower( Prototype.RayPower );
+        NewSpaceship->setRayColor( Prototype.RayColor );
+        std::cout << (int) Prototype.RayColor.r << " " << (int) Prototype.RayColor.g << " " << (int) Prototype.RayColor.b << std::endl;
         NewSpaceship->setMissileLimit( Prototype.MissileLimit );
         NewSpaceship->setMissileCount( Prototype.MissileCount );
 
@@ -142,17 +166,11 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
                     else if ( Personality == 1 ) {
 
-                        // TODO REASONABLE PERSONALITY
-                        NewSpaceship->setController( new AIController ( ) );
-
-                        }
+                        NewSpaceship->setController( new ReasonableAIController ( ) ); }
 
                     else {
 
-                        // TODO PASSIVE PERSONALITY
-                        NewSpaceship->setController( new AIController ( ) );
-
-                        }
+                        NewSpaceship->setController( new PassiveAIController ( ) ); }
 
                     break; }
 
@@ -162,7 +180,17 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
                     break; }
 
-                // TODO OTHER PERSONALITIES
+                case GameplaySettings::AIPersonalities::Reasonable: {
+
+                    NewSpaceship->setController( new ReasonableAIController ( ) );
+
+                    break; }
+
+                case GameplaySettings::AIPersonalities::Passive: {
+
+                    NewSpaceship->setController( new PassiveAIController ( ) );
+
+                    break; }
 
                 default: {
 
@@ -180,6 +208,8 @@ GameplaySettings * GameModule::getGameplay ( ) {
 
 void GameModule::update ( ) {
 
+    std::cout << "UPDATE IN\n";
+
     sf::Time ElapsedTime = Clock.restart();
 
     if ( ElapsedTime.asSeconds() < 0.1f ) {
@@ -191,16 +221,23 @@ void GameModule::update ( ) {
         else {
 
             GameplayTime += ElapsedTime; }
-
+        std::cout << "P";
         updatePlanets( ElapsedTime );
+        std::cout << "A";
         updateAsteroids( ElapsedTime );
+        std::cout << "S";
         updateSpaceships( ElapsedTime );
+        std::cout << "R";
         updateRayShots( ElapsedTime );
+        std::cout << "M";
         updateMissiles( ElapsedTime );
+        std::cout << "PU";
         updatePowerUps( ElapsedTime );
+        std::cout << "PS";
         updateParticleSystems( ElapsedTime );
-
+        std::cout << "V";
         updateViews();
+        std::cout << "\n";
 
         for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -287,25 +324,39 @@ void GameModule::update ( ) {
 
                     Interface[i]->beginFadeOut(); } }
 
-            Gameplay->setScore( ScoreCopy ); } } }
+            Gameplay->setScore( ScoreCopy ); } }
+
+    std::cout << "UPDATE OUT\n";
+
+    }
 
 void GameModule::update ( sf::Event &Event ) {
 
-    if ( Event.type == sf::Event::KeyPressed ) {
+    //std::cout << "EVENT IN\n";
 
-        if ( Event.key.code == sf::Keyboard::Escape ) {
+    if ( !EndingCondition ) {
 
-            Pause = true;
+        if ( Event.type == sf::Event::KeyPressed ) {
 
-            return; } }
+            if ( Event.key.code == sf::Keyboard::Escape ) {
+
+                Pause = true;
+
+                return; } } }
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
         if ( PlayerSpaceship[i] ) {
 
-            PlayerSpaceship[i]->update( Event ); } } }
+            PlayerSpaceship[i]->update( Event ); } }
+
+    //std::cout << "EVENT OUT\n";
+
+    }
 
 void GameModule::render ( sf::RenderWindow &Window ) {
+
+    //std::cout << "RENDER IN\n";
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -353,9 +404,15 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
                     ActiveMissile->render( Window ); } } }
 
+        Window.setView( Window.getDefaultView() );
+
         Interface[i]->render( Window ); }
 
-    renderViewsOutline( Window ); }
+    renderViewsOutline( Window );
+
+    //std::cout << "RENDER OUT\n";
+
+    }
 
 void GameModule::reset ( ) {
 
@@ -367,6 +424,7 @@ void GameModule::reset ( ) {
     Gravity = 1.f;
     DetectionDistance = 750.f;
     AreaRadius = 1500.f;
+    ScoreMultiplier = 1.f;
     PlayerCount = 0;
 
     AsteroidCount = 5;
@@ -388,32 +446,32 @@ void GameModule::reset ( ) {
         PlayerScoreMultiplier[i] = 1.f;
         Interface[i] = nullptr; }
 
-    for ( auto i = Planets.begin(); i != Planets.end(); i++ ) {
+    for ( auto i = Planets.begin(); i != Planets.end(); ) {
 
         delete *i;
         i = Planets.erase( i ); }
 
-    for ( auto i = Asteroids.begin(); i != Asteroids.end(); i++ ) {
+    for ( auto i = Asteroids.begin(); i != Asteroids.end(); ) {
 
         delete *i;
         i = Asteroids.erase( i ); }
 
-    for ( auto i = Spaceships.begin(); i != Spaceships.end(); i++ ) {
+    for ( auto i = Spaceships.begin(); i != Spaceships.end(); ) {
 
         delete *i;
         i = Spaceships.erase( i ); }
 
-    for ( auto i = Missiles.begin(); i != Missiles.end(); i++ ) {
+    for ( auto i = Missiles.begin(); i != Missiles.end(); ) {
 
         delete *i;
         i = Missiles.erase( i ); }
 
-    for ( auto i = RayShots.begin(); i != RayShots.end(); i++ ) {
+    for ( auto i = RayShots.begin(); i != RayShots.end(); ) {
 
         delete *i;
         i = RayShots.erase( i ); }
 
-    for ( auto i = ParticleSystems.begin(); i != ParticleSystems.end(); i++ ) {
+    for ( auto i = ParticleSystems.begin(); i != ParticleSystems.end(); ) {
 
         delete *i;
         i = ParticleSystems.erase( i ); } }
@@ -426,7 +484,13 @@ void GameModule::terminate ( ) {
 
 bool GameModule::onPause ( ) {
 
-    return Pause; }
+    if ( Pause ) {
+
+        Pause = false;
+
+        return true; }
+
+    return false; }
 
 bool GameModule::onTerminate ( ) {
 
@@ -672,12 +736,16 @@ void GameModule::updatePlanets ( sf::Time ElapsedTime ) {
 
     // Delete destructed planets
 
-    for ( auto i = Planets.begin(); i != Planets.end(); i++ ) {
+    for ( auto i = Planets.begin(); i != Planets.end(); ) {
 
         if ( (*i)->isDestructed() ) {
 
             destructBody( *i );
-            i = Planets.erase( i ); } } }
+            i = Planets.erase( i ); }
+
+        else {
+
+            ++i; } } }
 
 void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
@@ -765,12 +833,16 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
     // Delete destructed asteroids
 
-    for ( auto i = Asteroids.begin(); i != Asteroids.end(); i++ ) {
+    for ( auto i = Asteroids.begin(); i != Asteroids.end(); ) {
 
         if ( (*i)->isDestructed() ) {
 
             destructBody( *i );
-            i = Asteroids.erase( i ); } } }
+            i = Asteroids.erase( i ); }
+
+        else {
+
+            ++i; } } }
 
 void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
@@ -848,7 +920,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             if ( Distance > AreaRadius ) {
 
-                ActiveSpaceship->updateHealth( - 5.f * ElapsedTime.asSeconds() ); } }
+                ActiveSpaceship->updateHealth( - 10.f * ElapsedTime.asSeconds() ); } }
 
         ActiveSpaceship->updateVelocity( AccelerationSum, ElapsedTime ); }
 
@@ -928,11 +1000,13 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             sf::Vector2f Intersection;
             Spaceship * Target = getRayTarget( ActiveSpaceship, Intersection );
+
             auto RayShot = new Ray ( ActiveSpaceship->getPosition(), ActiveSpaceship->getVelocityAngle() );
+            RayShot->setColor( ActiveSpaceship->getRayColor() );
 
             if ( Target ) {
 
-                Target->updateHealth( - 0.2f *  ActiveSpaceship->getRayPower() );
+                Target->updateHealth( - 0.5f *  ActiveSpaceship->getRayPower() );
 
                 if ( isPlayer( Target ) ) {
 
@@ -981,12 +1055,16 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
     // Delete destructed spaceships
 
-    for ( auto i = Spaceships.begin(); i != Spaceships.end(); i++ ) {
+    for ( auto i = Spaceships.begin(); i != Spaceships.end(); ) {
 
         if ( (*i)->isDestructed() ) {
 
             destructBody( *i );
-            i = Spaceships.erase( i ); } } }
+            i = Spaceships.erase( i ); }
+
+        else {
+
+            ++i; } } }
 
 void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
@@ -1098,12 +1176,16 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
     // Delete destructed missiles
 
-    for ( auto i = Missiles.begin(); i != Missiles.end(); i++ ) {
+    for ( auto i = Missiles.begin(); i != Missiles.end(); ) {
 
         if ( (*i)->isDestructed() ) {
 
             destructBody( *i );
-            i = Missiles.erase( i ); } } }
+            i = Missiles.erase( i ); }
+
+        else {
+
+            ++i; } } }
 
 void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
@@ -1111,7 +1193,7 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
     PowerUpPauseTime -= ElapsedTime;
 
-    if ( PowerUpPauseTime.asSeconds() <= 0.f ) {
+    if ( PowerUps.size() < PowerUpLimit && PowerUpPauseTime.asSeconds() <= 0.f ) {
 
         PowerUpPauseTime = PowerUpPauseDuration;
 
@@ -1206,7 +1288,7 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
     // Delete inactive power ups
 
-    for ( auto i = PowerUps.begin(); i != PowerUps.end(); i++ ) {
+    for ( auto i = PowerUps.begin(); i != PowerUps.end(); ) {
 
         if ( (*i)->isExpired() ) {
 
@@ -1219,7 +1301,11 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
                 AsteroidPowerUp = nullptr; }
 
             delete (*i);
-            i = PowerUps.erase( i ); } } }
+            i = PowerUps.erase( i ); }
+
+        else {
+
+            ++i; } } }
 
 void GameModule::updateRayShots ( sf::Time ElapsedTime ) {
 
@@ -1231,12 +1317,16 @@ void GameModule::updateRayShots ( sf::Time ElapsedTime ) {
 
     // Delete inactive ray shots
 
-    for ( auto i = RayShots.begin(); i != RayShots.end(); i++ ) {
+    for ( auto i = RayShots.begin(); i != RayShots.end(); ) {
 
         if ( !(*i)->isRenderingEnabled() ) {
 
             delete (*i);
-            i = RayShots.erase( i ); } } }
+            i = RayShots.erase( i ); }
+
+        else {
+
+            ++i; } } }
 
 void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
@@ -1248,12 +1338,16 @@ void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
     // Delete inactive particle systems
 
-    for ( auto i = ParticleSystems.begin(); i != ParticleSystems.end(); i++ ) {
+    for ( auto i = ParticleSystems.begin(); i != ParticleSystems.end(); ) {
 
         if ( (*i)->getParticleCount() == 0 ) {
 
             delete (*i);
-            i = ParticleSystems.erase( i ); } } }
+            i = ParticleSystems.erase( i ); }
+
+        else {
+
+            ++i; } } }
 
 void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
 

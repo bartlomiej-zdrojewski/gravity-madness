@@ -35,6 +35,6 @@ bool ScoreBoard::onClose ( ) {
 
         Close = false;
 
-        return Close; }
+        return true; }
 
-    return true; }
+    return false; }

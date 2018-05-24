@@ -108,7 +108,7 @@ void ParticleSystem::update ( sf::Time ElapsedTime ) {
 
     InfluenceArea = sf::FloatRect ( OriginPosition.x, OriginPosition.y, 0.f, 0.f );
 
-    for ( auto i = Particles.begin(); i != Particles.end(); i++ ) {
+    for ( auto i = Particles.begin(); i != Particles.end(); ) {
 
         Particle &ActiveParticle = *i;
         ActiveParticle.Time -= ElapsedTime;
@@ -136,7 +136,9 @@ void ParticleSystem::update ( sf::Time ElapsedTime ) {
 
         else if ( ActiveParticle.Position.y > ( InfluenceArea.top + InfluenceArea.height ) ) {
 
-            InfluenceArea.height = ActiveParticle.Position.y - InfluenceArea.top; } } }
+            InfluenceArea.height = ActiveParticle.Position.y - InfluenceArea.top; }
+
+        ++i; } }
 
 void ParticleSystem::render ( sf::RenderWindow &Window ) {
 

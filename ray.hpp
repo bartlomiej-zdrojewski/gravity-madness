@@ -15,6 +15,9 @@ public:
     void enableRendering ( float Limit );
     bool isRenderingEnabled ( );
 
+    sf::Color getColor ( );
+    void setColor ( sf::Color Color );
+
     bool getIntersection ( sf::Vector2f Center, float Radius, sf::Vector2f &Intersection, float &Distance );
 
     void update ( sf::Time ElapsedTime );
@@ -27,6 +30,7 @@ private:
     float x0;
     float x1;
 
+    sf::Color Color;
     sf::Time RenderingTime;
     sf::Time RenderingDuration;
 

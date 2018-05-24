@@ -131,9 +131,7 @@ void WorldModule::update ( ) {
 
             if ( MyMainMenu->onSettingsChanged() ) {
 
-                // TODO UPDATE CONFIG
-
-                }
+                saveSettings(); }
 
             break; }
 
@@ -156,6 +154,12 @@ void WorldModule::update ( ) {
             MyPauseMenu->update();
 
             if ( MyPauseMenu->onClose() ) {
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyPauseMenu->onReset() ) {
+
+                Game->setGameplay( Gameplay );
 
                 setMode( Modes::GameMode ); }
 
@@ -297,6 +301,12 @@ void WorldModule::update ( sf::Event &Event ) {
             MyPauseMenu->update( Event );
 
             if ( MyPauseMenu->onClose() ) {
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyPauseMenu->onReset() ) {
+
+                Game->setGameplay( Gameplay );
 
                 setMode( Modes::GameMode ); }
 
@@ -542,3 +552,84 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
                 MyMessage = new Message ( Graphics );
 
                 setMode( Modes::MainMenuMode ); } } } }
+
+void WorldModule::saveSettings ( ) {
+
+    bool WindowWidthSuccess = false;
+    bool WindowHeightSuccess = false;
+    bool AntialiasingSuccess = false;
+    bool FullScreenSuccess = false;
+    bool HighScoreSuccess = false;
+
+    pugi::xml_node * Root = Config->getRoot();
+
+    if ( !Root ) {
+
+        return; }
+
+    auto SettingsNode = Config->getChildren( *Root );
+
+    if ( SettingsNode.empty() ) {
+
+        return; }
+
+    auto SettingNodes = Config->getChildren( SettingsNode[0] );
+
+    for ( auto Setting : SettingNodes ) {
+
+        if ( std::string( Setting.name() ) == "WindowWidth" ) {
+
+            Config->setValue( Setting, (int) Graphics->getWindowWidth() );
+
+            WindowWidthSuccess = true; }
+
+        else if ( std::string( Setting.name() ) == "WindowHeight" ) {
+
+            Config->setValue( Setting, (int) Graphics->getWindowHeight() );
+
+            WindowHeightSuccess = true; }
+
+        else if ( std::string( Setting.name() ) == "FullScreen" ) {
+
+            Config->setValue( Setting, (bool) Graphics->isFullScreenEnabled() );
+
+            FullScreenSuccess = true; }
+
+        else if ( std::string( Setting.name() ) == "Antialiasing" ) {
+
+            Config->setValue( Setting, (int) Graphics->getAntialiasingLevel() );
+
+            AntialiasingSuccess = true; }
+
+        else if ( std::string( Setting.name() ) == "HighScore" ) {
+
+            Config->setValue( Setting, (int) HighScore );
+
+            HighScoreSuccess = true; } }
+
+    if ( !WindowWidthSuccess ) {
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "WindowWidth" );
+        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getWindowWidth() ); }
+
+    if ( !WindowHeightSuccess ) {
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "WindowHeight" );
+        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getWindowHeight() ); }
+
+    if ( !FullScreenSuccess ) {
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "FullScreen" );
+        Config->setValue( Setting.append_child( pugi::node_pcdata ), (bool) Graphics->isFullScreenEnabled() ); }
+
+    if ( !AntialiasingSuccess ) {
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "Antialiasing" );
+        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getAntialiasingLevel() ); }
+
+    if ( !HighScoreSuccess ) {
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "HighScore" );
+        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) HighScore ); }
+
+    Config->saveToFile( "scripts/settings.xml" ); }

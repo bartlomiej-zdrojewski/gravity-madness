@@ -1,5 +1,5 @@
+#include <iostream>
 #include "gameplay-settings.hpp"
-#include <utility>
 
 GameplaySettings::~GameplaySettings ( ) {
 
@@ -604,22 +604,22 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
 
     SpaceshipPrototype Prototype;
 
-    Prototype.Name = "Testowy";
+    Prototype.Name = "Hercules the Unbroken";
     Prototype.Texture = "default";
     Prototype.AccentTexture = "default";
     Prototype.Mass = 4.f;
     Prototype.Radius = 20.f;
-    Prototype.HealthLimit = 250;
-    Prototype.HealthRestoration = 1.f;
-    Prototype.EnergyLimit = 5000;
-    Prototype.EnergyRestoration = 100;
-    Prototype.Thrust = 250;
-    Prototype.SuppressingFactor = 0.75;
+    Prototype.HealthLimit = 200;
+    Prototype.HealthRestoration = 2.f;
+    Prototype.EnergyLimit = 2500;
+    Prototype.EnergyRestoration = 20;
+    Prototype.Thrust = 75;
+    Prototype.SuppressingFactor = 0.6;
     Prototype.ExhaustColor = sf::Color::Blue;
-    Prototype.RayPower = 25;
+    Prototype.RayPower = 20;
     Prototype.RayColor = sf::Color::Red;
     Prototype.MissileCount = 3;
-    Prototype.MissileLimit = 5;
-    Prototype.ScoreMultiplier = 0.f;
+    Prototype.MissileLimit = 3;
+    Prototype.ScoreMultiplier = 2.0f;
 
     SpaceshipPrototypes.push_back( Prototype ); }

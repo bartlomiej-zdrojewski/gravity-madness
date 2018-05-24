@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <Settings>
     <GraphicsSettings>scripts/graphics.xml</GraphicsSettings>
     <AudioSettings>scripts/audio.xml</AudioSettings>

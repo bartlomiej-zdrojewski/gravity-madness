@@ -99,6 +99,8 @@ private:
     bool config ( Script ** GraphicsConfig, Script ** AudioConfig );
     void init ( sf::RenderWindow * Window = nullptr );
 
+    void saveSettings ( );
+
 private:
 
     Script * Config;

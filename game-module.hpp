@@ -16,11 +16,13 @@
 #include "graphics-module.hpp"
 #include "missile.hpp"
 #include "particle-system.hpp"
+#include "passive-ai-controller.hpp"
 #include "planet.hpp"
 #include "player-controller.hpp"
 #include "player-interface.hpp"
 #include "power-up.hpp"
 #include "ray.hpp"
+#include "reasonable-ai-controller.hpp"
 #include "spaceship.hpp"
 
 class DebugModule;
@@ -91,6 +93,7 @@ private:
     float DetectionDistance;
     float AreaRadius;
     sf::Time GameplayTime;
+    float ScoreMultiplier;
 
     unsigned int PlayerCount;
     const static int MaximumPlayerCount = 4;
