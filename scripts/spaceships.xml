@@ -5,8 +5,8 @@
     <Spaceship>
 
         <Name>Gilgamesh the Immortal</Name>
-        <Texture>default</Texture>
-        <AccentTexture>default</AccentTexture>
+        <Texture>spaceship-azrael</Texture>
+        <AccentTexture>spaceship-azrael-accent</AccentTexture>
         <Mass>4.00</Mass>
         <Radius>20.00</Radius>
         <HealthLimit>300.00</HealthLimit>
@@ -17,7 +17,7 @@
         <SuppressingFactor>0.75</SuppressingFactor>
         <ExhaustColor>#FFFFFF</ExhaustColor>
         <RayPower>25.00</RayPower>
-        <RayColor>#FFFFFF</RayColor>
+        <RayColor>#FF3D00</RayColor>
         <MissileCount>3</MissileCount>
         <MissileLimit>5</MissileLimit>
         <ScoreMultiplier>1.25</ScoreMultiplier>
@@ -27,8 +27,8 @@
     <Spaceship>
 
         <Name>Perun the Unexpected</Name>
-        <Texture>default</Texture>
-        <AccentTexture>default</AccentTexture>
+        <Texture>spaceship-azrael</Texture>
+        <AccentTexture>spaceship-azrael-accent</AccentTexture>
         <Mass>4.00</Mass>
         <Radius>20.00</Radius>
         <HealthLimit>250.00</HealthLimit>
@@ -39,7 +39,7 @@
         <SuppressingFactor>0.75</SuppressingFactor>
         <ExhaustColor>#FFFFFF</ExhaustColor>
         <RayPower>30.00</RayPower>
-        <RayColor>#FFFFFF</RayColor>
+        <RayColor>#76FF03</RayColor>
         <MissileCount>3</MissileCount>
         <MissileLimit>5</MissileLimit>
         <ScoreMultiplier>1.00</ScoreMultiplier>
@@ -49,8 +49,8 @@
     <Spaceship>
 
         <Name>Gogmagog the Colossal</Name>
-        <Texture>default</Texture>
-        <AccentTexture>default</AccentTexture>
+        <Texture>spaceship-azrael</Texture>
+        <AccentTexture>spaceship-azrael-accent</AccentTexture>
         <Mass>10.00</Mass>
         <Radius>30.00</Radius>
         <HealthLimit>500.00</HealthLimit>
@@ -61,7 +61,7 @@
         <SuppressingFactor>0.5</SuppressingFactor>
         <ExhaustColor>#FFFFFF</ExhaustColor>
         <RayPower>100.00</RayPower>
-        <RayColor>#FFFFFF</RayColor>
+        <RayColor>#D500F9</RayColor>
         <MissileCount>5</MissileCount>
         <MissileLimit>10</MissileLimit>
         <ScoreMultiplier>0.75</ScoreMultiplier>
@@ -71,8 +71,8 @@
     <Spaceship>
 
         <Name>Azrael the Merciless</Name>
-        <Texture>default</Texture>
-        <AccentTexture>default</AccentTexture>
+        <Texture>spaceship-azrael</Texture>
+        <AccentTexture>spaceship-azrael-accent</AccentTexture>
         <Mass>8.00</Mass>
         <Radius>25.00</Radius>
         <HealthLimit>400.00</HealthLimit>
@@ -83,7 +83,7 @@
         <SuppressingFactor>0.9</SuppressingFactor>
         <ExhaustColor>#FFFFFF</ExhaustColor>
         <RayPower>75.00</RayPower>
-        <RayColor>#FFFFFF</RayColor>
+        <RayColor>#2979FF</RayColor>
         <MissileCount>5</MissileCount>
         <MissileLimit>8</MissileLimit>
         <ScoreMultiplier>0.25</ScoreMultiplier>

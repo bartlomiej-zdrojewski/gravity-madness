@@ -4,7 +4,6 @@
 #include "asteroid.hpp"
 #include "body.hpp"
 #include "definitions.hpp"
-#include "graphics-module.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
 #include "spaceship-controller.hpp"
@@ -34,7 +33,9 @@ public:
         RayPower = 30.f;
         RayColor = sf::Color( 255, 0, 0 );
         MissileCount = 3;
-        MissileLimit = 5; }
+        MissileLimit = 5;
+        ThrusterAngleOffset = 0.f;
+        ThrusterMaximumAngleOffset = 0.1f * PI; }
 
     ~ Spaceship ( );
 
@@ -73,7 +74,12 @@ public:
 
     unsigned int getMissileCount ( );
     void setMissileCount ( unsigned int MissileCount );
+    unsigned int getMissileLimit ( );
     void setMissileLimit ( unsigned int MissileLimit );
+
+    void setTexture ( sf::Texture &Texture );
+    void setAccentTexture ( sf::Texture &AccentTexture, sf::Color AccentColor );
+    void setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color ThrusterExhaustColor );
 
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );
@@ -107,6 +113,15 @@ private:
     sf::Color RayColor;
     unsigned int MissileCount;
     unsigned int MissileLimit;
+
+    sf::Texture Texture;
+    sf::Texture AccentTexture;
+    sf::Texture ThrusterTexture;
+    sf::Color AccentColor;
+    float ThrusterAngleOffset;
+    float ThrusterMaximumAngleOffset;
+    ParticleSystem ThrusterExhaust;
+    sf::Color ThrusterExhaustColor;
 
     };
 

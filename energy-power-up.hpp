@@ -11,7 +11,7 @@ public:
     EnergyPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
                     PowerUp ( Radius, sf::seconds( 60.f ), Gravity, AsteroidCount ) {
 
-        Texture = &Graphics->getTexture( "default" ); // TODO
+        Texture = Graphics->getTexture( "power-up-energy" ); // TODO
 
         }
 

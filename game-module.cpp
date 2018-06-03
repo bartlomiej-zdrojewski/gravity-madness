@@ -132,9 +132,11 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setSuppressingFactor( Prototype.SuppressingFactor );
         NewSpaceship->setRayPower( Prototype.RayPower );
         NewSpaceship->setRayColor( Prototype.RayColor );
-        std::cout << (int) Prototype.RayColor.r << " " << (int) Prototype.RayColor.g << " " << (int) Prototype.RayColor.b << std::endl;
         NewSpaceship->setMissileLimit( Prototype.MissileLimit );
         NewSpaceship->setMissileCount( Prototype.MissileCount );
+        NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
+        NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color::Red ); // TODO MORE COLORS
+        NewSpaceship->setThrusterTexture( Graphics->getTexture( "thruster" ), Prototype.ExhaustColor );
 
         float PositionAngle = ( (float) SpaceshipOrder[i] / (float) Gameplay->getSpaceshipCount() ) * ( 2.f * PI );
         float PositionModule = AreaRadius - 200.f;
@@ -480,7 +482,7 @@ void GameModule::terminate ( ) {
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        PlayerSpaceship[i]->destruct(); } }
+        PlayerSpaceship[i]->destruct(); } } // TODO DESTRUCT BODY? INTERFACE DOESN'T UPDATE
 
 bool GameModule::onPause ( ) {
 
@@ -556,16 +558,14 @@ bool GameModule::isPlayer ( Spaceship * MySpaceship ) {
 
     return false; }
 
-bool GameModule::isOnScreen ( sf::Vector2f Center, float Radius ) {
+bool GameModule::isOnScreen ( sf::Vector2f Center, float Radius ) { // TODO
 
-    // TODO
     return true;
 
     }
 
-bool GameModule::isOnScreen ( sf::FloatRect Area ) {
+bool GameModule::isOnScreen ( sf::FloatRect Area ) { // TODO
 
-    // TODO
     return true;
 
     }
@@ -595,7 +595,7 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
 
     if ( AffectMissiles ) {
 
-        // TODO DESTROY MISSILES
+        // TODO DESTROY MISSILES ?
 
         }
 
@@ -1022,7 +1022,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     ( (AIController*) Target->getController() )->enableShotPanic(); }
 
-                // TODO PARTICLE EFFECT ON HIT
+                // TODO PARTICLE EFFECT ON HIT ?
 
                 }
 

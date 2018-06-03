@@ -5,16 +5,13 @@ PowerUp::PowerUp ( float Radius, sf::Time Duration, float * Gravity, unsigned in
     MySpaceship = nullptr;
     this->Gravity = Gravity;
     this->AsteroidCount = AsteroidCount;
-    Texture = nullptr;
 
     Caught = false;
     Expired = false;
     GravityModifier = false;
     AsteroidModifier = false;
     this->Radius = Radius;
-    ExistenceTime = Duration;
-
-    }
+    ExistenceTime = Duration; }
 
 bool PowerUp::isCaught ( ) {
 
@@ -48,6 +45,10 @@ void PowerUp::setRadius ( float Radius ) {
 
     this->Radius = Radius; }
 
+void PowerUp::setTexture ( sf::Texture &Texture ) {
+
+    this->Texture = Texture; }
+
 void PowerUp::update ( sf::Time ElapsedTime ) {
 
     if ( Caught ) {
@@ -62,22 +63,26 @@ void PowerUp::update ( sf::Time ElapsedTime ) {
 
             Expired = true; } } }
 
-void PowerUp::render ( sf::RenderWindow &Window ) { // TODO
+void PowerUp::render ( sf::RenderWindow &Window ) {
 
     if ( !Caught ) {
 
+        // TODO TEMP ->
         sf::CircleShape Circle;
-
         Circle.setRadius( getRadius() );
         Circle.setOrigin( getRadius(), getRadius() );
         Circle.setPosition( getPosition() );
         Circle.setFillColor( sf::Color( 0, 255, 0 ) );
-
         Window.draw( Circle );
+        // -> TEMP
 
-        }
+        sf::Sprite Sprite ( Texture );
 
-    }
+        Sprite.setOrigin( Texture.getSize().x / 2.f, Texture.getSize().y / 2.f );
+        Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
+        Sprite.setPosition( getPosition() );
+
+        Window.draw( Sprite ); } }
 
 void PowerUp::finish ( ) {
 

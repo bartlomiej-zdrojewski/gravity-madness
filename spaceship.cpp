@@ -19,9 +19,8 @@ void Spaceship::setController ( SpaceshipController * Controller ) {
 
         Controller->setSpaceship( this ); } }
 
-float Spaceship::getInfluenceRadius ( ) {
+float Spaceship::getInfluenceRadius ( ) { // TODO
 
-    // TODO
     return getRadius();
 
     }
@@ -155,9 +154,27 @@ void Spaceship::setMissileCount ( unsigned int MissileCount ) {
 
     this->MissileCount = MissileCount; }
 
+unsigned int Spaceship::getMissileLimit ( ) {
+
+    return MissileLimit; }
+
 void Spaceship::setMissileLimit ( unsigned int MissileLimit ) {
 
     this->MissileLimit = MissileLimit; }
+
+void Spaceship::setTexture ( sf::Texture &Texture ) {
+
+    this->Texture = Texture; }
+
+void Spaceship::setAccentTexture ( sf::Texture &AccentTexture, sf::Color AccentColor ) {
+
+    this->AccentTexture = AccentTexture;
+    this->AccentColor = AccentColor; }
+
+void Spaceship::setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color ThrusterExhaustColor ) {
+
+    this->ThrusterTexture = ThrusterTexture;
+    this->ThrusterExhaustColor = ThrusterExhaustColor; }
 
 void Spaceship::update ( sf::Event &Event ) {
 
@@ -188,18 +205,36 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
             if ( Controller->onThrustLeft() ) {
 
-                Angle -= PI / 3.f; }
+                Angle -= PI / 3.f;
+                ThrusterAngleOffset = ThrusterMaximumAngleOffset; }
 
             else if ( Controller->onThrustRight() ) {
 
-                Angle += PI / 3.f; }
+                Angle += PI / 3.f;
+                ThrusterAngleOffset = - ThrusterMaximumAngleOffset; }
+
+            else {
+
+                ThrusterAngleOffset = 0.f; }
 
             sf::Vector2f Acceleration;
             Acceleration.x = Thrust * cosf( Angle );
             Acceleration.y = Thrust * sinf( Angle );
 
             updateEnergy( Acceleration, ElapsedTime );
-            updateVelocity( Acceleration, ElapsedTime ); }
+            updateVelocity( Acceleration, ElapsedTime );
+
+            sf::Vector2f ThrusterPosition = getPosition();
+            ThrusterPosition += ( 0.84375f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
+            ThrusterPosition += ( 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
+
+            ThrusterExhaust.setOriginPosition( ThrusterPosition );
+            ThrusterExhaust.setOriginVelocity( getVelocity() );
+            ThrusterExhaust.setAngleRange( PI + getVelocityAngle() + ThrusterAngleOffset, 0.05f * PI );
+            ThrusterExhaust.setVelocityRange( 250.f, 500.f );
+            ThrusterExhaust.setColorRange( ThrusterExhaustColor, ThrusterExhaustColor );
+            ThrusterExhaust.setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
+            ThrusterExhaust.generateParticles( (unsigned int) ( ( Thrust / 100.f ) * 200 * ElapsedTime.asSeconds() ) ); }
 
         else if ( Controller->onThrustBackward() && Energy >= ( Thrust * ElapsedTime.asSeconds() ) ) {
 
@@ -217,6 +252,18 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
                 updateEnergy( Acceleration, ElapsedTime );
                 updateVelocity( Acceleration, ElapsedTime ); } }
 
+        if ( Controller->onThrustLeft() ) {
+
+            ThrusterAngleOffset = ThrusterMaximumAngleOffset; }
+
+        else if ( Controller->onThrustRight() ) {
+
+            ThrusterAngleOffset = - ThrusterMaximumAngleOffset; }
+
+        else {
+
+            ThrusterAngleOffset = 0.f; }
+
         if ( Controller->onRayShot() && !RayShot && Energy >= RayPower ) {
 
             RayShot = true;
@@ -231,24 +278,48 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
                 MissileCount--; } } }
 
-    updatePosition( ElapsedTime ); }
+    updatePosition( ElapsedTime );
+    ThrusterExhaust.update( ElapsedTime ); }
 
-void Spaceship::render ( sf::RenderWindow &Window ) { // TODO
+void Spaceship::render ( sf::RenderWindow &Window ) {
 
+    // TODO TEMP ->
     sf::CircleShape Circle;
-
     Circle.setRadius( getRadius() );
     Circle.setOrigin( getRadius(), getRadius() );
     Circle.setFillColor( sf::Color::Blue );
-
     Circle.setPosition( getPosition() );
     Window.draw( Circle );
+    // -> TEMP
 
-    Circle.setFillColor( sf::Color::Green );
-    Circle.setPosition( getPosition() + sf::Vector2f( 5.f * cosf( getVelocityAngle() ), 5.f * sinf( getVelocityAngle() ) ) );
-    Window.draw( Circle );
+    sf::Sprite Sprite ( Texture );
+    sf::Sprite AccentSprite ( AccentTexture );
+    sf::Sprite ThrusterSprite ( ThrusterTexture );
 
-    }
+    Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
+    Sprite.setScale( ( 3.f * getRadius() ) / Texture.getSize().x, ( 3.f * getRadius() ) / Texture.getSize().y );
+    Sprite.setPosition( getPosition() );
+    Sprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
+
+    AccentSprite.setOrigin( (float) AccentTexture.getSize().x / 2, (float) AccentTexture.getSize().y / 2 );
+    AccentSprite.setScale( ( 3.f * getRadius() ) / AccentTexture.getSize().x, ( 3.f * getRadius() ) / AccentTexture.getSize().y );
+    AccentSprite.setPosition( getPosition() );
+    AccentSprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
+    AccentSprite.setColor( AccentColor );
+
+    float ThrusterModule = 0.84375f * getRadius();
+    float ThrusterAngle = PI + getVelocityAngle();
+
+    ThrusterSprite.setOrigin( (float) ThrusterTexture.getSize().x / 2.f, (float) ThrusterTexture.getSize().y / 2.f );
+    ThrusterSprite.setScale( ( 0.25f * 3.f * getRadius() ) / ThrusterTexture.getSize().x, ( 0.25f * 3.f * getRadius() ) / ThrusterTexture.getSize().y );
+    ThrusterSprite.setOrigin( 64.f, 16.f );
+    ThrusterSprite.setPosition( Sprite.getPosition() + ThrusterModule * sf::Vector2f( cosf( ThrusterAngle ), sinf( ThrusterAngle ) ) );
+    ThrusterSprite.setRotation( RAD_TO_DEG * ( PI + ThrusterAngle + ThrusterAngleOffset ) + 90.f );
+
+    ThrusterExhaust.render( Window );
+    Window.draw( ThrusterSprite );
+    Window.draw( Sprite );
+    Window.draw( AccentSprite ); }
 
 bool Spaceship::onRayShot ( ) {
 
@@ -314,6 +385,7 @@ ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
         float DistanceX = getPosition().x - Other->getPosition().x;
         float DistanceY = getPosition().y - Other->getPosition().y;
+        std::cout << "SA " << DistanceX << " " << DistanceY << std::endl; // TODO
         Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
 
     while ( Distance <= ( getRadius() + Other->getRadius() ) );
@@ -337,7 +409,7 @@ ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
     return nullptr; }
 
-ParticleSystem *  Spaceship::onCollision ( Spaceship * Other ) {
+ParticleSystem * Spaceship::onCollision ( Spaceship * Other ) {
 
     float Distance;
     BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.7f );
@@ -360,6 +432,7 @@ ParticleSystem *  Spaceship::onCollision ( Spaceship * Other ) {
 
         float DistanceX = getPosition().x - Other->getPosition().x;
         float DistanceY = getPosition().y - Other->getPosition().y;
+        std::cout << "SS " << DistanceX << " " << DistanceY << std::endl; // TODO
         Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
 
     while ( Distance <= ( getRadius() + Other->getRadius() ) );

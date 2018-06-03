@@ -7,8 +7,18 @@
         <Path>assets/graphics/textures/</Path>
 
         <Texture>
-            <Name>Test</Name>
-            <Path>test.png</Path>
+            <Name>thruster</Name>
+            <Path>thruster.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>spaceship-azrael</Name>
+            <Path>spaceship-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>spaceship-azrael-accent</Name>
+            <Path>spaceship-azrael-accent.png</Path>
         </Texture>
 
     </Textures>
