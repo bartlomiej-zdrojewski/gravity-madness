@@ -4,7 +4,7 @@
 #include <cmath>
 #include <list>
 #include <SFML/Graphics.hpp>
-#include "definitions.hpp"
+#include "constants.hpp"
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 
@@ -37,7 +37,7 @@ public:
 
 private:
 
-    float getRandomFloat ( );
+    static float getRandomFloat ( );
 
     void updateMenu ( sf::Time ElapsedTime );
     void updateMenu ( sf::Event &Event );

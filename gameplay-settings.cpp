@@ -606,7 +606,7 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
 
     Prototype.Name = "Hercules the Unbroken";
     Prototype.Texture = "spaceship-azrael";
-    Prototype.AccentTexture = "spaceship-azrael-accent";
+    Prototype.AccentTexture = "spaceship-accent-azrael";
     Prototype.Mass = 4.f;
     Prototype.Radius = 20.f;
     Prototype.HealthLimit = 200;
@@ -615,7 +615,7 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
     Prototype.EnergyRestoration = 20;
     Prototype.Thrust = 75;
     Prototype.SuppressingFactor = 0.6;
-    Prototype.ExhaustColor = sf::Color::White; // TODO
+    Prototype.ExhaustColor = sf::Color( 213, 0, 0 );
     Prototype.RayPower = 20;
     Prototype.RayColor = sf::Color( 255, 23, 68 );
     Prototype.MissileCount = 3;

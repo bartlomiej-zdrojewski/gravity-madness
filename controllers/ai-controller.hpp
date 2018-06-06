@@ -1,8 +1,8 @@
 #ifndef GRAVITY_MADNESS_AI_CONTROLLER
 #define GRAVITY_MADNESS_AI_CONTROLLER
 
-#include "definitions.hpp"
-#include "power-up.hpp"
+#include "../constants.hpp"
+#include "../power-ups/power-up.hpp"
 #include "spaceship-controller.hpp"
 
 class AIController : public SpaceshipController {

@@ -162,6 +162,20 @@ void Spaceship::setMissileLimit ( unsigned int MissileLimit ) {
 
     this->MissileLimit = MissileLimit; }
 
+void Spaceship::updateMissileCount ( int DeltaMissileCount ) {
+
+    if ( DeltaMissileCount > MissileCount ) {
+
+        MissileCount = 0; }
+
+    else if ( ( MissileCount + DeltaMissileCount ) > MissileLimit ) {
+
+        MissileCount = MissileLimit; }
+
+    else {
+
+        MissileCount += DeltaMissileCount; } }
+
 void Spaceship::setTexture ( sf::Texture &Texture ) {
 
     this->Texture = Texture; }
@@ -385,7 +399,7 @@ ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
         float DistanceX = getPosition().x - Other->getPosition().x;
         float DistanceY = getPosition().y - Other->getPosition().y;
-        std::cout << "SA " << DistanceX << " " << DistanceY << std::endl; // TODO
+
         Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
 
     while ( Distance <= ( getRadius() + Other->getRadius() ) );
@@ -432,7 +446,7 @@ ParticleSystem * Spaceship::onCollision ( Spaceship * Other ) {
 
         float DistanceX = getPosition().x - Other->getPosition().x;
         float DistanceY = getPosition().y - Other->getPosition().y;
-        std::cout << "SS " << DistanceX << " " << DistanceY << std::endl; // TODO
+
         Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
 
     while ( Distance <= ( getRadius() + Other->getRadius() ) );

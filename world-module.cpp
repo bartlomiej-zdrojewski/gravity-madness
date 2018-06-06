@@ -632,4 +632,4 @@ void WorldModule::saveSettings ( ) {
         pugi::xml_node Setting = SettingsNode[0].append_child( "HighScore" );
         Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) HighScore ); }
 
-    Config->saveToFile( "scripts/settings.xml" ); }
+    Config->saveToFile(); }

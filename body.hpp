@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <SFML/Graphics.hpp>
-#include "definitions.hpp"
+#include "constants.hpp"
 #include "particle-system.hpp"
 
 class Body {

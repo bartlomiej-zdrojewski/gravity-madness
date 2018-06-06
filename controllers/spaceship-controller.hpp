@@ -3,7 +3,7 @@
 
 #include <queue>
 #include <SFML/Graphics.hpp>
-#include "spaceship.hpp"
+#include "../spaceship.hpp"
 
 class Spaceship;
 

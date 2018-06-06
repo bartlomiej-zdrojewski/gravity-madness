@@ -6,23 +6,32 @@
 #include <list>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include "definitions.hpp"
-#include "aggressive-ai-controller.hpp"
-#include "ai-controller.hpp"
+#include "constants.hpp"
+#include "controllers/aggressive-ai-controller.hpp"
+#include "controllers/ai-controller.hpp"
+#include "controllers/passive-ai-controller.hpp"
+#include "controllers/player-controller.hpp"
+#include "controllers/reasonable-ai-controller.hpp"
 #include "asteroid.hpp"
 #include "body.hpp"
-#include "energy-power-up.hpp"
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 #include "missile.hpp"
 #include "particle-system.hpp"
-#include "passive-ai-controller.hpp"
 #include "planet.hpp"
-#include "player-controller.hpp"
 #include "player-interface.hpp"
-#include "power-up.hpp"
+#include "power-ups/high-energy-power-up.hpp"
+#include "power-ups/high-gravity-power-up.hpp"
+#include "power-ups/high-health-power-up.hpp"
+#include "power-ups/low-gravity-power-up.hpp"
+#include "power-ups/low-energy-power-up.hpp"
+#include "power-ups/low-health-power-up.hpp"
+#include "power-ups/missile-power-up.hpp"
+#include "power-ups/more-asteroids-power-up.hpp"
+#include "power-ups/no-asteroids-power-up.hpp"
+#include "power-ups/power-up.hpp"
+#include "power-ups/random-gravity-power-up.hpp"
 #include "ray.hpp"
-#include "reasonable-ai-controller.hpp"
 #include "spaceship.hpp"
 
 class DebugModule;
@@ -51,11 +60,11 @@ public:
 
 private:
 
-    void destructBody ( Body * Object );
+    static float getMinDistance ( sf::Vector2f A, sf::Vector2f B );
+    static float getDistance ( sf::Vector2f A, sf::Vector2f B );
+    static float getRandomFloat ( );
 
-    float getMinDistance ( sf::Vector2f A, sf::Vector2f B );
-    float getDistance ( sf::Vector2f A, sf::Vector2f B );
-    float getRandomFloat ( );
+    void destructBody ( Body * Object );
 
     bool isPlayer ( Spaceship * MySpaceship );
     bool isOnScreen ( sf::Vector2f Center, float Radius );

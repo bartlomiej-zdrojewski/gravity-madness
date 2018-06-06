@@ -4,7 +4,7 @@ int main ( ) {
 
     srand( (unsigned int) time( nullptr ) );
 
-    Script Config ( "scripts/settings.xml" );
+    Script Config ( "assets/scripts/settings.xml" );
     WorldModule World ( &Config );
 
     if ( World.getMode() != WorldModule::Modes::IdleMode ) {

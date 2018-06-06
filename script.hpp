@@ -20,21 +20,21 @@ public:
     pugi::xml_node * getRoot ( );
     std::vector <pugi::xml_node> getChildren ( pugi::xml_node Node, std::string Filter = "" );
 
-    std::string getTextValue ( pugi::xml_node Node );
-    bool getBooleanValue ( pugi::xml_node Node );
-    int getIntegerValue ( pugi::xml_node Node );
-    float getRealValue ( pugi::xml_node Node );
-    sf::Color getColorValue ( pugi::xml_node Node );
+    static std::string getTextValue ( pugi::xml_node Node );
+    static bool getBooleanValue ( pugi::xml_node Node );
+    static int getIntegerValue ( pugi::xml_node Node );
+    static float getRealValue ( pugi::xml_node Node );
+    static sf::Color getColorValue ( pugi::xml_node Node );
 
-    void setValue ( pugi::xml_node Node, std::string Value );
-    void setValue ( pugi::xml_node Node, bool Value );
-    void setValue ( pugi::xml_node Node, int Value );
-    void setValue ( pugi::xml_node Node, float Value );
-    void setColorValue ( pugi::xml_node Node, sf::Color Value );
+    static void setValue ( pugi::xml_node Node, std::string Value );
+    static void setValue ( pugi::xml_node Node, bool Value );
+    static void setValue ( pugi::xml_node Node, int Value );
+    static void setValue ( pugi::xml_node Node, float Value );
+    static void setColorValue ( pugi::xml_node Node, sf::Color Value );
 
 private:
 
-    std::string toHex ( unsigned int Value );
+    static std::string toHex ( unsigned int Value );
 
 private:
 

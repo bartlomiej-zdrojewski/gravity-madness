@@ -2,7 +2,7 @@
 #define GRAVITY_MADNESS_POWER_UP_HPP
 
 #include <SFML/Graphics.hpp>
-#include "spaceship.hpp"
+#include "../spaceship.hpp"
 
 class PowerUp {
 
@@ -32,7 +32,7 @@ public:
 
 protected:
 
-    float getRandomFloat ( );
+    static float getRandomFloat ( );
 
     virtual void onEffectBegin ( ) { }
     virtual void onEffectEnd ( ) { }

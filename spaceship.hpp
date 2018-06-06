@@ -3,10 +3,10 @@
 
 #include "asteroid.hpp"
 #include "body.hpp"
-#include "definitions.hpp"
+#include "controllers/spaceship-controller.hpp"
+#include "constants.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
-#include "spaceship-controller.hpp"
 
 class Asteroid;
 class SpaceshipController;
@@ -76,6 +76,7 @@ public:
     void setMissileCount ( unsigned int MissileCount );
     unsigned int getMissileLimit ( );
     void setMissileLimit ( unsigned int MissileLimit );
+    void updateMissileCount ( int DeltaMissileCount );
 
     void setTexture ( sf::Texture &Texture );
     void setAccentTexture ( sf::Texture &AccentTexture, sf::Color AccentColor );

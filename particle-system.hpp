@@ -4,7 +4,7 @@
 #include <cmath>
 #include <list>
 #include <SFML/Graphics.hpp>
-#include "definitions.hpp"
+#include "constants.hpp"
 
 class ParticleSystem { // TODO ERROR CHECK
 
@@ -30,7 +30,7 @@ public:
 
 private:
 
-    float getRandomFloat ( );
+    static float getRandomFloat ( );
 
 private:
 

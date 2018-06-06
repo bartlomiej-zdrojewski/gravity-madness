@@ -16,7 +16,7 @@ funkcje aktualizujące i renderujące nadrzędnych klas.
 
 Moduł wymaga podania ścieżki do pliku z ustawieniami. Jest ona
 przekazywana na początku programu i jest jedyną sztywno ustaloną scieżką
-w całym kodzie. Jej domyślna wartość to `scripts/settings.xml`.
+w całym kodzie. Jej domyślna wartość to `assets/scripts/settings.xml`.
 
 Jeśli próba wczytania ustawień nie powiodła się, moduł przejdzie z trybu
 `Init` w tryb `Idle`, pojawi się odpowiedni komunikat systemowy, a

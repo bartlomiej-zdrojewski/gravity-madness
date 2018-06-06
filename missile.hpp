@@ -4,11 +4,11 @@
 #include "asteroid.hpp"
 #include "body.hpp"
 #include "body-collision.hpp"
-#include "definitions.hpp"
+#include "constants.hpp"
+#include "controllers/spaceship-controller.hpp"
 #include "graphics-module.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
-#include "spaceship-controller.hpp"
 
 class Missile : public Body {
 

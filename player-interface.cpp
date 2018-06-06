@@ -166,7 +166,7 @@ void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
 
     sf::RectangleShape Fade;
 
-    Fade.setPosition( 0.f, 0.f );
+    Fade.setPosition( Viewport.left, Viewport.top );
     Fade.setSize( sf::Vector2f( Viewport.width, Viewport.height ) );
 
     if ( FadeIn ) {
