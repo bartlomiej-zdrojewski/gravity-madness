@@ -11,15 +11,25 @@ MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
     SettingsChanged = false;
     Mode = MenuMode;
 
-    MenuOption = 0;
     MenuOptionCount = 5;
     MenuOptionText[0] = "Play now";
     MenuOptionText[1] = "Customize everything\nand play as you like";
     MenuOptionText[2] = "Beat the tutorial";
     MenuOptionText[3] = "Settings and stuff";
-    MenuOptionText[4] = "Leave to prepare\nfor next challenge"; //
+    MenuOptionText[4] = "Leave to prepare\nfor next challenge";
 
-    SettingsOption = 0;
+    GameplayOptionCount[0] = 5;
+    GameplayOptionCount[1] = 4;
+    GameplayOptionText[0][0] = "Area size";
+    GameplayOptionText[0][1] = "Asteroid strike";
+    GameplayOptionText[0][2] = "Winning condition";
+    GameplayOptionText[0][3] = "\"Certain time\"";
+    GameplayOptionText[0][4] = "Please, more options!";
+    GameplayOptionText[1][0] = "Player count";
+    GameplayOptionText[1][1] = "Spaceship count";
+    GameplayOptionText[1][2] = "Enemies personality";
+    GameplayOptionText[1][3] = "Show the spaceships!";
+
     SettingsOptionCount = 3;
     SettingsOptionText[0] = "Resolution";
     SettingsOptionText[1] = "Fullscreen";
@@ -63,7 +73,8 @@ void MainMenu::update ( ) {
 
             case GameplayMode: {
 
-                // updateGameplaySection( ElapsedTime );
+                updateMenu( ElapsedTime );
+                updateGameplaySection( ElapsedTime );
 
                 break; }
 
@@ -118,6 +129,7 @@ void MainMenu::render ( sf::RenderWindow &Window ) {
 
         case Modes::GameplayMode: {
 
+            renderMenu( Window );
             renderGameplaySection( Window );
 
             break; }
@@ -140,6 +152,11 @@ void MainMenu::reset ( ) {
     FullScreen = Graphics->isFullScreenEnabled();
     AntialiasingLevel = Graphics->getAntialiasingLevel();
 
+    MenuOption = 0;
+    GameplayPage = 0;
+    GameplayOption = 0;
+    SettingsOption = 0;
+
     MenuOptionPointerVelocity = 50.f;
     MenuOptionPointerPosition.y = -25.f;
 
@@ -157,11 +174,7 @@ void MainMenu::reset ( ) {
 
     Background.clear();
     ParticleIndexes.clear();
-    ParticleVelocities.clear();
-
-    // ...
-
-    }
+    ParticleVelocities.clear(); }
 
 bool MainMenu::onLaunch ( ) {
 
@@ -215,6 +228,10 @@ bool MainMenu::onSettingsChanged ( ) {
 float MainMenu::getRandomFloat ( ) {
 
     return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }
+
+std::string MainMenu::getTimeText ( sf::Time Time ) {
+
+    return std::to_string( (unsigned int) ( Time.asSeconds() / 60.f ) ) + " minutes"; }
 
 void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
@@ -511,23 +528,429 @@ void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
 
             Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
 
-        Window.draw( Text ); }
+        Window.draw( Text ); } }
 
-    // TODO LOGO
+void MainMenu::updateGameplaySection ( sf::Time ElapsedTime ) {
 
-    }
+    GameplayOptionText[0][ GameplayOptionCount[0] + 0 ] = Gameplay->getAreaSizeText();
+    GameplayOptionText[0][ GameplayOptionCount[0] + 1 ] = Gameplay->getAsteroidFrequencyText();
+    GameplayOptionText[0][ GameplayOptionCount[0] + 2 ] = Gameplay->getEndingConditionText();
+    GameplayOptionText[0][ GameplayOptionCount[0] + 3 ] = getTimeText( Gameplay->getTimeLimit() );
+    GameplayOptionText[1][ GameplayOptionCount[1] + 0 ] = std::to_string( Gameplay->getPlayerCount() );
+    GameplayOptionText[1][ GameplayOptionCount[1] + 1 ] = std::to_string( Gameplay->getSpaceshipCount() ) +
+                                                          ", with " + std::to_string( Gameplay->getSpaceshipCount() - Gameplay->getPlayerCount() ) + " enemies";
+    GameplayOptionText[1][ GameplayOptionCount[1] + 2 ] = Gameplay->getAIPersonalityText();
+
+    if ( Gameplay->getPlayerCount() == 1 ) {
+
+        GameplayOptionText[1][ GameplayOptionCount[1] + 0 ] = "One lone wolf"; }
+
+    else if ( Gameplay->getPlayerCount() == 2 ) {
+
+        GameplayOptionText[1][ GameplayOptionCount[1] + 0 ] = "Two mario bros"; }
+
+    else if ( Gameplay->getPlayerCount() == 3 ) {
+
+        GameplayOptionText[1][ GameplayOptionCount[1] + 0 ] = "Three musketeers"; }
+
+    else {
+
+        GameplayOptionText[1][ GameplayOptionCount[1] + 0 ] = "Four ninja turtles"; }
+
+    sf::Vector2f SectionMargin = sf::Vector2f ( 20.f, 30.f );
+    sf::Vector2f OptionMargin = sf::Vector2f ( 0.f, 15.f );
+
+    if ( Graphics->getWindowHeight() < 600.f ) {
+
+        SectionMargin = sf::Vector2f ( 12.f, 20.f );
+        OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
+
+    else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+
+        SectionMargin = sf::Vector2f ( 60.f, 60.f );
+        OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
+
+    else if ( Graphics->getWindowHeight() > 1000 ) {
+
+        SectionMargin = sf::Vector2f ( 100.f, 60.f );
+        OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
+
+    sf::Text TextPrototype;
+    sf::Vector2f SectionSize = sf::Vector2f ( 0.35f * Graphics->getWindowWidth() - 2.f * SectionMargin.x, Graphics->getWindowHeight() - 2.f * SectionMargin.y );
+    sf::Vector2f OptionPosition [2];
+    OptionPosition [0] = sf::Vector2f ( 0.55f * Graphics->getWindowWidth() + SectionMargin.x + OptionMargin.x, Graphics->getWindowHeight() - SectionMargin.y );
+    OptionPosition [1] = sf::Vector2f ( 0.55f * Graphics->getWindowWidth() + SectionMargin.x + OptionMargin.x, Graphics->getWindowHeight() - SectionMargin.y );
+    float OptionHeight = 0.f;
+
+    GameplayOptionFontSize = MenuOptionFontSize;
+    float SmallFontScale = 0.85f;
+
+    for ( unsigned int i = 0; i < 2; i++ ) {
+
+        for ( unsigned int j = 0; j < ( 2 * GameplayOptionCount[i] - 1 ); j++ ) {
+
+            TextPrototype.setString( GameplayOptionText[i][j] );
+            TextPrototype.setFont( Graphics->getFont( "MainMenu" ) );
+            TextPrototype.setCharacterSize( j < GameplayOptionCount[i] ? GameplayOptionFontSize : (unsigned int) ( SmallFontScale * GameplayOptionFontSize ) );
+
+            while ( TextPrototype.getLocalBounds().height > ( 0.06f * SectionSize.y ) ) {
+
+                TextPrototype.setCharacterSize( --GameplayOptionFontSize ); }
+
+            while ( TextPrototype.getLocalBounds().width > SectionSize.x ) {
+
+                TextPrototype.setCharacterSize( --GameplayOptionFontSize ); } } }
+
+    for ( unsigned int i = 0; i < 2; i++ ) {
+
+        for ( unsigned int j = 0; j < ( 2 * GameplayOptionCount[i] - 1 ); j++ ) {
+
+            TextPrototype.setString( GameplayOptionText[i][j] );
+            TextPrototype.setCharacterSize( j < GameplayOptionCount[i] ? GameplayOptionFontSize : (unsigned int) ( SmallFontScale * GameplayOptionFontSize ) );
+
+            OptionHeight = std::fmaxf( OptionHeight, TextPrototype.getLocalBounds().height ); } }
+
+    for ( unsigned int i = 0; i < 2; i++ ) {
+
+        for ( unsigned int j = 0; j < GameplayOptionCount[i]; j++ ) {
+
+            size_t Index = GameplayOptionCount[i] - j - 1;
+
+            if ( ( Index + 1 ) != GameplayOptionCount[i] ) {
+
+                GameplayOptionPosition[i][ Index ] = sf::Vector2f( OptionPosition[i].x, OptionPosition[i].y - 2.f * OptionHeight - 0.5f * OptionMargin.y );
+                GameplayOptionPosition[i][ Index + GameplayOptionCount[i] ] = sf::Vector2f( OptionPosition[i].x, OptionPosition[i].y - OptionHeight );
+
+                OptionPosition[i].y -= 2.f * OptionHeight + 1.5f * OptionMargin.y; }
+
+            else {
+
+                GameplayOptionPosition[i][ Index ] = sf::Vector2f( OptionPosition[i].x, OptionPosition[i].y - OptionHeight );
+
+                OptionPosition[i].y -= OptionHeight + OptionMargin.y; } } } }
 
 void MainMenu::updateGameplaySection ( sf::Event &Event ) {
 
-    // TODO
+    if ( Event.type == sf::Event::KeyPressed ) {
 
-    }
+        switch ( Event.key.code ) {
+
+            case sf::Keyboard::Up: {
+
+                if ( GameplayOption > 0 ) {
+
+                    GameplayOption--; }
+
+                break; }
+
+            case sf::Keyboard::Down: {
+
+                if ( GameplayOption < ( GameplayOptionCount[ GameplayPage ] - 1 ) ) {
+
+                    GameplayOption++; }
+
+                break; }
+
+            case sf::Keyboard::Left: {
+
+                updateGameplaySection_BindLeft();
+
+                break; }
+
+            case sf::Keyboard::Right: {
+
+                updateGameplaySection_BindRight();
+
+                break; }
+
+            case sf::Keyboard::W: {
+
+                if ( GameplayOption > 0 ) {
+
+                    GameplayOption--; }
+
+                break; }
+
+            case sf::Keyboard::S: {
+
+                if ( GameplayOption < ( GameplayOptionCount[ GameplayPage ] - 1 ) ) {
+
+                    GameplayOption++;
+                    GameplayOption = 0; }
+
+                break; }
+
+            case sf::Keyboard::A: {
+
+                updateGameplaySection_BindLeft();
+
+                break; }
+
+            case sf::Keyboard::D: {
+
+                updateGameplaySection_BindRight();
+
+                break; }
+
+            case sf::Keyboard::Return: {
+
+                if ( GameplayOption == 4 ) {
+
+                    if ( GameplayPage == 0 ) {
+
+                        GameplayPage++;
+                        GameplayOption = 0; }
+
+                    else if ( GameplayPage == 1 ) {
+
+                        // TODO SPACESHIP SECTION
+
+                        } }
+
+                break; }
+
+            case sf::Keyboard::Space: {
+
+                if ( GameplayOption == 4 ) {
+
+                    if ( GameplayPage == 0 ) {
+
+                        GameplayPage++; }
+
+                    else if ( GameplayPage == 1 ) {
+
+                        // TODO SPACESHIP SECTION
+
+                        } }
+
+                break; }
+
+            case sf::Keyboard::BackSpace: {
+
+                if ( GameplayPage == 0 ) {
+
+                    setMode( Modes::MenuMode ); }
+
+                else if ( GameplayPage == 1 ) {
+
+                    GameplayPage = 0;
+                    GameplayOption = 4; }
+
+                break; }
+
+            case sf::Keyboard::Escape: {
+
+                if ( GameplayPage == 0 ) {
+
+                    setMode( Modes::MenuMode ); }
+
+                else if ( GameplayPage == 1 ) {
+
+                    GameplayPage = 0;
+                    GameplayOption = 4; }
+
+                break; }
+
+            default: {
+
+                break; } } } }
+
+void MainMenu::updateGameplaySection_BindLeft ( ) {
+
+    switch ( GameplayOption ) {
+
+        case 0: {
+
+            if ( GameplayPage == 0 ) {
+
+                Gameplay->setPreviousAreaSize(); }
+
+            else if ( GameplayPage == 1 ) {
+
+                if ( Gameplay->getPlayerCount() > 1 ) {
+
+                    Gameplay->setPlayerCount( Gameplay->getPlayerCount() - 1 ); } }
+
+            break; }
+
+        case 1: {
+
+            if ( GameplayPage == 0 ) {
+
+                Gameplay->setPreviousAsteroidFrequency(); }
+
+            else if ( GameplayPage == 1 ) {
+
+                if ( Gameplay->getSpaceshipCount() > 10 ) {
+
+                    Gameplay->setSpaceshipCount( Gameplay->getSpaceshipCount() - 1 ); } }
+
+            break; }
+
+        case 2: {
+
+            if ( GameplayPage == 0 ) {
+
+                Gameplay->setPreviousEndingCondition(); }
+
+            else if ( GameplayPage == 1 ) {
+
+                Gameplay->setPreviousAIPersonality(); }
+
+            break; }
+
+        case 3: {
+
+            if ( Gameplay->getTimeLimit() == sf::seconds( 3.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 15.f * 60.f ) ); }
+
+            else if ( Gameplay->getTimeLimit() == sf::seconds( 5.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 3.f * 60.f ) ); }
+
+            else if ( Gameplay->getTimeLimit() == sf::seconds( 10.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 5.f * 60.f ) ); }
+
+            else if ( Gameplay->getTimeLimit() == sf::seconds( 15.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 10.f * 60.f ) ); }
+
+            break; }
+
+        default: {
+
+            break; } } }
+
+void MainMenu::updateGameplaySection_BindRight ( ) {
+
+    switch ( GameplayOption ) {
+
+        case 0: {
+
+            if ( GameplayPage == 0 ) {
+
+                Gameplay->setNextAreaSize(); }
+
+            else if ( GameplayPage == 1 ) {
+
+                if ( Gameplay->getPlayerCount() < 4 ) {
+
+                    Gameplay->setPlayerCount( Gameplay->getPlayerCount() + 1 ); } }
+
+            break; }
+
+        case 1: {
+
+            if ( GameplayPage == 0 ) {
+
+                Gameplay->setNextAsteroidFrequency(); }
+
+            else if ( GameplayPage == 1 ) {
+
+                if ( Gameplay->getSpaceshipCount() < 40 ) {
+
+                    Gameplay->setSpaceshipCount( Gameplay->getSpaceshipCount() + 1 ); } }
+
+            break; }
+
+        case 2: {
+
+            if ( GameplayPage == 0 ) {
+
+                Gameplay->setNextEndingCondition(); }
+
+            else if ( GameplayPage == 1 ) {
+
+                Gameplay->setNextAIPersonality(); }
+
+            break; }
+
+        case 3: {
+
+            if ( Gameplay->getTimeLimit() == sf::seconds( 3.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 5.f * 60.f ) ); }
+
+            else if ( Gameplay->getTimeLimit() == sf::seconds( 5.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 10.f * 60.f ) ); }
+
+            else if ( Gameplay->getTimeLimit() == sf::seconds( 10.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 15.f * 60.f ) ); }
+
+            else if ( Gameplay->getTimeLimit() == sf::seconds( 15.f * 60.f ) ) {
+
+                Gameplay->setTimeLimit( sf::seconds( 3.f * 60.f ) ); }
+
+            break; }
+
+        default: {
+
+            break; } } }
 
 void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
 
     renderSectionBackground( Window, 1 );
 
-    // TODO
+    sf::Text Text;
+
+    Text.setFont( Graphics->getFont( "MainMenu" ) );
+    Text.setCharacterSize( GameplayOptionFontSize );
+
+    for ( unsigned int i = 0; i < GameplayOptionCount[ GameplayPage ]; i++ ) {
+
+        Text.setString( GameplayOptionText[ GameplayPage ][i] );
+        Text.setPosition( GameplayOptionPosition[ GameplayPage ][i] );
+        Text.setOutlineThickness( 1.f );
+        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
+
+        if ( i == GameplayOption ) {
+
+            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+
+        else if ( ( i + 1 ) == GameplayOption || ( i - 1 ) == GameplayOption ) {
+
+            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+
+        else if ( ( i + 2 ) == GameplayOption || ( i - 2 ) == GameplayOption ) {
+
+            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+
+        else {
+
+            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+
+        Window.draw( Text ); }
+
+    Text.setCharacterSize( (unsigned int) ( 0.85f * GameplayOptionFontSize ) );
+
+    for ( unsigned int i = GameplayOptionCount[ GameplayPage ]; i < ( 2 * GameplayOptionCount[ GameplayPage ] - 1 ); i++ ) {
+
+        Text.setString( GameplayOptionText[ GameplayPage ][i] );
+        Text.setPosition( GameplayOptionPosition[ GameplayPage ][i] );
+        Text.setOutlineThickness( 1.f );
+        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
+
+        if ( ( i - GameplayOptionCount[ GameplayPage ] ) == GameplayOption ) {
+
+            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+
+        else if ( ( i - GameplayOptionCount[ GameplayPage ] + 1 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 1 ) == GameplayOption ) {
+
+            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+
+        else if ( ( i - GameplayOptionCount[ GameplayPage ] + 2 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 2 ) == GameplayOption ) {
+
+            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+
+        else {
+
+            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+
+        Window.draw( Text ); }
 
     }
 
@@ -927,11 +1350,7 @@ void MainMenu::renderSettingsSection ( sf::RenderWindow &Window ) {
 
             Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
 
-        Window.draw( Text ); }
-
-    // ...
-
-    }
+        Window.draw( Text ); } }
 
 void MainMenu::updateBackground ( sf::Time ElapsedTime ) {
 

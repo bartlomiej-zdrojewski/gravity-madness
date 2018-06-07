@@ -298,12 +298,14 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 void Spaceship::render ( sf::RenderWindow &Window ) {
 
     // TODO TEMP ->
+    /*
     sf::CircleShape Circle;
     Circle.setRadius( getRadius() );
     Circle.setOrigin( getRadius(), getRadius() );
     Circle.setFillColor( sf::Color::Blue );
     Circle.setPosition( getPosition() );
     Window.draw( Circle );
+    */
     // -> TEMP
 
     sf::Sprite Sprite ( Texture );

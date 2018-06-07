@@ -38,12 +38,16 @@ public:
 private:
 
     static float getRandomFloat ( );
+    static std::string getTimeText ( sf::Time Time );
 
     void updateMenu ( sf::Time ElapsedTime );
     void updateMenu ( sf::Event &Event );
     void renderMenu ( sf::RenderWindow &Window );
 
+    void updateGameplaySection ( sf::Time ElapsedTime );
     void updateGameplaySection ( sf::Event &Event );
+    void updateGameplaySection_BindLeft ( );
+    void updateGameplaySection_BindRight ( );
     void renderGameplaySection ( sf::RenderWindow &Window );
 
     void updateSettingsSection ( sf::Time ElapsedTime );
@@ -81,6 +85,13 @@ private:
     float MenuOptionPositionCenter [5];
     sf::Vector2f MenuOptionPointerPosition;
     float MenuOptionPointerVelocity;
+
+    unsigned int GameplayPage;
+    unsigned int GameplayOption;
+    unsigned int GameplayOptionCount [2];
+    std::string GameplayOptionText [2][9];
+    unsigned int GameplayOptionFontSize;
+    sf::Vector2f GameplayOptionPosition [2][9];
 
     unsigned int SettingsOption;
     unsigned int SettingsOptionCount;

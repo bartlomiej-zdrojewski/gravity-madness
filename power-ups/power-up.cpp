@@ -82,7 +82,9 @@ void PowerUp::render ( sf::RenderWindow &Window ) {
         Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
         Sprite.setPosition( getPosition() );
 
-        Window.draw( Sprite ); } }
+        // TODO Window.draw( Sprite );
+
+        } }
 
 void PowerUp::finish ( ) {
 

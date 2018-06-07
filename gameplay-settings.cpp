@@ -384,17 +384,17 @@ std::string GameplaySettings::getAIPersonalityText ( ) {
 
             return "Random"; }
 
-        case AIPersonalities::Aggressive: {
+        case AIPersonalities::Passive: {
 
-            return "Aggressive"; }
+            return "Passive"; }
 
         case AIPersonalities::Reasonable: {
 
             return "Reasonable"; }
 
-        case AIPersonalities::Passive: {
+        case AIPersonalities::Aggressive: {
 
-            return "Passive"; }
+            return "Aggressive"; }
 
         default: {
 
@@ -412,11 +412,11 @@ void GameplaySettings::setNextAIPersonality ( ) {
 
         case AIPersonalities::Random: {
 
-            AIPersonality = AIPersonalities::Aggressive;
+            AIPersonality = AIPersonalities::Passive;
 
             break; }
 
-        case AIPersonalities::Aggressive: {
+        case AIPersonalities::Passive: {
 
             AIPersonality = AIPersonalities::Reasonable;
 
@@ -424,11 +424,11 @@ void GameplaySettings::setNextAIPersonality ( ) {
 
         case AIPersonalities::Reasonable: {
 
-            AIPersonality = AIPersonalities::Passive;
+            AIPersonality = AIPersonalities::Aggressive;
 
             break; }
 
-        case AIPersonalities::Passive: {
+        case AIPersonalities::Aggressive: {
 
             AIPersonality = AIPersonalities::Random;
 
@@ -446,11 +446,11 @@ void GameplaySettings::setPreviousAIPersonality ( ) {
 
         case AIPersonalities::Random: {
 
-            AIPersonality = AIPersonalities::Passive;
+            AIPersonality = AIPersonalities::Aggressive;
 
             break; }
 
-        case AIPersonalities::Aggressive: {
+        case AIPersonalities::Passive: {
 
             AIPersonality = AIPersonalities::Random;
 
@@ -458,11 +458,11 @@ void GameplaySettings::setPreviousAIPersonality ( ) {
 
         case AIPersonalities::Reasonable: {
 
-            AIPersonality = AIPersonalities::Aggressive;
+            AIPersonality = AIPersonalities::Passive;
 
             break; }
 
-        case AIPersonalities::Passive: {
+        case AIPersonalities::Aggressive: {
 
             AIPersonality = AIPersonalities::Reasonable;
 

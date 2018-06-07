@@ -10,7 +10,7 @@ TODO
 
 TODO
 
-### Agresywny kontroler AI
+### Pasywny kontroler AI
 
 TODO
 
@@ -18,6 +18,6 @@ TODO
 
 TODO
 
-### Pasywny kontroler AI
+### Agresywny kontroler AI
 
 TODO

@@ -31,9 +31,9 @@ public:
     enum AIPersonalities {
 
         Random,
-        Aggressive,
+        Passive,
         Reasonable,
-        Passive
+        Aggressive
 
         };
 
@@ -76,7 +76,7 @@ public:
         PlayerCount = 1;
         AIPersonality = AIPersonalities::Random;
         EndingCondition = EndingConditions::NoEnemies;
-        TimeLimit = sf::seconds( 300.f );
+        TimeLimit = sf::seconds( 5.f * 60.f );
         Score = nullptr;
         Winner = -1;
 

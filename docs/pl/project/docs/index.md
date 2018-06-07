@@ -32,7 +32,22 @@ TODO
 
 ## Możliwe udoskonalenia
 
-TODO
+Poniżej znajduje się lista udoskonaleń, które powinny zostać wprowadzone
+w ostatecznej wersji projektu.
+
+* Możliwość wyboru statku w menu głównym (aktualnie wybierany
+jest losowy statek)
+* Kontrolery dla graczy 2-4
+* Wyświetlanie ilości przeciwników i pozostałych pociski w interejsie
+gracza
+* Tutorial
+* Mechanizm liczenia punktów
+* Tablica wyników
+* Muzyka i efekty dźwiękowe
+* Zwiększenie różnorodności grafik
+* Obracanie się asteroid
+* Zwiększenie dokładności detekcji kolizji poprzez zastosowanie
+"szkieletów" i algorytmów graficznych
 
 W kodzie źródłowym wszelkie propozycje udoskonaleń zostały opatrzone
 komentarzem `TODO`.

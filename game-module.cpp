@@ -513,8 +513,10 @@ void GameModule::terminate ( ) {
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        PlayerSpaceship[i]->setHealth( 0.f );
-        PlayerSpaceship[i]->updateHealth( 0.f ); } }
+        if ( PlayerSpaceship[i] ) {
+
+            PlayerSpaceship[i]->setHealth( 0.f );
+            PlayerSpaceship[i]->updateHealth( 0.f ); } } }
 
 bool GameModule::onPause ( ) {
 
