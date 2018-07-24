@@ -298,14 +298,12 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 void Spaceship::render ( sf::RenderWindow &Window ) {
 
     // TODO TEMP ->
-    /*
     sf::CircleShape Circle;
     Circle.setRadius( getRadius() );
     Circle.setOrigin( getRadius(), getRadius() );
     Circle.setFillColor( sf::Color::Blue );
     Circle.setPosition( getPosition() );
     Window.draw( Circle );
-    */
     // -> TEMP
 
     sf::Sprite Sprite ( Texture );
@@ -374,7 +372,7 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
 
     setHealth( 0.f );
     setEnergy( 0.f );
-    setVelocity( sf::Vector2f( 0.f, 0.f ) );// Necessary for PlayerFinalVelocity
+    setVelocity( sf::Vector2f( 0.f, 0.f ) ); // Necessary for PlayerFinalVelocity
     destruct();
 
     return Explosion; }

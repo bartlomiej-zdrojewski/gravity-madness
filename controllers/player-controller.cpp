@@ -1,104 +1,86 @@
+#include <iostream>
 #include "player-controller.hpp"
 
 void PlayerController::update ( sf::Event &Event ) {
 
     if ( Event.type == sf::Event::KeyPressed ) {
 
-        switch ( Event.key.code ) {
+        if ( Keys->getDevice() == PlayerControllerSettings::Devices::Keyboard ) {
 
-            case sf::Keyboard::W: {
+            if ( Event.key.code == Keys->getForwardKey() ) {
 
                 ThrustForward = true;
                 ThrustBackward = false;
+                ForceThrust = false; }
 
-                break; }
-
-            case sf::Keyboard::S: {
+            else if ( Event.key.code == Keys->getBackwardKey() ) {
 
                 ThrustForward = false;
                 ThrustBackward = true;
+                ForceThrust = false; }
 
-                break; }
-
-            case sf::Keyboard::A: {
+            else if ( Event.key.code == Keys->getLeftKey() ) {
 
                 ThrustLeft = true;
-                ThrustRight = false;
+                ThrustRight = false; }
 
-                break; }
-
-            case sf::Keyboard::D: {
+            else if ( Event.key.code == Keys->getRightKey() ) {
 
                 ThrustLeft = false;
-                ThrustRight = true;
+                ThrustRight = true; }
 
-                break; }
+            else if ( Event.key.code == Keys->getRayShotKey() ) {
 
-            case sf::Keyboard::Space: {
+                ForceRayShot = true; }
 
-                ForceRayShot = true;
+            else if ( Event.key.code == Keys->getMissileShotKey() ) {
 
-                break; }
+                ForceMissileShot = true; } } }
 
-            case sf::Keyboard::Q: {
+    if ( Event.type == sf::Event::KeyReleased ) {
 
-                MissileShot = true;
+        if ( Keys->getDevice() == PlayerControllerSettings::Devices::Keyboard ) {
 
-                break; }
+            if ( Event.key.code == Keys->getForwardKey() ) {
 
-                // ...
+                ThrustForward = false; }
 
-            default: {
+            else if ( Event.key.code == Keys->getBackwardKey() ) {
 
-                break; } } }
+                ThrustBackward = false; }
 
-    else if ( Event.type == sf::Event::KeyReleased ) {
-
-        switch ( Event.key.code ) {
-
-            case sf::Keyboard::W: {
-
-                ThrustForward = false;
-
-                break; }
-
-            case sf::Keyboard::S: {
-
-                ThrustBackward = false;
-
-                break; }
-
-            case sf::Keyboard::A: {
+            else if ( Event.key.code == Keys->getLeftKey() ) {
 
                 ThrustLeft = false;
 
-                break; }
+                if ( ForceThrust ) {
 
-            case sf::Keyboard::D: {
+                    ForceThrust = false;
+                    ThrustForward = false; } }
+
+            else if ( Event.key.code == Keys->getRightKey() ) {
 
                 ThrustRight = false;
 
-                break; }
+                if ( ForceThrust ) {
 
-            case sf::Keyboard::Space: {
+                    ForceThrust = false;
+                    ThrustForward = false; } }
 
-                ForceRayShot = false;
+            else if ( Event.key.code == Keys->getRayShotKey() ) {
 
-                break; }
+                ForceRayShot = false; }
 
-            case sf::Keyboard::Q: {
+            else if ( Event.key.code == Keys->getMissileShotKey() ) {
 
-                MissileShot = false;
+                ForceMissileShot = false; } } }
 
-                break; }
+    // TODO Joystick
 
-                // ...
+    if ( !ThrustForward && !ThrustBackward && ( ThrustLeft || ThrustRight ) ) {
 
-            default: {
-
-                break; } } }
-
-    // ...
+        ForceThrust = true;
+        ThrustForward = true; }
 
     }
 
@@ -111,4 +93,9 @@ void PlayerController::update ( sf::Time ElapsedTime ) {
         RayShot = true;
         RayShotRestorationTime = RayShotRestorationDuration; }
 
-    }
+    MissileShotRestorationTime -= ElapsedTime;
+
+    if ( ForceMissileShot && MissileShotRestorationTime.asSeconds() <= 0.f ) {
+
+        MissileShot = true;
+        MissileShotRestorationTime = MissileShotRestorationDuration; } }

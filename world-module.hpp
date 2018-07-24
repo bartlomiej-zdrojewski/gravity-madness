@@ -35,6 +35,7 @@ public:
 
         this->Config = Config;
         SpaceshipsConfig = nullptr;
+        ControllersConfig = "";
 
         Log = nullptr;
         Graphics = nullptr;
@@ -105,6 +106,7 @@ private:
 
     Script * Config;
     Script * SpaceshipsConfig;
+    std::string ControllersConfig;
 
     LoggerManager * Log;
     GraphicsModule * Graphics;

@@ -112,6 +112,18 @@ void Message::update ( sf::Event &Event ) {
 
                 break; }
 
+            case sf::Keyboard::BackSpace: {
+
+                Close = true;
+
+                break; }
+
+            case sf::Keyboard::Escape: {
+
+                Close = true;
+
+                break; }
+
             default: {
 
                 break; } } } }

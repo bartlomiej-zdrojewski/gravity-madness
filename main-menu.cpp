@@ -1,3 +1,4 @@
+#include <iostream>
 #include "main-menu.hpp"
 
 MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
@@ -30,10 +31,11 @@ MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
     GameplayOptionText[1][2] = "Enemies personality";
     GameplayOptionText[1][3] = "Show the spaceships!";
 
-    SettingsOptionCount = 3;
+    SettingsOptionCount = 4;
     SettingsOptionText[0] = "Resolution";
     SettingsOptionText[1] = "Fullscreen";
     SettingsOptionText[2] = "Antialiasing";
+    SettingsOptionText[3] = "Check out controllers!";
 
     BackgroundPauseDuration = sf::seconds( 2.f );
     BackgroundPauseTime = BackgroundPauseDuration;
@@ -63,7 +65,7 @@ void MainMenu::update ( ) {
 
         updateBackground( ElapsedTime );
 
-        switch ( Mode ) {
+        switch ( getMode() ) {
 
             case MenuMode: {
 
@@ -85,13 +87,21 @@ void MainMenu::update ( ) {
 
                 break; }
 
+            case ControllersMode: {
+
+                updateMenu( ElapsedTime );
+                updateSettingsSection( ElapsedTime );
+                updateControllersSection( ElapsedTime );
+
+                break; }
+
             default: {
 
                 break; } } } }
 
 void MainMenu::update ( sf::Event &Event ) {
 
-    switch ( Mode ) {
+    switch ( getMode() ) {
 
         case Modes::MenuMode: {
 
@@ -111,6 +121,12 @@ void MainMenu::update ( sf::Event &Event ) {
 
             break; }
 
+        case Modes::ControllersMode: {
+
+            updateControllersSection( Event );
+
+            break; }
+
         default: {
 
             break; } } }
@@ -119,7 +135,7 @@ void MainMenu::render ( sf::RenderWindow &Window ) {
 
     renderBackground( Window );
 
-    switch ( Mode ) {
+    switch ( getMode() ) {
 
         case Modes::MenuMode: {
 
@@ -141,6 +157,14 @@ void MainMenu::render ( sf::RenderWindow &Window ) {
 
             break; }
 
+        case Modes::ControllersMode: {
+
+            renderMenu( Window );
+            renderSettingsSection( Window );
+            renderControllersSection( Window );
+
+            break; }
+
         default: {
 
             break; } } }
@@ -157,18 +181,25 @@ void MainMenu::reset ( ) {
     GameplayOption = 0;
     SettingsOption = 0;
 
-    MenuOptionPointerVelocity = 50.f;
     MenuOptionPointerPosition.y = -25.f;
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
         MenuOptionPointerVelocity = 30.f; }
 
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+        MenuOptionPointerVelocity = 50.f; }
+
     else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
         MenuOptionPointerVelocity = 70.f; }
 
-    else if ( Graphics->getWindowHeight() > 1000 ) {
+    else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+        MenuOptionPointerVelocity = 70.f; }
+
+    else {
 
         MenuOptionPointerVelocity = 80.f; }
 
@@ -202,7 +233,7 @@ bool MainMenu::onTerminate ( ) {
 
 bool MainMenu::onVideoChanged ( ) {
 
-    if ( VideoChanged && Mode != Modes::SettingsMode ) {
+    if ( VideoChanged && getMode() != Modes::SettingsMode && getMode() != Modes::ControllersMode ) {
 
         Graphics->setWindowSize( WindowWidth, WindowHeight );
         FullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
@@ -217,7 +248,7 @@ bool MainMenu::onVideoChanged ( ) {
 
 bool MainMenu::onSettingsChanged ( ) {
 
-    if ( SettingsChanged && Mode != Modes::SettingsMode ) {
+    if ( SettingsChanged && getMode() != Modes::SettingsMode && getMode() != Modes::ControllersMode ) {
 
         SettingsChanged = false;
 
@@ -235,20 +266,30 @@ std::string MainMenu::getTimeText ( sf::Time Time ) {
 
 void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
-    sf::Vector2f SectionMargin = sf::Vector2f ( 20.f, 30.f );
-    sf::Vector2f OptionMargin = sf::Vector2f ( 10.f, 15.f );
+    sf::Vector2f SectionMargin;
+    sf::Vector2f OptionMargin;
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
         SectionMargin = sf::Vector2f ( 12.f, 20.f );
         OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
 
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+        SectionMargin = sf::Vector2f ( 20.f, 30.f );
+        OptionMargin = sf::Vector2f ( 10.f, 15.f ); }
+
     else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
         SectionMargin = sf::Vector2f ( 60.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
 
-    else if ( Graphics->getWindowHeight() > 1000 ) {
+    else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+        SectionMargin = sf::Vector2f ( 60.f, 60.f );
+        OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
+
+    else {
 
         SectionMargin = sf::Vector2f ( 100.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
@@ -323,18 +364,26 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
     if ( std::fabs( SignedDistance ) > 5.f ) {
 
-        float Factor = 600.f;
+        float Factor;
         float MaximumDistance = std::fabs( MenuOptionPosition[ MenuOption ].y - MenuOptionPositionCenter[ MenuOption ] );
 
         if ( Graphics->getWindowHeight() < 600.f ) {
 
             Factor = 480.f; }
 
+        else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+            Factor = 600.f; }
+
         else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
             Factor = 1200.f; }
 
-        else if ( Graphics->getWindowHeight() > 1000 ) {
+        else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+            Factor = 1200.f; }
+
+        else {
 
             Factor = 1800.f; }
 
@@ -478,13 +527,10 @@ void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
     renderSectionBackground( Window, 0 );
 
     sf::Text Text;
-    sf::CircleShape Circle;
-
     Text.setFont( Graphics->getFont( "MainMenu" ) );
     Text.setCharacterSize( MenuOptionFontSize );
 
-    Circle.setRadius( 10.f );
-    Circle.setOrigin( Circle.getRadius(), Circle.getRadius() );
+    sf::CircleShape Circle;
     Circle.setPosition( MenuOptionPointerPosition - sf::Vector2f( 1.f, 0.f ) );
     Circle.setFillColor( sf::Color( 33, 150, 243 ) );
 
@@ -493,12 +539,22 @@ void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
         Circle.setRadius( 8.f );
         Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
 
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+        Circle.setRadius( 10.f );
+        Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
+
     else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
         Circle.setRadius( 15.f );
         Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
 
-    else if ( Graphics->getWindowHeight() > 1000 ) {
+    else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+        Circle.setRadius( 15.f );
+        Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
+
+    else {
 
         Circle.setRadius( 20.f );
         Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
@@ -509,24 +565,47 @@ void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
 
         Text.setString( MenuOptionText[i] );
         Text.setPosition( MenuOptionPosition[i] );
-        Text.setOutlineThickness( 1.f );
-        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        if ( i == MenuOption ) {
+        #if ( SFML_VERSION_MINOR >= 4 )
 
-            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+            Text.setOutlineThickness( 1.f );
+            Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        else if ( ( i + 1 ) == MenuOption || ( i - 1 ) == MenuOption ) {
+            if ( i == MenuOption ) {
 
-            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
 
-        else if ( ( i + 2 ) == MenuOption || ( i - 2 ) == MenuOption ) {
+            else if ( ( i + 1 ) == MenuOption || ( i - 1 ) == MenuOption ) {
 
-            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
 
-        else {
+            else if ( ( i + 2 ) == MenuOption || ( i - 2 ) == MenuOption ) {
 
-            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+
+        #else
+
+            if ( i == MenuOption ) {
+
+                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+
+            else if ( ( i + 1 ) == MenuOption || ( i - 1 ) == MenuOption ) {
+
+                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+
+            else if ( ( i + 2 ) == MenuOption || ( i - 2 ) == MenuOption ) {
+
+                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+
+        #endif
 
         Window.draw( Text ); } }
 
@@ -538,7 +617,7 @@ void MainMenu::updateGameplaySection ( sf::Time ElapsedTime ) {
     GameplayOptionText[0][ GameplayOptionCount[0] + 3 ] = getTimeText( Gameplay->getTimeLimit() );
     GameplayOptionText[1][ GameplayOptionCount[1] + 0 ] = std::to_string( Gameplay->getPlayerCount() );
     GameplayOptionText[1][ GameplayOptionCount[1] + 1 ] = std::to_string( Gameplay->getSpaceshipCount() ) +
-                                                          ", with " + std::to_string( Gameplay->getSpaceshipCount() - Gameplay->getPlayerCount() ) + " enemies";
+                                                          " including " + std::to_string( Gameplay->getSpaceshipCount() - Gameplay->getPlayerCount() ) + " enemies";
     GameplayOptionText[1][ GameplayOptionCount[1] + 2 ] = Gameplay->getAIPersonalityText();
 
     if ( Gameplay->getPlayerCount() == 1 ) {
@@ -557,20 +636,30 @@ void MainMenu::updateGameplaySection ( sf::Time ElapsedTime ) {
 
         GameplayOptionText[1][ GameplayOptionCount[1] + 0 ] = "Four ninja turtles"; }
 
-    sf::Vector2f SectionMargin = sf::Vector2f ( 20.f, 30.f );
-    sf::Vector2f OptionMargin = sf::Vector2f ( 0.f, 15.f );
+    sf::Vector2f SectionMargin;
+    sf::Vector2f OptionMargin;
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
         SectionMargin = sf::Vector2f ( 12.f, 20.f );
         OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
 
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+        SectionMargin = sf::Vector2f ( 20.f, 30.f );
+        OptionMargin = sf::Vector2f ( 0.f, 15.f ); }
+
     else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
         SectionMargin = sf::Vector2f ( 60.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
 
-    else if ( Graphics->getWindowHeight() > 1000 ) {
+    else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+        SectionMargin = sf::Vector2f ( 60.f, 60.f );
+        OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
+
+    else {
 
         SectionMargin = sf::Vector2f ( 100.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
@@ -729,6 +818,8 @@ void MainMenu::updateGameplaySection ( sf::Event &Event ) {
 
                 if ( GameplayPage == 0 ) {
 
+                    GameplayOption = 0;
+
                     setMode( Modes::MenuMode ); }
 
                 else if ( GameplayPage == 1 ) {
@@ -741,6 +832,8 @@ void MainMenu::updateGameplaySection ( sf::Event &Event ) {
             case sf::Keyboard::Escape: {
 
                 if ( GameplayPage == 0 ) {
+
+                    GameplayOption = 0;
 
                     setMode( Modes::MenuMode ); }
 
@@ -896,7 +989,6 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
     renderSectionBackground( Window, 1 );
 
     sf::Text Text;
-
     Text.setFont( Graphics->getFont( "MainMenu" ) );
     Text.setCharacterSize( GameplayOptionFontSize );
 
@@ -904,24 +996,47 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
 
         Text.setString( GameplayOptionText[ GameplayPage ][i] );
         Text.setPosition( GameplayOptionPosition[ GameplayPage ][i] );
-        Text.setOutlineThickness( 1.f );
-        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        if ( i == GameplayOption ) {
+        #if ( SFML_VERSION_MINOR >= 4 )
 
-            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+            Text.setOutlineThickness( 1.f );
+            Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        else if ( ( i + 1 ) == GameplayOption || ( i - 1 ) == GameplayOption ) {
+            if ( i == GameplayOption ) {
 
-            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
 
-        else if ( ( i + 2 ) == GameplayOption || ( i - 2 ) == GameplayOption ) {
+            else if ( ( i + 1 ) == GameplayOption || ( i - 1 ) == GameplayOption ) {
 
-            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
 
-        else {
+            else if ( ( i + 2 ) == GameplayOption || ( i - 2 ) == GameplayOption ) {
 
-            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+
+        #else
+
+            if ( i == GameplayOption ) {
+
+                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+
+            else if ( ( i + 1 ) == GameplayOption || ( i - 1 ) == GameplayOption ) {
+
+                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+
+            else if ( ( i + 2 ) == GameplayOption || ( i - 2 ) == GameplayOption ) {
+
+                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+
+        #endif
 
         Window.draw( Text ); }
 
@@ -931,28 +1046,49 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
 
         Text.setString( GameplayOptionText[ GameplayPage ][i] );
         Text.setPosition( GameplayOptionPosition[ GameplayPage ][i] );
-        Text.setOutlineThickness( 1.f );
-        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        if ( ( i - GameplayOptionCount[ GameplayPage ] ) == GameplayOption ) {
+        #if ( SFML_VERSION_MINOR >= 4 )
 
-            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+            Text.setOutlineThickness( 1.f );
+            Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        else if ( ( i - GameplayOptionCount[ GameplayPage ] + 1 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 1 ) == GameplayOption ) {
+            if ( ( i - GameplayOptionCount[ GameplayPage ] ) == GameplayOption ) {
 
-            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
 
-        else if ( ( i - GameplayOptionCount[ GameplayPage ] + 2 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 2 ) == GameplayOption ) {
+            else if ( ( i - GameplayOptionCount[ GameplayPage ] + 1 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 1 ) == GameplayOption ) {
 
-            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
 
-        else {
+            else if ( ( i - GameplayOptionCount[ GameplayPage ] + 2 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 2 ) == GameplayOption ) {
 
-            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
 
-        Window.draw( Text ); }
+            else {
 
-    }
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+
+        #else
+
+            if ( ( i - GameplayOptionCount[ GameplayPage ] ) == GameplayOption ) {
+
+                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+
+            else if ( ( i - GameplayOptionCount[ GameplayPage ] + 1 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 1 ) == GameplayOption ) {
+
+                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+
+            else if ( ( i - GameplayOptionCount[ GameplayPage ] + 2 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 2 ) == GameplayOption ) {
+
+                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+
+        #endif
+
+        Window.draw( Text ); } }
 
 void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
@@ -975,20 +1111,30 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
         SettingsOptionText[ SettingsOptionCount + 2 ] = std::to_string( AntialiasingLevel ) + "th level"; }
 
-    sf::Vector2f SectionMargin = sf::Vector2f ( 20.f, 30.f );
-    sf::Vector2f OptionMargin = sf::Vector2f ( 0.f, 15.f );
+    sf::Vector2f SectionMargin;
+    sf::Vector2f OptionMargin;
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
         SectionMargin = sf::Vector2f ( 12.f, 20.f );
         OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
 
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+        SectionMargin = sf::Vector2f ( 20.f, 30.f );
+        OptionMargin = sf::Vector2f ( 0.f, 15.f ); }
+
     else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
         SectionMargin = sf::Vector2f ( 60.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
 
-    else if ( Graphics->getWindowHeight() > 1000 ) {
+    else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+        SectionMargin = sf::Vector2f ( 60.f, 60.f );
+        OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
+
+    else {
 
         SectionMargin = sf::Vector2f ( 100.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
@@ -1001,7 +1147,7 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
     SettingsOptionFontSize = MenuOptionFontSize;
     float SmallFontScale = 0.85f;
 
-    for ( unsigned int i = 0; i < ( 2 * SettingsOptionCount ); i++ ) {
+    for ( unsigned int i = 0; i < ( 2 * SettingsOptionCount - 1 ); i++ ) {
 
         TextPrototype.setString( SettingsOptionText[i] );
         TextPrototype.setFont( Graphics->getFont( "MainMenu" ) );
@@ -1015,7 +1161,7 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
             TextPrototype.setCharacterSize( --SettingsOptionFontSize ); } }
 
-    for ( unsigned int i = 0; i < ( 2 * SettingsOptionCount ); i++ ) {
+    for ( unsigned int i = 0; i < ( 2 * SettingsOptionCount - 1 ); i++ ) {
 
         TextPrototype.setString( SettingsOptionText[i] );
         TextPrototype.setCharacterSize( i < SettingsOptionCount ? SettingsOptionFontSize : (unsigned int) ( SmallFontScale * SettingsOptionFontSize ) );
@@ -1026,10 +1172,18 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
         size_t Index = SettingsOptionCount - i - 1;
 
-        SettingsOptionPosition[ Index ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - 2.f * OptionHeight - 0.5f * OptionMargin.y );
-        SettingsOptionPosition[ Index + SettingsOptionCount ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - OptionHeight );
+        if ( ( Index + 1 ) != SettingsOptionCount ) {
 
-        OptionPosition.y -= 2.f * OptionHeight + 1.5f * OptionMargin.y; } }
+            SettingsOptionPosition[ Index ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - 2.f * OptionHeight - 0.5f * OptionMargin.y );
+            SettingsOptionPosition[ Index + SettingsOptionCount ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - OptionHeight );
+
+            OptionPosition.y -= 2.f * OptionHeight + 1.5f * OptionMargin.y; }
+
+        else {
+
+            SettingsOptionPosition[ Index ] = sf::Vector2f( OptionPosition.x, OptionPosition.y - OptionHeight );
+
+            OptionPosition.y -= OptionHeight + OptionMargin.y; } } }
 
 void MainMenu::updateSettingsSection ( sf::Event &Event ) {
 
@@ -1093,13 +1247,33 @@ void MainMenu::updateSettingsSection ( sf::Event &Event ) {
 
                 break; }
 
+            case sf::Keyboard::Return: {
+
+                if ( SettingsOption == 3 ) {
+
+                    setMode( Modes::ControllersMode ); }
+
+                break; }
+
+            case sf::Keyboard::Space: {
+
+                if ( SettingsOption == 3 ) {
+
+                    setMode( Modes::ControllersMode ); }
+
+                break; }
+
             case sf::Keyboard::BackSpace: {
+
+                SettingsOption = 0;
 
                 setMode( Modes::MenuMode );
 
                 break; }
 
             case sf::Keyboard::Escape: {
+
+                SettingsOption = 0;
 
                 setMode( Modes::MenuMode );
 
@@ -1117,6 +1291,16 @@ void MainMenu::updateSettingsSection_BindLeft ( ) {
 
             std::vector <sf::VideoMode> Resolutions = sf::VideoMode::getFullscreenModes();
             size_t Index = 0;
+
+            for ( auto i = Resolutions.begin(); i != Resolutions.end(); ) {
+
+                if ( i->height < 480 || i->height > 1080 ) {
+
+                    i = Resolutions.erase( i ); }
+
+                else {
+
+                    ++i; } }
 
             while ( Index < Resolutions.size() && WindowWidth < Resolutions[Index].width ) {
 
@@ -1209,6 +1393,16 @@ void MainMenu::updateSettingsSection_BindRight ( ) {
             std::vector <sf::VideoMode> Resolutions = sf::VideoMode::getFullscreenModes();
             size_t Index = Resolutions.size();
 
+            for ( auto i = Resolutions.begin(); i != Resolutions.end(); ) {
+
+                if ( i->height < 480 || i->height > 1080 ) {
+
+                    i = Resolutions.erase( i ); }
+
+                else {
+
+                    ++i; } }
+
             while ( Index > 0 && WindowWidth > Resolutions[ Index - 1 ].width ) {
 
                 Index--; }
@@ -1296,7 +1490,6 @@ void MainMenu::renderSettingsSection ( sf::RenderWindow &Window ) {
     renderSectionBackground( Window, 1 );
 
     sf::Text Text;
-
     Text.setFont( Graphics->getFont( "MainMenu" ) );
     Text.setCharacterSize( SettingsOptionFontSize );
 
@@ -1304,67 +1497,385 @@ void MainMenu::renderSettingsSection ( sf::RenderWindow &Window ) {
 
         Text.setString( SettingsOptionText[i] );
         Text.setPosition( SettingsOptionPosition[i] );
-        Text.setOutlineThickness( 1.f );
-        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        if ( i == SettingsOption ) {
+        #if ( SFML_VERSION_MINOR >= 4 )
 
-            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+            Text.setOutlineThickness( 1.f );
+            Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        else if ( ( i + 1 ) == SettingsOption || ( i - 1 ) == SettingsOption ) {
+            if ( i == SettingsOption ) {
 
-            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
 
-        else if ( ( i + 2 ) == SettingsOption || ( i - 2 ) == SettingsOption ) {
+            else if ( ( i + 1 ) == SettingsOption || ( i - 1 ) == SettingsOption ) {
 
-            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
 
-        else {
+            else if ( ( i + 2 ) == SettingsOption || ( i - 2 ) == SettingsOption ) {
 
-            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+
+        #else
+
+            if ( i == SettingsOption ) {
+
+                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+
+            else if ( ( i + 1 ) == SettingsOption || ( i - 1 ) == SettingsOption ) {
+
+                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+
+            else if ( ( i + 2 ) == SettingsOption || ( i - 2 ) == SettingsOption ) {
+
+                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+
+        #endif
 
         Window.draw( Text ); }
 
     Text.setCharacterSize( (unsigned int) ( 0.85f * SettingsOptionFontSize ) );
 
-    for ( unsigned int i = SettingsOptionCount; i < ( 2 * SettingsOptionCount ); i++ ) {
+    for ( unsigned int i = SettingsOptionCount; i < ( 2 * SettingsOptionCount - 1 ); i++ ) {
 
         Text.setString( SettingsOptionText[i] );
         Text.setPosition( SettingsOptionPosition[i] );
-        Text.setOutlineThickness( 1.f );
-        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        if ( ( i - SettingsOptionCount ) == SettingsOption ) {
+        #if ( SFML_VERSION_MINOR >= 4 )
 
-            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+            Text.setOutlineThickness( 1.f );
+            Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        else if ( ( i - SettingsOptionCount + 1 ) == SettingsOption || ( i - SettingsOptionCount - 1 ) == SettingsOption ) {
+            if ( ( i - SettingsOptionCount ) == SettingsOption ) {
 
-            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
 
-        else if ( ( i - SettingsOptionCount + 2 ) == SettingsOption || ( i - SettingsOptionCount - 2 ) == SettingsOption ) {
+            else if ( ( i - SettingsOptionCount + 1 ) == SettingsOption || ( i - SettingsOptionCount - 1 ) == SettingsOption ) {
 
-            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
 
-        else {
+            else if ( ( i - SettingsOptionCount + 2 ) == SettingsOption || ( i - SettingsOptionCount - 2 ) == SettingsOption ) {
 
-            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+
+        #else
+
+            if ( ( i - SettingsOptionCount ) == SettingsOption ) {
+
+                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+
+            else if ( ( i - SettingsOptionCount + 1 ) == SettingsOption || ( i - SettingsOptionCount - 1 ) == SettingsOption ) {
+
+                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+
+            else if ( ( i - SettingsOptionCount + 2 ) == SettingsOption || ( i - SettingsOptionCount - 2 ) == SettingsOption ) {
+
+                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+
+        #endif
 
         Window.draw( Text ); } }
 
+void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
+
+    sf::Vector2f SectionPosition = sf::Vector2f( 0.f, 0.2f * Graphics->getWindowHeight() );
+    sf::Vector2f SectionSize = sf::Vector2f( Graphics->getWindowWidth(), 0.6f * Graphics->getWindowHeight() );
+
+    float TableTop = 0.125f;
+    float TableBottom = 0.875f;
+    float TableLeft = 0.125f;
+    float TableRight = 0.875f;
+    float TableCellWidth = 0.136f;
+    float TableCellHeight = 0.079f;
+    float TableThickness = 1.5f;
+    sf::Color TableColor = sf::Color( 13, 71, 161 ); // #0D47A1
+
+    ControllersTable.clear();
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop ), sf::Color() ) );
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableBottom ), sf::Color() ) );
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + 1.5f * TableCellWidth, TableTop ), sf::Color() ) );
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + 1.5f * TableCellWidth, TableBottom ), sf::Color() ) );
+
+    for ( unsigned int i = 2; i <= 5; i++ ) {
+
+        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + ( i + 0.5f ) * TableCellWidth, TableTop ), sf::Color() ) );
+        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + ( i + 0.5f ) * TableCellWidth, TableBottom ), sf::Color() ) ); }
+
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop ), sf::Color() ) );
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableRight, TableTop ), sf::Color() ) );
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop + 1.5f * TableCellHeight ), sf::Color() ) );
+    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableRight, TableTop + 1.5f * TableCellHeight ), sf::Color() ) );
+
+    for ( unsigned int i = 2; i <= 9; i++ ) {
+
+        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop + ( i + 0.5f ) * TableCellHeight ), sf::Color() ) );
+        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableRight, TableTop + ( i + 0.5f ) * TableCellHeight ), sf::Color() ) ); }
+
+    size_t LinesCount = ControllersTable.size();
+
+    for ( unsigned int i = 0; i < LinesCount; i += 2 ) {
+
+        ControllersTable[ 2 * i ].position.x *= SectionSize.x;
+        ControllersTable[ 2 * i ].position.y *= SectionSize.y;
+        ControllersTable[ 2 * i ].position += SectionPosition;
+        ControllersTable[ 2 * i ].color = TableColor;
+
+        ControllersTable[ 2 * i + 1 ].position.x *= SectionSize.x;
+        ControllersTable[ 2 * i + 1 ].position.y *= SectionSize.y;
+        ControllersTable[ 2 * i + 1 ].position += SectionPosition;
+        ControllersTable[ 2 * i + 1 ].color = TableColor;
+
+        if ( i <= 10 ) {
+
+            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i ].position.x + TableThickness, ControllersTable[ 2 * i ].position.y ), ControllersTable[ 2 * i ].color ) );
+            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i + 1 ].position.x + TableThickness, ControllersTable[ 2 * i + 1 ].position.y ), ControllersTable[ 2 * i + 1 ].color ) ); }
+
+        else {
+
+            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i ].position.x, ControllersTable[ 2 * i ].position.y + TableThickness ), ControllersTable[ 2 * i ].color ) );
+            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i + 1 ].position.x, ControllersTable[ 2 * i + 1 ].position.y + TableThickness ), ControllersTable[ 2 * i + 1 ].color ) ); } }
+
+    unsigned int TableHeaderFontSize = 100;
+    unsigned int TableContentFontSize = 100;
+    sf::Color TableTextColor = sf::Color( 255, 255, 255 );
+    sf::Color ConnectedJoystickColor = sf::Color( 0, 255, 0 );
+    sf::Color DisconnectedJoystickColor = sf::Color( 255, 0, 0 );
+
+    for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
+
+        ControllersTableHeader[i].setFont( Graphics->getFont( "ControllersTableHeader" ) ); }
+
+    for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
+
+        ControllersTableContent[i].setFont( Graphics->getFont( "ControllersTableContent" ) ); }
+
+    // TODO HEADERS TEXTS
+
+    for ( unsigned int i = 0; i < Gameplay->getMaximumPlayerCount(); i++ ) {
+
+        auto Controller = Gameplay->getPlayerControllerSettings( i );
+
+        if ( Controller->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+            ControllersTableContent.emplace_back( sf::Text() );
+            ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() ].setString( "Joystick " + std::to_string( Controller->getJoystickIdentifier() ) ); }
+
+        else {
+
+            ControllersTableContent.emplace_back( sf::Text() );
+            ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() ].setString( "Keyboard" ); }
+
+        ControllersTableContent.emplace_back( sf::Text() );
+        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 1 ].setString( PlayerControllerSettings::encodeKey( Controller->getForwardKey() ) );
+
+        ControllersTableContent.emplace_back( sf::Text() );
+        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 2 ].setString( PlayerControllerSettings::encodeKey( Controller->getBackwardKey() ) );
+
+        ControllersTableContent.emplace_back( sf::Text() );
+        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 3 ].setString( PlayerControllerSettings::encodeKey( Controller->getLeftKey() ) );
+
+        ControllersTableContent.emplace_back( sf::Text() );
+        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 4 ].setString( PlayerControllerSettings::encodeKey( Controller->getRightKey() ) );
+
+        ControllersTableContent.emplace_back( sf::Text() );
+        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 5 ].setString( PlayerControllerSettings::encodeKey( Controller->getRayShotKey() ) );
+
+        ControllersTableContent.emplace_back( sf::Text() );
+        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 6 ].setString( PlayerControllerSettings::encodeKey( Controller->getMissileShotKey() ) ); }
+
+    // TODO TableHeaderFontSize;
+    // TODO TableContentFontSize
+
+    // TODO TEXTS POSITIONS
+
+    #if ( SFML_VERSION_MINOR >= 4 )
+
+        for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
+
+            ControllersTableHeader[i].setCharacterSize( TableHeaderFontSize );
+            ControllersTableHeader[i].setFillColor( TableTextColor ); }
+
+        for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
+
+            ControllersTableContent[i].setCharacterSize( TableContentFontSize );
+            ControllersTableContent[i].setFillColor( TableTextColor ); }
+
+        for ( unsigned int i = 0; i < 4; i++ ) {
+
+            if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+                if ( sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ) ) {
+
+                    ControllersTableContent[i].setFillColor( ConnectedJoystickColor ); }
+
+                else {
+
+                    ControllersTableContent[i].setFillColor( DisconnectedJoystickColor ); } } }
+
+    #else
+
+        for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
+
+            ControllersTableHeader[i].setCharacterSize( TableHeaderFontSize );
+            ControllersTableHeader[i].setColor( TableTextColor ); }
+
+        for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
+
+            ControllersTableContent[i].setCharacterSize( TableContentFontSize );
+            ControllersTableContent[i].setColor( TableTextColor ); }
+
+        for ( unsigned int i = 0; i < 4; i++ ) {
+
+            if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+                if ( sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ) ) {
+
+                    ControllersTableContent[i].setColor( ConnectedJoystickColor ); }
+
+                else {
+
+                    ControllersTableContent[i].setColor( DisconnectedJoystickColor ); } } }
+
+    #endif
+
+    }
+
+void MainMenu::updateControllersSection ( sf::Event &Event ) {
+
+    if ( Event.type == sf::Event::KeyPressed ) {
+
+        switch ( Event.key.code ) {
+
+            case sf::Keyboard::Up: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::Down: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::Left: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::Right: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::W: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::S: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::A: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::D: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::Return: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::Space: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::BackSpace: {
+
+                //SettingsOption = 0;
+
+                setMode( Modes::SettingsMode );
+
+                break; }
+
+            case sf::Keyboard::Escape: {
+
+                //SettingsOption = 0;
+
+                setMode( Modes::SettingsMode );
+
+                break; }
+
+            default: {
+
+                break; } } } }
+
+void MainMenu::renderControllersSection ( sf::RenderWindow &Window ) {
+
+    renderSectionBackground( Window, 2 );
+
+    Window.draw( &ControllersTable[0], ControllersTable.size(), sf::Quads );
+
+    for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
+
+        Window.draw( ControllersTableHeader[i] ); }
+
+    for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
+
+        Window.draw( ControllersTableContent[i] ); } }
+
 void MainMenu::updateBackground ( sf::Time ElapsedTime ) {
 
-    unsigned int ParticlesCount = 10;
+    unsigned int ParticlesCount;
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
         ParticlesCount = 5; }
 
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+        ParticlesCount = 10; }
+
     else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
         ParticlesCount = 15; }
 
-    else if ( Graphics->getWindowHeight() > 1000 ) {
+    else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+        ParticlesCount = 15; }
+
+    else {
 
         ParticlesCount = 20; }
 
@@ -1423,23 +1934,38 @@ void MainMenu::renderBackground ( sf::RenderWindow &Window ) {
 
 void MainMenu::renderSectionBackground ( sf::RenderWindow &Window, unsigned int Position ) {
 
-    sf::RectangleShape Rectangle;
+    sf::RectangleShape Box;
+    sf::RectangleShape Shade;
 
     if ( Position == 0 ) {
 
-        Rectangle.setPosition( 0.1f * Graphics->getWindowWidth(), 0.f ); }
+        Box.setPosition( 0.1f * Graphics->getWindowWidth(), 0.f );
+        Box.setSize( sf::Vector2f( 0.35f * Graphics->getWindowWidth(), Graphics->getWindowHeight() ) ); }
 
     else if ( Position == 1 ) {
 
-        Rectangle.setPosition( 0.55f * Graphics->getWindowWidth(), 0.f ); }
+        Box.setPosition( 0.55f * Graphics->getWindowWidth(), 0.f );
+        Box.setSize( sf::Vector2f( 0.35f * Graphics->getWindowWidth(), Graphics->getWindowHeight() ) ); }
+
+    else if ( Position == 2 ) {
+
+        Box.setPosition( 0.f, 0.2f * Graphics->getWindowHeight() );
+        Box.setSize( sf::Vector2f( Graphics->getWindowWidth(), 0.6f * Graphics->getWindowHeight() ) ); }
 
     else {
 
         return; }
 
-    Rectangle.setSize( sf::Vector2f( 0.35f * Graphics->getWindowWidth(), Graphics->getWindowHeight() ) );
-    Rectangle.setFillColor( sf::Color( 0, 0, 0 ) );
-    Rectangle.setOutlineThickness( 2.f );
-    Rectangle.setOutlineColor( sf::Color ( 13, 71, 161 ) ); // #0D47A1
+    Box.setFillColor( sf::Color( 0, 0, 0 ) );
+    Box.setOutlineThickness( 2.f );
+    Box.setOutlineColor( sf::Color ( 13, 71, 161 ) ); // #0D47A1
 
-    Window.draw( Rectangle ); }
+    Shade.setPosition( 0.f, 0.f );
+    Shade.setSize( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() ) );
+    Shade.setFillColor( sf::Color( 0, 0, 0, 155 ) );
+
+    if ( Position >= 2 ) {
+
+        Window.draw( Shade ); }
+
+    Window.draw( Box ); }

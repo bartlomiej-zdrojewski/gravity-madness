@@ -1,3 +1,4 @@
+#include <iostream>
 #include "asteroid.hpp"
 
 void Asteroid::resetExistenceTime ( ) {
@@ -51,7 +52,7 @@ ParticleSystem * Asteroid::onCollision ( Planet * Other ) {
     Explosion->setVelocityRange( 10.f, 10.f + 0.8f * Velocity );
     Explosion->setColorRange( sf::Color ( 25, 25, 50 ), sf::Color ( 125, 125, 150 ) );
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 4.f ) );
-    Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 20000 : 10000 ) * ( getMass() / 10.f ) ) );
+    Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 20000 : 10000 ) * ( getMass() / 5000.f ) ) );
 
     destruct();
 

@@ -16,7 +16,8 @@ public:
 
         MenuMode,
         GameplayMode,
-        SettingsMode
+        SettingsMode,
+        ControllersMode
 
         };
 
@@ -55,6 +56,10 @@ private:
     void updateSettingsSection_BindLeft ( );
     void updateSettingsSection_BindRight ( );
     void renderSettingsSection ( sf::RenderWindow &Window );
+
+    void updateControllersSection ( sf::Time ElapsedTime );
+    void updateControllersSection ( sf::Event &Event );
+    void renderControllersSection ( sf::RenderWindow &Window );
 
     void updateBackground ( sf::Time ElapsedTime );
     void renderBackground ( sf::RenderWindow &Window );
@@ -95,9 +100,15 @@ private:
 
     unsigned int SettingsOption;
     unsigned int SettingsOptionCount;
-    std::string SettingsOptionText [6];
+    std::string SettingsOptionText [7];
     unsigned int SettingsOptionFontSize;
-    sf::Vector2f SettingsOptionPosition [6];
+    sf::Vector2f SettingsOptionPosition [7];
+
+    std::vector <sf::Vertex> ControllersTable;
+    std::vector <sf::Text> ControllersTableHeader;
+    std::vector <sf::Text> ControllersTableContent;
+    sf::Vector2i ControllersTablePointer;
+
 
     std::vector <sf::Vertex> Background;
     std::vector <unsigned int> ParticleIndexes;

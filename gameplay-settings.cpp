@@ -76,23 +76,23 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
 
                     SpaceshipPrototype Prototype;
 
-                    Prototype.Name = Config->getTextValue( NameNode[0] );
-                    Prototype.Texture = Config->getTextValue( TextureNode[0] );
-                    Prototype.AccentTexture = Config->getTextValue( AccentTextureNode[0] );
-                    Prototype.Mass = Config->getRealValue( MassNode[0] );
-                    Prototype.Radius = Config->getRealValue( RadiusNode[0] );
-                    Prototype.HealthLimit = Config->getRealValue( HealthLimitNode[0] );
-                    Prototype.HealthRestoration = Config->getRealValue( HealthRestorationNode[0] );
-                    Prototype.EnergyLimit = Config->getRealValue( EnergyLimitNode[0] );
-                    Prototype.EnergyRestoration = Config->getRealValue( EnergyRestorationNode[0] );
-                    Prototype.Thrust = Config->getRealValue( ThrustNode[0] );
-                    Prototype.SuppressingFactor = Config->getRealValue( SuppressingFactorNode[0] );
-                    Prototype.ExhaustColor = Config->getColorValue( ExhaustColorNode[0] );
-                    Prototype.RayPower = Config->getRealValue( RayPowerNode[0] );
-                    Prototype.RayColor = Config->getColorValue( RayColorNode[0] );
-                    Prototype.MissileCount = (unsigned int) Config->getIntegerValue( MissileCountNode[0] );
-                    Prototype.MissileLimit = (unsigned int) Config->getIntegerValue( MissileLimitNode[0] );
-                    Prototype.ScoreMultiplier = Config->getRealValue( ScoreMultiplierNode[0] );
+                    Prototype.Name = Script::getTextValue( NameNode[0] );
+                    Prototype.Texture = Script::getTextValue( TextureNode[0] );
+                    Prototype.AccentTexture = Script::getTextValue( AccentTextureNode[0] );
+                    Prototype.Mass = Script::getRealValue( MassNode[0] );
+                    Prototype.Radius = Script::getRealValue( RadiusNode[0] );
+                    Prototype.HealthLimit = Script::getRealValue( HealthLimitNode[0] );
+                    Prototype.HealthRestoration = Script::getRealValue( HealthRestorationNode[0] );
+                    Prototype.EnergyLimit = Script::getRealValue( EnergyLimitNode[0] );
+                    Prototype.EnergyRestoration = Script::getRealValue( EnergyRestorationNode[0] );
+                    Prototype.Thrust = Script::getRealValue( ThrustNode[0] );
+                    Prototype.SuppressingFactor = Script::getRealValue( SuppressingFactorNode[0] );
+                    Prototype.ExhaustColor = Script::getColorValue( ExhaustColorNode[0] );
+                    Prototype.RayPower = Script::getRealValue( RayPowerNode[0] );
+                    Prototype.RayColor = Script::getColorValue( RayColorNode[0] );
+                    Prototype.MissileCount = (unsigned int) Script::getIntegerValue( MissileCountNode[0] );
+                    Prototype.MissileLimit = (unsigned int) Script::getIntegerValue( MissileLimitNode[0] );
+                    Prototype.ScoreMultiplier = Script::getRealValue( ScoreMultiplierNode[0] );
 
                     SpaceshipPrototypes.insert( SpaceshipPrototypes.begin(), Prototype ); } }
 
@@ -147,6 +147,110 @@ GameplaySettings::SpaceshipPrototype GameplaySettings::getSpaceshipPrototype ( u
     PrototypeIndex = (unsigned int) ( rand() % SpaceshipPrototypes.size() );
 
     return SpaceshipPrototypes[ PrototypeIndex ]; }
+
+void GameplaySettings::loadPlayerControllerSettingsRegister ( std::string Config ) {
+
+    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
+
+        PlayerControllerSettingsRegister[i] = new PlayerControllerSettings ( ); }
+
+    unsigned int IndexA = 0;
+    std::istringstream DataA ( Config );
+    std::string ResultA;
+
+    while ( getline( DataA, ResultA, '|' ) ) {
+
+        if ( IndexA >= MaximumPlayerCount ) {
+
+            break; }
+
+        unsigned int IndexB = 0;
+        std::istringstream DataB ( ResultA );
+        std::string ResultB;
+
+        while ( getline( DataB, ResultB, ',' ) ) {
+
+            if ( IndexB > 6 ) {
+
+                break; }
+
+            switch ( IndexB ) {
+
+                case 0: {
+
+                    if ( ResultB.substr( 0, 9 ) == "JOYSTICK_" ) {
+
+                        PlayerControllerSettingsRegister[IndexA]->setDevice( PlayerControllerSettings::Devices::Joystick );
+
+                        try {
+
+                            PlayerControllerSettingsRegister[IndexA]->setJoystickIdentifier( std::stoi( ResultB.substr( 9, 1 ) ) ); }
+
+                        catch ( ... ) {
+
+                            PlayerControllerSettingsRegister[IndexA]->setJoystickIdentifier( 0 ); } }
+
+                    else {
+
+                        PlayerControllerSettingsRegister[IndexA]->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
+
+                    break; }
+
+                case 1: {
+
+                    PlayerControllerSettingsRegister[IndexA]->setForwardKey( PlayerControllerSettings::decodeKey( ResultB ) );
+
+                    break; }
+
+                case 2: {
+
+                    PlayerControllerSettingsRegister[IndexA]->setBackwardKey( PlayerControllerSettings::decodeKey( ResultB ) );
+
+                    break; }
+
+                case 3: {
+
+                    PlayerControllerSettingsRegister[IndexA]->setLeftKey( PlayerControllerSettings::decodeKey( ResultB ) );
+
+                    break; }
+
+                case 4: {
+
+                    PlayerControllerSettingsRegister[IndexA]->setRightKey( PlayerControllerSettings::decodeKey( ResultB ) );
+
+                    break; }
+
+                case 5: {
+
+                    PlayerControllerSettingsRegister[IndexA]->setRayShotKey( PlayerControllerSettings::decodeKey( ResultB ) );
+
+                    break; }
+
+                case 6: {
+
+                    PlayerControllerSettingsRegister[IndexA]->setMissileShotKey( PlayerControllerSettings::decodeKey( ResultB ) );
+
+                    break; }
+
+                default: {
+
+                    break; } }
+
+            IndexB++; }
+
+        IndexA++; } }
+
+PlayerControllerSettings ** GameplaySettings::getPlayerControllerSettingsRegister ( ) {
+
+    return PlayerControllerSettingsRegister; }
+
+PlayerControllerSettings * GameplaySettings::getPlayerControllerSettings ( unsigned int Index ) {
+
+    if ( Index >= MaximumPlayerCount ) {
+
+        return nullptr; }
+
+    return PlayerControllerSettingsRegister[ Index ]; }
 
 float GameplaySettings::getAreaSize ( ) {
 
@@ -615,7 +719,7 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
     Prototype.EnergyRestoration = 20;
     Prototype.Thrust = 75;
     Prototype.SuppressingFactor = 0.6;
-    Prototype.ExhaustColor = sf::Color( 213, 0, 0 );
+    Prototype.ExhaustColor = sf::Color( 255, 82, 82 );
     Prototype.RayPower = 20;
     Prototype.RayColor = sf::Color( 255, 23, 68 );
     Prototype.MissileCount = 3;

@@ -1,4 +1,4 @@
-site_name: Gravity Madness
+﻿site_name: Gravity Madness
 pages:
     - Wstęp: index.md
     - Moduły: modules.md
@@ -6,3 +6,7 @@ pages:
     - Rozgrywka: gameplay.md
     - Statki: spaceships.md
     - Kontrolery: controllers.md
+extra_javascript: 
+    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+markdown_extensions:
+    - mdx_math

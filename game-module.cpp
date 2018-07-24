@@ -6,6 +6,11 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
 
     this->Graphics = Graphics;
 
+    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
+
+        PlayerSpaceship[i] = nullptr;
+        Interface[i] = nullptr; }
+
     reset(); }
 
 GameModule::~GameModule ( ) {
@@ -19,7 +24,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
     this->Gameplay = Gameplay;
     EndingCondition = false;
     AreaRadius = Gameplay->getAreaSize();
-    GameplayTime = Gameplay->getTimeLimit();
+    GameplayTime = ( Gameplay->getEndingCondition() == GameplaySettings::EndingConditions::Time ) ? Gameplay->getTimeLimit() : sf::seconds( 0.f );
     PlayerCount = Gameplay->getPlayerCount();
     PowerUpLimit = (unsigned int) ( 5.f * powf( AreaRadius / 1000.f, 2 ) );
 
@@ -73,8 +78,8 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
     for ( unsigned int i = 0; i < PlanetCount; i++ ) {
 
-        float Mass = 3000.f + getRandomFloat() * 4000.f;
-        float Radius = sqrtf( Mass / PI / 0.075f );
+        float Mass = 1000.f * ( 1500.f + getRandomFloat() * 2000.f );
+        float Radius = sqrtf( Mass / PI / 35.f );
 
         auto NewPlanet = new Planet ( Mass, Radius );
         sf::Vector2f Position ( 1000000.f, 1000000.f );
@@ -149,7 +154,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         if ( i < PlayerCount ) {
 
             PlayerSpaceship[i] = NewSpaceship;
-            PlayerSpaceship[i]->setController( new PlayerController ( ) );
+            PlayerSpaceship[i]->setController( new PlayerController ( Gameplay->getPlayerControllerSettings( i ) ) );
             PlayerScoreMultiplier[i] = Prototype.ScoreMultiplier;
             Interface[i] = new PlayerInterface ( Graphics );
             Interface[i]->setSpaceship( PlayerSpaceship[i] ); }
@@ -254,7 +259,7 @@ void GameModule::update ( ) {
 
         for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-            if ( PlayerSpaceship[i] != nullptr ) {
+            if ( PlayerSpaceship[i] ) {
 
                 AlivePlayers++;
                 LastAlivePlayer = i; } }
@@ -472,12 +477,20 @@ void GameModule::reset ( ) {
 
     for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
 
-        delete Interface[i];
+        if ( PlayerSpaceship[i] ) {
+
+            delete PlayerSpaceship[i]->getController();
+            PlayerSpaceship[i]->setController( nullptr ); }
+
+        if ( Interface[i] ) {
+
+            Interface[i]->setSpaceship( nullptr );
+            delete Interface[i]; }
 
         PlayerSpaceship[i] = nullptr;
+        Interface[i] = nullptr;
         PlayerScore[i] = 0;
-        PlayerScoreMultiplier[i] = 1.f;
-        Interface[i] = nullptr; }
+        PlayerScoreMultiplier[i] = 1.f; }
 
     for ( auto i = Planets.begin(); i != Planets.end(); ) {
 
@@ -574,6 +587,7 @@ void GameModule::destructBody ( Body * Object ) {
             Interface[i]->beginFadeOut();
 
             delete PlayerSpaceship[i]->getController();
+            PlayerSpaceship[i]->setController( nullptr );
 
             PlayerSpaceship[i] = nullptr;
             Interface[i]->setSpaceship( nullptr );
@@ -791,8 +805,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         AsteroidPauseTime = AsteroidPauseDuration;
 
-        float Mass = 8.f + getRandomFloat() * 12.f;
-        float Radius = Mass * ( 0.75f + getRandomFloat() * 0.5f );
+        float Mass = 4000.f + getRandomFloat() * 6000.f;
+        float Radius = ( Mass / 500.f ) * ( 0.75f + getRandomFloat() * 0.5f );
 
         auto * NewAsteroid = new Asteroid ( Mass, Radius );
 
@@ -814,8 +828,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveAsteroid->getPosition(), ActivePlanet->getPosition() );
 
-            Acceleration.x -= Gravity * ActivePlanet->getMass() * ( ActiveAsteroid->getPosition().x - ActivePlanet->getPosition().x ) / ( Distance * Distance );
-            Acceleration.y -= Gravity * ActivePlanet->getMass() * ( ActiveAsteroid->getPosition().y - ActivePlanet->getPosition().y ) / ( Distance * Distance );
+            Acceleration.x += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveAsteroid->updateVelocity( Acceleration, ElapsedTime );
 
@@ -894,8 +908,8 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveSpaceship->getPosition(), ActivePlanet->getPosition() );
 
-            Acceleration.x -= Gravity * ActivePlanet->getMass() * ( ActiveSpaceship->getPosition().x - ActivePlanet->getPosition().x ) / ( Distance * Distance );
-            Acceleration.y -= Gravity * ActivePlanet->getMass() * ( ActiveSpaceship->getPosition().y - ActivePlanet->getPosition().y ) / ( Distance * Distance );
+            Acceleration.x += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance * Distance );
 
             if ( ( Distance - ActivePlanet->getRadius() ) < ClosestBodyDistance ) {
 
@@ -919,8 +933,8 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveSpaceship->getPosition(), ActiveAsteroid->getPosition() );
 
-            Acceleration.x -= Gravity * ActiveAsteroid->getMass() * ( ActiveSpaceship->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance );
-            Acceleration.y -= Gravity * ActiveAsteroid->getMass() * ( ActiveSpaceship->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance );
+            Acceleration.x += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance * Distance );
 
             if ( ( Distance - ActiveAsteroid->getRadius() ) < ClosestBodyDistance ) {
 
@@ -1111,8 +1125,8 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveMissile->getPosition(), ActivePlanet->getPosition() );
 
-            Acceleration.x -= Gravity * ActivePlanet->getMass() * ( ActiveMissile->getPosition().x - ActivePlanet->getPosition().x ) / ( Distance * Distance );
-            Acceleration.y -= Gravity * ActivePlanet->getMass() * ( ActiveMissile->getPosition().y - ActivePlanet->getPosition().y ) / ( Distance * Distance );
+            Acceleration.x += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
 
@@ -1131,8 +1145,8 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveMissile->getPosition(), ActiveAsteroid->getPosition() );
 
-            Acceleration.x -= Gravity * ActiveAsteroid->getMass() * ( ActiveMissile->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance );
-            Acceleration.y -= Gravity * ActiveAsteroid->getMass() * ( ActiveMissile->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance );
+            Acceleration.x += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
 
@@ -1151,8 +1165,8 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveMissile->getPosition(), ActiveSpaceship->getPosition() );
 
-            Acceleration.x -= Gravity * ActiveSpaceship->getMass() * ( ActiveMissile->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance );
-            Acceleration.y -= Gravity * ActiveSpaceship->getMass() * ( ActiveMissile->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance );
+            Acceleration.x += Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y += Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
 
@@ -1219,6 +1233,8 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             ++i; } } }
 
 void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
+
+    std::cout << GameplayTime.asSeconds() << " " << PowerUps.size() << "/" << PowerUpLimit << std::endl;
 
     // Generate power ups
 

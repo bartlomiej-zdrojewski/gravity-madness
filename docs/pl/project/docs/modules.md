@@ -218,7 +218,17 @@ TODO
 
 #### Grawitacja
 
-TODO
+$$F = G {M_{1} \cdot M_{2} \over r^2}$$
+$$F = M_{1} \cdot a_{1} = M_{2} \cdot a_{2}$$
+$$M_{S} \cdot a_{S} = G {M_{S} \cdot M_{P} \over r^2}$$
+$$a_{S} = G {M_{P} \over r^2}$$
+$$\Delta x = X_{P} - X_{S} \quad \Delta y = Y_{P} - Y_{S}$$
+$$\cos\alpha = {\Delta x \over r} \quad \sin\alpha = {\Delta y
+\over r}$$
+$$a_{x_{S}} = a_{S} \cdot \cos\alpha = G {M_{P} \over r^2} \cdot
+{X_{S} - X_{P} \over r} = G {M_{P} \cdot (X_{P} - X_{S}) \over r^3}$$
+$$a_{y_{S}} = a_{S} \cdot \sin\alpha = G {M_{P} \over r^2} \cdot
+{Y_{S} - Y_{P} \over r} = G {M_{P} \cdot (Y_{P} - Y_{S}) \over r^3}$$
 
 #### Kolizje
 

@@ -20,9 +20,9 @@ BodyCollision::BodyCollision ( BodyCollision::Types Type, Body * First, Body * S
         float SecondEndEnergy = 0.5f * Second->getMass() * powf( getLength( SecondVelocity ), 2.f );
         float EndEnergy = FirstEndEnergy + SecondEndEnergy;
 
-        ReleasedEnergy = ( BeginEnergy - EndEnergy ) / 1000.f; }
+        ReleasedEnergy = ( BeginEnergy - EndEnergy ) / 1000000.f; }
 
-    if ( Type == Inelastic ) {
+    if ( Type == Inelastic ) { // TODO WHAT THE ACTUAL FUCK?
 
         sf::Vector2f FirstMomentum = First->getMass() * First->getVelocity();
         sf::Vector2f SecondMomentum = Second->getMass() * Second->getVelocity();

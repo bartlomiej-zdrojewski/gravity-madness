@@ -98,6 +98,16 @@
         </Font>
 
         <Font>
+            <Name>ControllersTableHeader</Name>
+            <Path>RobotoCondensed-Light.ttf</Path>
+        </Font>
+
+        <Font>
+            <Name>ControllersTableContent</Name>
+            <Path>StintUltraCondensed-Regular.ttf</Path>
+        </Font>
+
+        <Font>
             <Name>PauseMenu</Name>
             <Path>RobotoCondensed-Light.ttf</Path>
         </Font>

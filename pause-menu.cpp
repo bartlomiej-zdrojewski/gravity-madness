@@ -218,30 +218,49 @@ void PauseMenu::render ( sf::RenderWindow &Window ) {
 
         Text.setString( OptionText[i] );
         Text.setPosition( OptionPosition[i] );
-        Text.setOutlineThickness( 1.f );
-        Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        if ( i == Option ) {
+        #if ( SFML_VERSION_MINOR >= 4 )
 
-            Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+            Text.setOutlineThickness( 1.f );
+            Text.setOutlineColor( sf::Color( 0, 0, 0 ) );
 
-        else if ( ( i + 1 ) == Option || ( i - 1 ) == Option ) {
+            if ( i == Option ) {
 
-            Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
 
-        else if ( ( i + 2 ) == Option || ( i - 2 ) == Option ) {
+            else if ( ( i + 1 ) == Option || ( i - 1 ) == Option ) {
 
-            Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
 
-        else {
+            else if ( ( i + 2 ) == Option || ( i - 2 ) == Option ) {
 
-            Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
 
-        Window.draw( Text ); }
+            else {
 
-    // TODO LOGO
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
 
-    }
+        #else
+
+            if ( i == Option ) {
+
+                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+
+            else if ( ( i + 1 ) == Option || ( i - 1 ) == Option ) {
+
+                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+
+            else if ( ( i + 2 ) == Option || ( i - 2 ) == Option ) {
+
+                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+
+            else {
+
+                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+
+        #endif
+
+        Window.draw( Text ); } }
 
 bool PauseMenu::onClose ( ) {
 

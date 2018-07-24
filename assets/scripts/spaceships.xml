@@ -15,7 +15,7 @@
         <EnergyRestoration>30.00</EnergyRestoration>
         <Thrust>100.00</Thrust>
         <SuppressingFactor>0.75</SuppressingFactor>
-        <ExhaustColor>#DD2C00</ExhaustColor>
+        <ExhaustColor>#FF6E40</ExhaustColor>
         <RayPower>25.00</RayPower>
         <RayColor>#FF3D00</RayColor>
         <MissileCount>3</MissileCount>
@@ -37,7 +37,7 @@
         <EnergyRestoration>40.00</EnergyRestoration>
         <Thrust>120.00</Thrust>
         <SuppressingFactor>0.75</SuppressingFactor>
-        <ExhaustColor>#64DD17</ExhaustColor>
+        <ExhaustColor>#B2FF59</ExhaustColor>
         <RayPower>30.00</RayPower>
         <RayColor>#76FF03</RayColor>
         <MissileCount>3</MissileCount>
@@ -59,7 +59,7 @@
         <EnergyRestoration>75.00</EnergyRestoration>
         <Thrust>80.00</Thrust>
         <SuppressingFactor>0.5</SuppressingFactor>
-        <ExhaustColor>#AA00FF</ExhaustColor>
+        <ExhaustColor>#E040FB</ExhaustColor>
         <RayPower>100.00</RayPower>
         <RayColor>#D500F9</RayColor>
         <MissileCount>5</MissileCount>
@@ -81,7 +81,7 @@
         <EnergyRestoration>60.00</EnergyRestoration>
         <Thrust>150.00</Thrust>
         <SuppressingFactor>0.9</SuppressingFactor>
-        <ExhaustColor>#2962FF</ExhaustColor>
+        <ExhaustColor>#448AFF</ExhaustColor>
         <RayPower>75.00</RayPower>
         <RayColor>#2979FF</RayColor>
         <MissileCount>5</MissileCount>

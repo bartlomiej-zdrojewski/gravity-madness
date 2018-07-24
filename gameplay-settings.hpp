@@ -1,9 +1,11 @@
 #ifndef GRAVITY_MADNESS_GAMEPLAY_HPP
 #define GRAVITY_MADNESS_GAMEPLAY_HPP
 
+#include <sstream>
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "logger.hpp"
+#include "controllers/player-controller-settings.hpp"
 #include "script.hpp"
 
 class GameplaySettings : public Logger {
@@ -90,6 +92,10 @@ public:
     std::vector <SpaceshipPrototype> getSpaceshipPrototypes ( );
     SpaceshipPrototype getSpaceshipPrototype ( unsigned int Index );
 
+    void loadPlayerControllerSettingsRegister ( std::string Config );
+    PlayerControllerSettings ** getPlayerControllerSettingsRegister ( );
+    PlayerControllerSettings * getPlayerControllerSettings ( unsigned int Index );
+
     float getAreaSize ( );
     std::string getAreaSizeText ( );
     void setAreaSize ( AreaSizes AreaSize );
@@ -144,11 +150,13 @@ private:
     AIPersonalities AIPersonality;
     EndingConditions EndingCondition;
     sf::Time TimeLimit;
+
     unsigned int * Score;
     int Winner;
 
     std::vector <SpaceshipPrototype> SpaceshipPrototypes;
     std::vector <int> SpaceshipAssignment;
+    PlayerControllerSettings * PlayerControllerSettingsRegister [ MaximumPlayerCount ];
 
     };
 

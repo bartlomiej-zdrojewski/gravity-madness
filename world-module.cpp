@@ -1,3 +1,4 @@
+#include <iostream>
 #include "world-module.hpp"
 
 WorldModule::~WorldModule ( ) {
@@ -440,7 +441,7 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
         if ( std::string( Setting.name() ) == "GraphicsSettings" ) {
 
             delete *GraphicsConfig;
-            *GraphicsConfig = new Script ( Config->getTextValue( Setting ) ); }
+            *GraphicsConfig = new Script ( Script::getTextValue( Setting ) ); }
 
         else if ( std::string( Setting.name() ) == "AudioSettings" ) {
 
@@ -452,35 +453,39 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
         else if ( std::string( Setting.name() ) == "SpaceshipsSettings" ) {
 
             delete SpaceshipsConfig;
-            SpaceshipsConfig = new Script ( Config->getTextValue( Setting ) ); }
+            SpaceshipsConfig = new Script ( Script::getTextValue( Setting ) ); }
 
         else if ( std::string( Setting.name() ) == "Log" ) {
 
-            LogPath = Config->getTextValue( Setting ); }
+            LogPath = Script::getTextValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "WindowWidth" ) {
 
-            InitWindowWidth = (unsigned int) Config->getIntegerValue( Setting ); }
+            InitWindowWidth = (unsigned int) Script::getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "WindowHeight" ) {
 
-            InitWindowHeight = (unsigned int) Config->getIntegerValue( Setting ); }
+            InitWindowHeight = (unsigned int) Script::getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "FullScreen" ) {
 
-            InitFullScreen = Config->getBooleanValue( Setting ); }
+            InitFullScreen = Script::getBooleanValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "Antialiasing" ) {
 
-            InitAntialiasing = (unsigned int) Config->getIntegerValue( Setting ); }
+            InitAntialiasing = (unsigned int) Script::getIntegerValue( Setting ); }
+
+        else if ( std::string( Setting.name() ) == "Controllers" ) {
+
+            ControllersConfig = Script::getTextValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "HighScore" ) {
 
-            HighScore = (unsigned int) Config->getIntegerValue( Setting ); }
+            HighScore = (unsigned int) Script::getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "Debug" ) {
 
-            Debugging = Config->getBooleanValue( Setting ); } }
+            Debugging = Script::getBooleanValue( Setting ); } }
 
     return !( InitWindowWidth == 0 || InitWindowHeight == 0 ); }
 
@@ -527,6 +532,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
 
             Log->manage( Gameplay->getLogger() );
             Gameplay->loadSpaceshipPrototypes( SpaceshipsConfig );
+            Gameplay->loadPlayerControllerSettingsRegister( ControllersConfig );
             Log->update();
 
             if ( Log->wasWarningLogged() ) {
@@ -559,6 +565,7 @@ void WorldModule::saveSettings ( ) {
     bool WindowHeightSuccess = false;
     bool AntialiasingSuccess = false;
     bool FullScreenSuccess = false;
+    bool ControllersSuccess = false;
     bool HighScoreSuccess = false;
 
     pugi::xml_node * Root = Config->getRoot();
@@ -579,57 +586,128 @@ void WorldModule::saveSettings ( ) {
 
         if ( std::string( Setting.name() ) == "WindowWidth" ) {
 
-            Config->setValue( Setting, (int) Graphics->getWindowWidth() );
+            Script::setValue( Setting, (int) Graphics->getWindowWidth() );
 
             WindowWidthSuccess = true; }
 
         else if ( std::string( Setting.name() ) == "WindowHeight" ) {
 
-            Config->setValue( Setting, (int) Graphics->getWindowHeight() );
+            Script::setValue( Setting, (int) Graphics->getWindowHeight() );
 
             WindowHeightSuccess = true; }
 
         else if ( std::string( Setting.name() ) == "FullScreen" ) {
 
-            Config->setValue( Setting, (bool) Graphics->isFullScreenEnabled() );
+            Script::setValue( Setting, (bool) Graphics->isFullScreenEnabled() );
 
             FullScreenSuccess = true; }
 
         else if ( std::string( Setting.name() ) == "Antialiasing" ) {
 
-            Config->setValue( Setting, (int) Graphics->getAntialiasingLevel() );
+            Script::setValue( Setting, (int) Graphics->getAntialiasingLevel() );
 
             AntialiasingSuccess = true; }
 
+        else if ( std::string( Setting.name() ) == "Controllers" ) {
+
+            std::string Data;
+
+            for ( unsigned int i = 0; i < Gameplay->getMaximumPlayerCount(); i++ ) {
+
+                if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+                    Data += "JOYSTICK_";
+                    Data += std::to_string( Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ); }
+
+                else {
+
+                    Data += "KEYBOARD"; }
+
+                Data += ",";
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getForwardKey() );
+                Data += ",";
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getBackwardKey() );
+                Data += ",";
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getLeftKey() );
+                Data += ",";
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRightKey() );
+                Data += ",";
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRayShotKey() );
+                Data += ",";
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getMissileShotKey() );
+
+                if ( i != ( Gameplay->getMaximumPlayerCount() - 1 ) ) {
+
+                    Data += "|"; } }
+
+            Script::setValue( Setting, Data );
+
+            ControllersSuccess = true; }
+
         else if ( std::string( Setting.name() ) == "HighScore" ) {
 
-            Config->setValue( Setting, (int) HighScore );
+            Script::setValue( Setting, (int) HighScore );
 
             HighScoreSuccess = true; } }
 
     if ( !WindowWidthSuccess ) {
 
         pugi::xml_node Setting = SettingsNode[0].append_child( "WindowWidth" );
-        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getWindowWidth() ); }
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getWindowWidth() ); }
 
     if ( !WindowHeightSuccess ) {
 
         pugi::xml_node Setting = SettingsNode[0].append_child( "WindowHeight" );
-        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getWindowHeight() ); }
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getWindowHeight() ); }
 
     if ( !FullScreenSuccess ) {
 
         pugi::xml_node Setting = SettingsNode[0].append_child( "FullScreen" );
-        Config->setValue( Setting.append_child( pugi::node_pcdata ), (bool) Graphics->isFullScreenEnabled() ); }
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), (bool) Graphics->isFullScreenEnabled() ); }
 
     if ( !AntialiasingSuccess ) {
 
         pugi::xml_node Setting = SettingsNode[0].append_child( "Antialiasing" );
-        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getAntialiasingLevel() ); }
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getAntialiasingLevel() ); }
+
+    if ( !ControllersSuccess ) {
+
+        std::string Data;
+
+        for ( unsigned int i = 0; i < Gameplay->getMaximumPlayerCount(); i++ ) {
+
+            if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+                Data += "JOYSTICK_";
+                Data += std::to_string( Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ); }
+
+            else {
+
+                Data += "KEYBOARD"; }
+
+            Data += ",";
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getForwardKey() );
+            Data += ",";
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getBackwardKey() );
+            Data += ",";
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getLeftKey() );
+            Data += ",";
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRightKey() );
+            Data += ",";
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRayShotKey() );
+            Data += ",";
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getMissileShotKey() );
+
+            if ( i != ( Gameplay->getMaximumPlayerCount() - 1 ) ) {
+
+                Data += "|"; } }
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "Controllers" );
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), Data ); }
 
     if ( !HighScoreSuccess ) {
 
         pugi::xml_node Setting = SettingsNode[0].append_child( "HighScore" );
-        Config->setValue( Setting.append_child( pugi::node_pcdata ), (int) HighScore ); }
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), (int) HighScore ); }
 
     Config->saveToFile(); }
