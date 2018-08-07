@@ -1,4 +1,3 @@
-#include <iostream>
 #include "spaceship.hpp"
 
 Spaceship::~Spaceship ( ) {
@@ -368,7 +367,7 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
     Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
     Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 3.f ) );
-    Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 10000 : 5000 ) * ( getMass() / 4.f ) ) );
+    Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 10000 : 5000 ) * ( getMass() / 400.f ) ) );
 
     setHealth( 0.f );
     setEnergy( 0.f );
@@ -417,7 +416,7 @@ ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
         Explosion->setVelocityRange( 5.f, 15.f + 0.5f * Velocity );
         Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
         Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 4.f ) );
-        Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 10000 : 5000 ) * ( getMass() / 4.f ) ) );
+        Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 10000 : 5000 ) * ( getMass() / 400.f ) ) );
 
         return Explosion; }
 
@@ -468,6 +467,6 @@ ParticleSystem * Spaceship::onDestruction ( ) {
     Explosion->setVelocityRange( - 25.f, Velocity > 100.f ? 75.f : 50.f );
     Explosion->setColorRange( sf::Color ( 150, 0, 0 ), sf::Color ( 255, 150, 50 ) );
     Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 5.f ) );
-    Explosion->generateParticles( (unsigned int) ( 5000 * ( getMass() / 4.f ) ) );
+    Explosion->generateParticles( (unsigned int) ( 5000 * ( getMass() / 400.f ) ) );
 
     return Explosion; }

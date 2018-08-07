@@ -1,4 +1,3 @@
-#include <iostream>
 #include "debug-module.hpp"
 
 void DebugModule::update ( ) {
@@ -153,7 +152,7 @@ Planet * DebugModule::getPlanet ( ) {
 
 Asteroid * DebugModule::getAsteroid ( ) {
 
-    auto * NewAsteroid = new Asteroid ( 15.f, 15.f );
+    auto * NewAsteroid = new Asteroid ( Graphics, 15.f, 15.f );
 
     return NewAsteroid; }
 
@@ -162,8 +161,8 @@ Spaceship * DebugModule::getSpaceship ( ) {
     GameplaySettings::SpaceshipPrototype Prototype;
 
     Prototype.Name = "Hercules the Unbroken";
-    Prototype.Texture = "spaceship";
-    Prototype.AccentTexture = "spaceship-accent";
+    Prototype.Texture = "Spaceship";
+    Prototype.AccentTexture = "SpaceshipAccent";
     Prototype.Mass = 4.f;
     Prototype.Radius = 20.f;
     Prototype.HealthLimit = 200;

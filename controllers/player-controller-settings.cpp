@@ -1,4 +1,3 @@
-#include <iostream>
 #include "player-controller-settings.hpp"
 
 PlayerControllerSettings::PlayerControllerSettings ( ) {

@@ -141,7 +141,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setMissileCount( Prototype.MissileCount );
         NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
         NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color::Red ); // TODO MORE COLORS
-        NewSpaceship->setThrusterTexture( Graphics->getTexture( "thruster" ), Prototype.ExhaustColor );
+        NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.ExhaustColor );
 
         float PositionAngle = ( (float) SpaceshipOrder[i] / (float) Gameplay->getSpaceshipCount() ) * ( 2.f * PI );
         float PositionModule = AreaRadius - 200.f;
@@ -329,6 +329,12 @@ void GameModule::update ( sf::Event &Event ) {
 
     if ( !EndingCondition ) {
 
+        if ( Event.type == sf::Event::LostFocus ) {
+
+            Pause = true;
+
+            return; }
+
         if ( Event.type == sf::Event::KeyPressed ) {
 
             if ( Event.key.code == sf::Keyboard::Escape ) {
@@ -466,11 +472,11 @@ void GameModule::reset ( ) {
     PlayerCount = 0;
 
     AsteroidCount = 5;
-    AsteroidPauseDuration = sf::seconds( 5.f );
-    AsteroidPauseTime = sf::seconds( 30.f );
+    AsteroidPauseDuration = sf::seconds( 2.f );
+    AsteroidPauseTime = sf::seconds( 2.f );
 
     PowerUpLimit = 10;
-    PowerUpPauseDuration = sf::seconds( 5.f );
+    PowerUpPauseDuration = sf::seconds( 2.f );
     PowerUpPauseTime = sf::seconds( 30.f );
     GravityPowerUp = nullptr;
     AsteroidPowerUp = nullptr;
@@ -511,6 +517,11 @@ void GameModule::reset ( ) {
 
         delete *i;
         i = Missiles.erase( i ); }
+
+    for ( auto i = PowerUps.begin(); i != PowerUps.end(); ) {
+
+        delete *i;
+        i = PowerUps.erase( i ); }
 
     for ( auto i = RayShots.begin(); i != RayShots.end(); ) {
 
@@ -805,10 +816,10 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         AsteroidPauseTime = AsteroidPauseDuration;
 
-        float Mass = 4000.f + getRandomFloat() * 6000.f;
-        float Radius = ( Mass / 500.f ) * ( 0.75f + getRandomFloat() * 0.5f );
+        float Mass = 1000.f + getRandomFloat() * 9000.f;
+        float Radius = 2.f * cbrtf( Mass / 10.f ) * ( 0.75f + getRandomFloat() * 0.5f );
 
-        auto * NewAsteroid = new Asteroid ( Mass, Radius );
+        auto * NewAsteroid = new Asteroid ( Graphics, Mass, Radius );
 
         float Angle = getRandomFloat() * ( 2.f * PI );
         float AngleFluctuation = ( - PI / 6.f ) + getRandomFloat() * ( PI / 3.f );
@@ -819,6 +830,10 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         Asteroids.push_back( NewAsteroid ); }
 
+    std::cout << Asteroids.size() << "/" << AsteroidCount << " " << AsteroidPauseTime.asSeconds();
+    if ( AsteroidPowerUp != nullptr ) std::cout << " POWER_UP";
+    std::cout << std::endl;
+
     // Update gravity acceleration, detect collisions with planets
 
     for ( auto ActiveAsteroid : Asteroids ) {
@@ -828,8 +843,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveAsteroid->getPosition(), ActivePlanet->getPosition() );
 
-            Acceleration.x += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance * Distance );
-            Acceleration.y += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance * Distance );
+            Acceleration.x = Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveAsteroid->updateVelocity( Acceleration, ElapsedTime );
 
@@ -843,13 +858,23 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
                         ParticleSystems.push_back( Explosion ); } } } }
 
+        for ( auto ActiveSpaceship : Spaceships ) {
+
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( ActiveAsteroid->getPosition(), ActiveSpaceship->getPosition() );
+
+            Acceleration.x = Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().x - ActiveAsteroid->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().y - ActiveAsteroid->getPosition().y ) / ( Distance * Distance * Distance );
+
+            ActiveAsteroid->updateVelocity( Acceleration, ElapsedTime ); }
+
         float DistanceFromOrigin = getDistance( sf::Vector2f ( 0.f, 0.f ), ActiveAsteroid->getPosition() );
 
         if ( DistanceFromOrigin < AreaRadius ) {
 
             ActiveAsteroid->resetExistenceTime(); } }
 
-    // Detect collisions between asteroids
+    // Update gravity acceleration, detect collisions between asteroids
 
     for ( auto FirstAsteroid : Asteroids ) {
 
@@ -859,19 +884,23 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
                 continue; }
 
-            float MinimumDistance = FirstAsteroid->getRadius() + SecondAsteroid->getRadius();
+            sf::Vector2f Acceleration;
+            float Distance = getDistance( FirstAsteroid->getPosition(), SecondAsteroid->getPosition() );
+            
+            Acceleration.x = Gravity * SecondAsteroid->getMass() * ( SecondAsteroid->getPosition().x - FirstAsteroid->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * SecondAsteroid->getMass() * ( SecondAsteroid->getPosition().y - FirstAsteroid->getPosition().y ) / ( Distance * Distance * Distance );
 
-            if ( getMinDistance( FirstAsteroid->getPosition(), SecondAsteroid->getPosition() ) <= MinimumDistance ) {
+            FirstAsteroid->updateVelocity( Acceleration, ElapsedTime );
 
-                if ( getDistance( FirstAsteroid->getPosition(), SecondAsteroid->getPosition() ) <= MinimumDistance ) {
+            if ( Distance <= ( FirstAsteroid->getRadius() + SecondAsteroid->getRadius() ) ) {
 
-                    if ( true ) { // TODO ACCURATE CHECK
+                if ( true ) { // TODO ACCURATE CHECK
 
-                        ParticleSystem * Explosion = FirstAsteroid->onCollision( SecondAsteroid );
+                    ParticleSystem * Explosion = FirstAsteroid->onCollision( SecondAsteroid );
 
-                        if ( Explosion ) {
+                    if ( Explosion ) {
 
-                            ParticleSystems.push_back( Explosion ); } } } } } }
+                        ParticleSystems.push_back( Explosion ); } }} } }
 
     // Update asteroids' state
 
@@ -908,8 +937,8 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveSpaceship->getPosition(), ActivePlanet->getPosition() );
 
-            Acceleration.x += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance * Distance );
-            Acceleration.y += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance * Distance );
+            Acceleration.x = Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance * Distance );
 
             if ( ( Distance - ActivePlanet->getRadius() ) < ClosestBodyDistance ) {
 
@@ -933,8 +962,8 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveSpaceship->getPosition(), ActiveAsteroid->getPosition() );
 
-            Acceleration.x += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance * Distance );
-            Acceleration.y += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance * Distance );
+            Acceleration.x = Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance * Distance );
 
             if ( ( Distance - ActiveAsteroid->getRadius() ) < ClosestBodyDistance ) {
 
@@ -1125,8 +1154,8 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveMissile->getPosition(), ActivePlanet->getPosition() );
 
-            Acceleration.x += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
-            Acceleration.y += Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
+            Acceleration.x = Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * ActivePlanet->getMass() * ( ActivePlanet->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
 
@@ -1145,8 +1174,8 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveMissile->getPosition(), ActiveAsteroid->getPosition() );
 
-            Acceleration.x += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
-            Acceleration.y += Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
+            Acceleration.x = Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
 
@@ -1165,8 +1194,8 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             sf::Vector2f Acceleration;
             float Distance = getDistance( ActiveMissile->getPosition(), ActiveSpaceship->getPosition() );
 
-            Acceleration.x += Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
-            Acceleration.y += Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
+            Acceleration.x = Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().x - ActiveMissile->getPosition().x ) / ( Distance * Distance * Distance );
+            Acceleration.y = Gravity * ActiveSpaceship->getMass() * ( ActiveSpaceship->getPosition().y - ActiveMissile->getPosition().y ) / ( Distance * Distance * Distance );
 
             ActiveMissile->updateVelocity( Acceleration, ElapsedTime );
 
@@ -1233,8 +1262,6 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
             ++i; } } }
 
 void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
-
-    std::cout << GameplayTime.asSeconds() << " " << PowerUps.size() << "/" << PowerUpLimit << std::endl;
 
     // Generate power ups
 
@@ -1442,8 +1469,8 @@ void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
 
     ViewsOutline.clear();
 
-    float ViewWidth = ( 1200.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
-    float ViewHeight = 1200.f;
+    float ViewWidth = ( 900.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
+    float ViewHeight = 900.f;
 
     if ( PlayerCount == 1 ) {
 

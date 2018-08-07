@@ -45,23 +45,21 @@ void PowerUp::setRadius ( float Radius ) {
 
     this->Radius = Radius; }
 
-void PowerUp::setTexture ( sf::Texture &Texture ) {
-
-    this->Texture = Texture; }
-
 void PowerUp::update ( sf::Time ElapsedTime ) {
 
-    if ( Caught ) {
+    if ( !Expired ) {
 
-        updateEffect( ElapsedTime ); }
+        if ( !Caught ) {
 
-    else {
+            ExistenceTime -= ElapsedTime;
 
-        ExistenceTime -= ElapsedTime;
+            if ( ExistenceTime.asSeconds() <= 0.f ) {
 
-        if ( ExistenceTime.asSeconds() <= 0.f ) {
+                Expired = true; } }
 
-            Expired = true; } } }
+        else {
+
+            updateEffect( ElapsedTime ); } } }
 
 void PowerUp::render ( sf::RenderWindow &Window ) {
 

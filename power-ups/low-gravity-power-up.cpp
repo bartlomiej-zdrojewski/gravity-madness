@@ -14,6 +14,4 @@ void LowGravityPowerUp::updateEffect ( sf::Time ElapsedTime ) {
 
     if ( EffectDuration.asSeconds() <= 0.f ) {
 
-        onEffectEnd();
-
-        Expired = true; } }
+        finish(); } }

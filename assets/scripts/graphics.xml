@@ -12,6 +12,71 @@
         </Texture>
 
         <Texture>
+            <Name>Spaceship</Name>
+            <Path>spaceship-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccent</Name>
+            <Path>spaceship-accent-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAzrael</Name>
+            <Path>spaceship-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentAzrael</Name>
+            <Path>spaceship-accent-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidSmall1</Name>
+            <Path>asteroid-small-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidSmall2</Name>
+            <Path>asteroid-small-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidSmall3</Name>
+            <Path>asteroid-small-3.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidMedium1</Name>
+            <Path>asteroid-medium-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidMedium2</Name>
+            <Path>asteroid-medium-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidMedium3</Name>
+            <Path>asteroid-medium-3.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidBig1</Name>
+            <Path>asteroid-big-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidBig2</Name>
+            <Path>asteroid-big-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidBig3</Name>
+            <Path>asteroid-big-3.png</Path>
+        </Texture>
+
+        <Texture>
             <Name>power-up-low-health</Name>
             <Path>power-up.png</Path>
         </Texture>
@@ -61,26 +126,6 @@
             <Path>power-up.png</Path>
         </Texture>
 
-        <Texture>
-            <Name>spaceship</Name>
-            <Path>spaceship-azrael.png</Path>
-        </Texture>
-
-        <Texture>
-            <Name>spaceship-accent</Name>
-            <Path>spaceship-accent-azrael.png</Path>
-        </Texture>
-
-        <Texture>
-            <Name>spaceship-azrael</Name>
-            <Path>spaceship-azrael.png</Path>
-        </Texture>
-
-        <Texture>
-            <Name>spaceship-accent-azrael</Name>
-            <Path>spaceship-accent-azrael.png</Path>
-        </Texture>
-
     </Textures>
 
     <Fonts>
@@ -98,12 +143,12 @@
         </Font>
 
         <Font>
-            <Name>ControllersTableHeader</Name>
+            <Name>TableHeader</Name>
             <Path>RobotoCondensed-Light.ttf</Path>
         </Font>
 
         <Font>
-            <Name>ControllersTableContent</Name>
+            <Name>TableContent</Name>
             <Path>StintUltraCondensed-Regular.ttf</Path>
         </Font>
 

@@ -22,8 +22,6 @@ public:
     float getRadius ( );
     void setRadius ( float Radius );
 
-    void setTexture ( sf::Texture &Texture );
-
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
     void finish ( );

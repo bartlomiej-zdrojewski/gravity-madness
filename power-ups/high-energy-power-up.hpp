@@ -15,7 +15,7 @@ public:
 
 private:
 
-    void updateEffect ( sf::Time ElapsedTime );
+    void onEffectBegin ( );
 
     };
 

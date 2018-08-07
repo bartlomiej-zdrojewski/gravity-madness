@@ -1,4 +1,3 @@
-#include <iostream>
 #include "gameplay-settings.hpp"
 
 GameplaySettings::~GameplaySettings ( ) {
@@ -709,9 +708,9 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
     SpaceshipPrototype Prototype;
 
     Prototype.Name = "Hercules the Unbroken";
-    Prototype.Texture = "spaceship-azrael";
-    Prototype.AccentTexture = "spaceship-accent-azrael";
-    Prototype.Mass = 4.f;
+    Prototype.Texture = "Spaceship";
+    Prototype.AccentTexture = "SpaceshipAccent";
+    Prototype.Mass = 400.f;
     Prototype.Radius = 20.f;
     Prototype.HealthLimit = 200;
     Prototype.HealthRestoration = 2.f;

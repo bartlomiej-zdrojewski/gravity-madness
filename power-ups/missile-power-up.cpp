@@ -1,7 +1,7 @@
 #include "missile-power-up.hpp"
 
-void MissilePowerUp::updateEffect ( sf::Time ElapsedTime ) {
+void MissilePowerUp::onEffectBegin ( ) {
 
     MySpaceship->updateMissileCount( 1 );
 
-    Expired = true; }
+    finish(); }

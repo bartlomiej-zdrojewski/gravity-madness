@@ -4,6 +4,12 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
+#if ( SFML_VERSION_MINOR < 2 )
+    #warning "The oldest tested version of SFML is 2.2, therefore the older ones may not work as expected. For the best result try the 2.5 version."
+#elif ( SFML_VERSION_MINOR > 5 )
+    #warning "The newest tested version of SFML is 2.5, therefore the newer ones may not work as expected. For the best result try the 2.5 version."
+#endif
+
 #include "body.hpp"
 #include "constants.hpp"
 #include "controllers/aggressive-ai-controller.hpp"

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "asteroid.hpp"
 
 void Asteroid::resetExistenceTime ( ) {
@@ -25,18 +24,22 @@ void Asteroid::update ( sf::Time ElapsedTime ) {
 
         DestructionTime = DestructionDuration; }
 
+    Angle += AngularSpeed * ElapsedTime.asSeconds();
+
     updatePosition( ElapsedTime ); }
 
 void Asteroid::render ( sf::RenderWindow &Window ) { // TODO
 
-    sf::CircleShape Circle;
+    sf::Sprite Sprite;
 
-    Circle.setRadius( getRadius() );
-    Circle.setOrigin( getRadius(), getRadius() );
-    Circle.setPosition( getPosition() );
-    Circle.setFillColor( sf::Color( 255, 0, 0, (sf::Uint8) ( 255.f * DestructionTime.asSeconds() / DestructionDuration.asSeconds() ) ) );
+    Sprite.setTexture( Texture );
+    Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
+    Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
+    Sprite.setPosition( getPosition() );
+    Sprite.setRotation( RAD_TO_DEG * Angle );
+    Sprite.setColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255.f * DestructionTime.asSeconds() / DestructionDuration.asSeconds() ) ) );
 
-    Window.draw( Circle );
+    Window.draw( Sprite );
 
     }
 
@@ -52,7 +55,7 @@ ParticleSystem * Asteroid::onCollision ( Planet * Other ) {
     Explosion->setVelocityRange( 10.f, 10.f + 0.8f * Velocity );
     Explosion->setColorRange( sf::Color ( 25, 25, 50 ), sf::Color ( 125, 125, 150 ) );
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 4.f ) );
-    Explosion->generateParticles( (unsigned int) ( ( Velocity > 200.f ? 20000 : 10000 ) * ( getMass() / 5000.f ) ) );
+    Explosion->generateParticles( (unsigned int) ( getMass() * ( Velocity / 100.f ) ) );
 
     destruct();
 
@@ -83,3 +86,7 @@ ParticleSystem * Asteroid::onCollision ( Asteroid * Other ) {
     while ( Distance <= ( getRadius() + Other->getRadius() ) );
 
     return nullptr; }
+
+float Asteroid::getRandomFloat ( ) {
+
+    return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "world-module.hpp"
 
 WorldModule::~WorldModule ( ) {

@@ -5,9 +5,9 @@
     <Spaceship>
 
         <Name>Gilgamesh the Immortal</Name>
-        <Texture>spaceship-azrael</Texture>
-        <AccentTexture>spaceship-accent-azrael</AccentTexture>
-        <Mass>4.00</Mass>
+        <Texture>SpaceshipAzrael</Texture>
+        <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
+        <Mass>400.00</Mass>
         <Radius>20.00</Radius>
         <HealthLimit>300.00</HealthLimit>
         <HealthRestoration>6.00</HealthRestoration>
@@ -27,9 +27,9 @@
     <Spaceship>
 
         <Name>Perun the Unexpected</Name>
-        <Texture>spaceship-azrael</Texture>
-        <AccentTexture>spaceship-accent-azrael</AccentTexture>
-        <Mass>4.00</Mass>
+        <Texture>SpaceshipAzrael</Texture>
+        <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
+        <Mass>400.00</Mass>
         <Radius>20.00</Radius>
         <HealthLimit>250.00</HealthLimit>
         <HealthRestoration>2.00</HealthRestoration>
@@ -49,9 +49,9 @@
     <Spaceship>
 
         <Name>Gogmagog the Colossal</Name>
-        <Texture>spaceship-azrael</Texture>
-        <AccentTexture>spaceship-accent-azrael</AccentTexture>
-        <Mass>10.00</Mass>
+        <Texture>SpaceshipAzrael</Texture>
+        <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
+        <Mass>1000.00</Mass>
         <Radius>30.00</Radius>
         <HealthLimit>500.00</HealthLimit>
         <HealthRestoration>5.00</HealthRestoration>
@@ -71,9 +71,9 @@
     <Spaceship>
 
         <Name>Azrael the Merciless</Name>
-        <Texture>spaceship-azrael</Texture>
-        <AccentTexture>spaceship-accent-azrael</AccentTexture>
-        <Mass>8.00</Mass>
+        <Texture>SpaceshipAzrael</Texture>
+        <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
+        <Mass>800.00</Mass>
         <Radius>25.00</Radius>
         <HealthLimit>400.00</HealthLimit>
         <HealthRestoration>3.00</HealthRestoration>

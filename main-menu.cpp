@@ -1,4 +1,3 @@
-#include <iostream>
 #include "main-menu.hpp"
 
 MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
@@ -1658,11 +1657,11 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
     for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
 
-        ControllersTableHeader[i].setFont( Graphics->getFont( "ControllersTableHeader" ) ); }
+        ControllersTableHeader[i].setFont( Graphics->getFont( "TableHeader" ) ); }
 
     for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
 
-        ControllersTableContent[i].setFont( Graphics->getFont( "ControllersTableContent" ) ); }
+        ControllersTableContent[i].setFont( Graphics->getFont( "TableContent" ) ); }
 
     // TODO HEADERS TEXTS
 
