@@ -51,7 +51,9 @@ void ReasonableAIController::onSafeOrbit ( sf::Time ElapsedTime ) {
 
     else if ( MyPowerUp ) {
 
-        if ( PowerUpDistace < 200.f || ( ( PowerUpDistace < 500.f ) && ( fabsf( PowerUpAngle ) > ( PI / 12.f ) ) ) ) {
+        if ( ( ( PowerUpDistance < 50.f ) && ( fabsf( PowerUpAngle ) > ( PI / 24.f ) ) ) ||
+             ( ( PowerUpDistance < 250.f ) && ( fabsf( PowerUpAngle ) > ( PI / 12.f ) ) ) ||
+             ( ( PowerUpDistance < 500.f ) && ( fabsf( PowerUpAngle ) > ( PI / 4.f ) ) ) ) {
 
             ThrustForward = true;
 

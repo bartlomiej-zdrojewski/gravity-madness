@@ -9,8 +9,8 @@ BodyCollision::BodyCollision ( BodyCollision::Types Type, Body * First, Body * S
         FirstVelocity = ( First->getVelocity() * ( First->getMass() - Second->getMass() ) + 2.f * Second->getMass() * Second->getVelocity() ) / MassSum;
         SecondVelocity = ( Second->getVelocity() * ( Second->getMass() - First->getMass() ) + 2.f * First->getMass() * First->getVelocity() ) / MassSum;
 
-        FirstVelocity *= Efficiency;
-        SecondVelocity *= Efficiency;
+        FirstVelocity *= sqrtf( Efficiency );
+        SecondVelocity *= sqrtf( Efficiency );
 
         float FirstBeginEnergy = 0.5f * First->getMass() * powf( getLength( First->getVelocity() ), 2.f );
         float SecondBeginEnergy = 0.5f * Second->getMass() * powf( getLength( Second->getVelocity() ), 2.f );
@@ -22,19 +22,23 @@ BodyCollision::BodyCollision ( BodyCollision::Types Type, Body * First, Body * S
 
         ReleasedEnergy = ( BeginEnergy - EndEnergy ) / 1000000.f; }
 
-    if ( Type == Inelastic ) { // TODO WHAT THE ACTUAL FUCK?
+    if ( Type == Inelastic ) {
 
         sf::Vector2f FirstMomentum = First->getMass() * First->getVelocity();
         sf::Vector2f SecondMomentum = Second->getMass() * Second->getVelocity();
+
         sf::Vector2f Velocity = ( FirstMomentum + SecondMomentum ) / ( First->getMass() + Second->getMass() );
+        FirstVelocity = SecondVelocity = Velocity * sqrtf( Efficiency );
 
-        float FirstEnergy = 0.5f * First->getMass() * powf( getLength( First->getVelocity() ), 2.f );
-        float SecondEnergy = 0.5f * First->getMass() * powf( getLength( First->getVelocity() ), 2.f );
-        float FinalEnergy = 0.5f * First->getMass() * powf( getLength( Velocity ), 2.f );
+        float FirstBeginEnergy = 0.5f * First->getMass() * powf( getLength( First->getVelocity() ), 2.f );
+        float SecondBeginEnergy = 0.5f * Second->getMass() * powf( getLength( Second->getVelocity() ), 2.f );
 
-        FirstVelocity = Velocity;
-        SecondVelocity = Velocity;
-        ReleasedEnergy = ( FirstEnergy + SecondEnergy - FinalEnergy ) / 1000.f; } }
+        float BeginEnergy = FirstBeginEnergy + SecondBeginEnergy;
+        float EndEnergy = 0.5f * ( First->getMass() + Second->getMass() ) * powf( getLength( Velocity ), 2.f );
+
+        ReleasedEnergy = ( BeginEnergy - EndEnergy ) / 1000000.f;
+
+        } }
 
 sf::Vector2f BodyCollision::getFirstVelocity ( ) {
 

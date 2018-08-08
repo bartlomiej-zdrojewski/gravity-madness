@@ -8,10 +8,10 @@ class HighEnergyPowerUp : public PowerUp {
 
 public:
 
-    HighEnergyPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                        PowerUp ( Radius, sf::seconds( 60.f ), Gravity, AsteroidCount ) {
+    HighEnergyPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                        PowerUp ( sf::seconds( 60.f ), Gravity, AsteroidCount ) {
 
-        Texture = Graphics->getTexture( "power-up-high-energy" ); }
+        Texture = Graphics->getTexture( "PowerUpHighEnergy" ); }
 
 private:
 

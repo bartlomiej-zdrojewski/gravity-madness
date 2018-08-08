@@ -30,9 +30,8 @@ void Asteroid::update ( sf::Time ElapsedTime ) {
 
 void Asteroid::render ( sf::RenderWindow &Window ) { // TODO
 
-    sf::Sprite Sprite;
+    sf::Sprite Sprite ( Texture );
 
-    Sprite.setTexture( Texture );
     Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
     Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
     Sprite.setPosition( getPosition() );
@@ -64,15 +63,15 @@ ParticleSystem * Asteroid::onCollision ( Planet * Other ) {
 ParticleSystem * Asteroid::onCollision ( Asteroid * Other ) {
 
     float Distance;
-    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.7f );
+    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.50f ); // 50% of kinetic is released
 
     setVelocity( Collision.getFirstVelocity() );
     Other->setVelocity( Collision.getSecondVelocity() );
 
-    if ( getVelocity() == sf::Vector2f( 0.f, 0.f ) && Other->getVelocity() == sf::Vector2f ( 0.f, 0.f ) ) {
+    if ( sf::Vector2i( (int) getVelocity().x, (int) getVelocity().y ) == sf::Vector2i( 0, 0 ) && sf::Vector2i( (int) Other->getVelocity().x, (int) Other->getVelocity().y ) == sf::Vector2i( 0, 0 ) ) {
 
-        setVelocity( sf::Vector2f( 1.f, 0.f ) );
-        Other->setVelocity( sf::Vector2f( - 1.f, 0.f ) ); }
+        setVelocity( sf::Vector2f( 1.f, 1.f ) );
+        Other->setVelocity( sf::Vector2f( - 1.f, - 1.f ) ); }
 
     do {
 

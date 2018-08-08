@@ -14,7 +14,7 @@ class Missile : public Body {
 
 public:
 
-    Missile ( ) : Body ( 1.f, 15.f ) {
+    Missile ( ) : Body ( 50.f, 15.f ) {
 
         ExplosionOnDestruction = true;
         ExplosionPower = 100.f;
@@ -48,6 +48,7 @@ public:
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
 
+    void onShot ( );
     ParticleSystem * onCollision ( Planet * Other );
     ParticleSystem * onCollision ( Asteroid * Other );
     ParticleSystem * onCollision ( Spaceship * Other );

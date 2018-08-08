@@ -58,7 +58,7 @@ void AIController::setPowerUp ( PowerUp * MyPowerUp, float Distance, float Angle
 
     if ( MyPowerUp ) {
 
-        PowerUpDistace = Distance;
+        PowerUpDistance = Distance;
         PowerUpAngle = Angle; } }
 
 void AIController::update ( sf::Time ElapsedTime ) {
@@ -96,7 +96,7 @@ void AIController::update ( sf::Time ElapsedTime ) {
 
             ThrustLeft = true; } }
 
-    else if ( Distance < ( 2.5f * MinimumDistance ) && fabsf( AngleDifference ) < ( PI / 8.f ) ) {
+    else if ( Distance < ( 3.f * MinimumDistance ) && fabsf( AngleDifference ) < ( PI / 8.f ) ) {
 
         ThrustForward = true;
 
@@ -118,7 +118,9 @@ void AIController::update ( sf::Time ElapsedTime ) {
         else if ( AngleDifference < 0.f && AngleDifference > ( - PI / 3.f ) ) {
 
             ThrustForward = true;
-            ThrustLeft = true; } }
+            ThrustLeft = true; }
+
+        onUnsafeOrbit( ElapsedTime ); }
 
     else if ( LimitPanicTime.asSeconds() > 0.f ) {
 
@@ -165,7 +167,7 @@ void AIController::update ( sf::Time ElapsedTime ) {
 
                 onSafeOrbit( ElapsedTime ); } }
 
-        else if ( ShotPanicTime.asSeconds() > 0.f ) {
+        if ( ShotPanicTime.asSeconds() > 0.f ) {
 
             ThrustForward = true;
 

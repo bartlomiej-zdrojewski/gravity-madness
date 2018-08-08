@@ -58,7 +58,7 @@ void DebugModule::prepareTest ( ) {
     Game->AreaRadius = 500.f;
     Game->AsteroidCount = 0;
     Game->PowerUpLimit = 0;
-    Game->prepareAreaLimit();
+    Game->initAreaLimit();
 
     if ( TestIndex < 3 ) {
 

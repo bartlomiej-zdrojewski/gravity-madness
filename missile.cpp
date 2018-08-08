@@ -98,6 +98,10 @@ void Missile::render ( sf::RenderWindow &Window ) { // TODO
 
     }
 
+void Missile::onShot ( ) {
+
+    ExplosionTime -= sf::seconds( 0.5f ); }
+
 ParticleSystem * Missile::onCollision ( Planet * Other ) {
 
     auto * Explosion = new ParticleSystem ( );
@@ -119,7 +123,7 @@ ParticleSystem * Missile::onCollision ( Planet * Other ) {
 
 ParticleSystem * Missile::onCollision ( Asteroid * Other ) {
 
-    BodyCollision Collision ( BodyCollision::Types::Inelastic, this, Other );
+    BodyCollision Collision ( BodyCollision::Types::Inelastic, this, Other, 0.70f ); // 30% of kinetic energy is released
     auto * Explosion = new ParticleSystem ( );
     float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
     float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
@@ -140,7 +144,7 @@ ParticleSystem * Missile::onCollision ( Asteroid * Other ) {
 
 ParticleSystem * Missile::onCollision ( Spaceship * Other ) {
 
-    BodyCollision Collision ( BodyCollision::Types::Inelastic, this, Other );
+    BodyCollision Collision ( BodyCollision::Types::Inelastic, this, Other, 0.60f ); // 40% of kinetic energy is released
     auto * Explosion = new ParticleSystem ( );
     float Normal = PI + atan2f( Other->getPosition().y - getPosition().y, Other->getPosition().x - getPosition().x );
     float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
@@ -155,7 +159,8 @@ ParticleSystem * Missile::onCollision ( Spaceship * Other ) {
     Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) );
 
     Other->updateHealth( - ExplosionPower );
-    Other->updateHealth( - 0.25f * Collision.getReleasedEnergy() );
+    Other->updateHealth( - 10.f * Collision.getReleasedEnergy() );
+
     Other->setVelocity( Collision.getSecondVelocity() );
     destruct();
 

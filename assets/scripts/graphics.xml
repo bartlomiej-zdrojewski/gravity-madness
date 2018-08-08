@@ -87,13 +87,13 @@
         </Texture>
 
         <Texture>
-            <Name>power-up-low-energy</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpLowEnergy</Name>
+            <Path>power-up-low-energy.png</Path>
         </Texture>
 
         <Texture>
-            <Name>power-up-high-energy</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpHighEnergy</Name>
+            <Path>power-up-high-energy.png</Path>
         </Texture>
 
         <Texture>

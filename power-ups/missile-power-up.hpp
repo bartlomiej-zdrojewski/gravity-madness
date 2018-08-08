@@ -8,8 +8,8 @@ class MissilePowerUp : public PowerUp {
 
 public:
 
-    MissilePowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                     PowerUp ( Radius, sf::seconds( 60.f ), Gravity, AsteroidCount ) {
+    MissilePowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                     PowerUp ( sf::seconds( 60.f ), Gravity, AsteroidCount ) {
 
         Texture = Graphics->getTexture( "power-up-missile" ); }
 

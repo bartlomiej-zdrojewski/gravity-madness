@@ -8,8 +8,8 @@ class NoAsteroidsPowerUp : public PowerUp {
 
 public:
 
-    NoAsteroidsPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                         PowerUp ( Radius, sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+    NoAsteroidsPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                         PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
 
         Texture = Graphics->getTexture( "power-up-no-asteroids" );
         AsteroidModifier = true;

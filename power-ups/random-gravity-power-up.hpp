@@ -8,8 +8,8 @@ class RandomGravityPowerUp : public PowerUp {
 
 public:
 
-    RandomGravityPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                           PowerUp ( Radius, sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+    RandomGravityPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                           PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
 
         Texture = Graphics->getTexture( "power-up-random-gravity" );
         GravityModifier = true;

@@ -8,8 +8,8 @@ class LowGravityPowerUp : public PowerUp {
 
 public:
 
-    LowGravityPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                        PowerUp ( Radius, sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+    LowGravityPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                        PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
 
         Texture = Graphics->getTexture( "power-up-low-gravity" );
         GravityModifier = true;

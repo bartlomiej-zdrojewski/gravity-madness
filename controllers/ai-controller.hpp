@@ -24,7 +24,7 @@ public:
         TargetAngle = PI;
 
         MyPowerUp = nullptr;
-        PowerUpDistace = 1000000.f;
+        PowerUpDistance = 1000000.f;
         PowerUpAngle = PI;
 
         ClosestBodyDistance = 1000000.f;
@@ -61,7 +61,7 @@ protected:
     float TargetAngle;
 
     PowerUp * MyPowerUp;
-    float PowerUpDistace;
+    float PowerUpDistance;
     float PowerUpAngle;
 
     virtual void onSafeOrbit ( sf::Time ElapsedTime ) { };

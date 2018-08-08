@@ -86,7 +86,7 @@ private:
     void updateViews ( );
     void renderViewsOutline ( sf::RenderWindow &Window );
 
-    void prepareAreaLimit ( );
+    void initAreaLimit ( );
     void renderAreaLimit ( sf::RenderWindow &Window );
 
 private:
@@ -122,7 +122,6 @@ private:
     sf::Time PowerUpPauseDuration;
     PowerUp * GravityPowerUp;
     PowerUp * AsteroidPowerUp;
-    const float PowerUpRadius = 15.f;
 
     std::list <Planet*> Planets;
     std::list <Asteroid*> Asteroids;

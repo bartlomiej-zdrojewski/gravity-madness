@@ -8,10 +8,10 @@ class LowEnergyPowerUp : public PowerUp {
 
 public:
 
-    LowEnergyPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                       PowerUp ( Radius, sf::seconds( 60.f ), Gravity, AsteroidCount ) {
+    LowEnergyPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                       PowerUp ( sf::seconds( 60.f ), Gravity, AsteroidCount ) {
 
-        Texture = Graphics->getTexture( "power-up-low-energy" ); }
+        Texture = Graphics->getTexture( "PowerUpLowEnergy" ); }
 
 private:
 

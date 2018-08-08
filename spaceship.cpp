@@ -379,17 +379,17 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
 ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
     float Distance;
-    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.7f );
+    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.80f ); // 20% of kinetic energy is released
 
     setVelocity( Collision.getFirstVelocity() );
     Other->setVelocity( Collision.getSecondVelocity() );
 
-    updateHealth( - 0.5f * Collision.getReleasedEnergy() );
+    updateHealth( - 2.5f * Collision.getReleasedEnergy() );
 
-    if ( getVelocity() == sf::Vector2f( 0.f, 0.f ) && Other->getVelocity() == sf::Vector2f ( 0.f, 0.f ) ) {
+    if ( sf::Vector2i( (int) getVelocity().x, (int) getVelocity().y ) == sf::Vector2i( 0, 0 ) && sf::Vector2i( (int) Other->getVelocity().x, (int) Other->getVelocity().y ) == sf::Vector2i( 0, 0 ) ) {
 
-        setVelocity( sf::Vector2f( 1.f, 0.f ) );
-        Other->setVelocity( sf::Vector2f( - 1.f, 0.f ) ); }
+        setVelocity( sf::Vector2f( 1.f, 1.f ) );
+        Other->setVelocity( sf::Vector2f( - 1.f, - 1.f ) ); }
 
     do {
 
@@ -425,18 +425,18 @@ ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 ParticleSystem * Spaceship::onCollision ( Spaceship * Other ) {
 
     float Distance;
-    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.7f );
+    BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.70f ); // 30% of kinetic energy is released
 
     setVelocity( Collision.getFirstVelocity() );
     Other->setVelocity( Collision.getSecondVelocity() );
 
-    updateHealth( - 0.5f * Collision.getReleasedEnergy() );
-    Other->updateHealth( - 0.5f * Collision.getReleasedEnergy() );
+    updateHealth( - 2.5f * Collision.getReleasedEnergy() );
+    Other->updateHealth( - 2.5f * Collision.getReleasedEnergy() );
 
-    if ( getVelocity() == sf::Vector2f( 0.f, 0.f ) && Other->getVelocity() == sf::Vector2f ( 0.f, 0.f ) ) {
+    if ( sf::Vector2i( (int) getVelocity().x, (int) getVelocity().y ) == sf::Vector2i( 0, 0 ) && sf::Vector2i( (int) Other->getVelocity().x, (int) Other->getVelocity().y ) == sf::Vector2i( 0, 0 ) ) {
 
-        setVelocity( sf::Vector2f( 1.f, 0.f ) );
-        Other->setVelocity( sf::Vector2f( - 1.f, 0.f ) ); }
+        setVelocity( sf::Vector2f( 1.f, 1.f ) );
+        Other->setVelocity( sf::Vector2f( - 1.f, - 1.f ) ); }
 
     do {
 

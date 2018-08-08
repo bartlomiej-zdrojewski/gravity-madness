@@ -8,8 +8,8 @@ class MoreAsteroidsPowerUp : public PowerUp {
 
 public:
 
-    MoreAsteroidsPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                           PowerUp ( Radius, sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+    MoreAsteroidsPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                           PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
 
         Texture = Graphics->getTexture( "power-up-more-asteroids" );
         AsteroidModifier = true;

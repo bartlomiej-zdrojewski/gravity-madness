@@ -1,4 +1,4 @@
-#include <iostream>
+#include <iostream> // TODO TEMP
 #include "debug-module.hpp"
 #include "game-module.hpp"
 
@@ -72,14 +72,14 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
             break; } }
 
-    prepareAreaLimit();
+    initAreaLimit();
 
-    auto PlanetCount = (unsigned int) ( 2.f * powf( AreaRadius / 1000.f, 2 ) );
+    auto PlanetCount = (unsigned int) ( 0.10f * ( powf( AreaRadius, 2.f ) / powf( 200.f, 2.f ) ) ); // Average planet radius is ~ 200
 
     for ( unsigned int i = 0; i < PlanetCount; i++ ) {
 
-        float Mass = 1000.f * ( 1500.f + getRandomFloat() * 2000.f );
-        float Radius = sqrtf( Mass / PI / 35.f );
+        float Mass = 1000000.f * ( 4.f + getRandomFloat() * 2.f );
+        float Radius = cbrtf( ( Mass / 0.25f ) / ( PI * 0.75f ) ) * ( 0.75f + getRandomFloat() * 0.5f );
 
         auto NewPlanet = new Planet ( Mass, Radius );
         sf::Vector2f Position ( 1000000.f, 1000000.f );
@@ -466,7 +466,7 @@ void GameModule::reset ( ) {
     EndingCondition = false;
 
     Gravity = 1.f;
-    DetectionDistance = 750.f;
+    DetectionDistance = 600.f;
     AreaRadius = 1500.f;
     ScoreMultiplier = 1.f;
     PlayerCount = 0;
@@ -477,7 +477,7 @@ void GameModule::reset ( ) {
 
     PowerUpLimit = 10;
     PowerUpPauseDuration = sf::seconds( 2.f );
-    PowerUpPauseTime = sf::seconds( 30.f );
+    PowerUpPauseTime = sf::seconds( 2.f );
     GravityPowerUp = nullptr;
     AsteroidPowerUp = nullptr;
 
@@ -652,11 +652,23 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
                 TargetDistance = Distance;
                 TargetIntersection = Intersection; } } }
 
-    if ( AffectMissiles ) {
+    for ( auto ActiveMissile : Missiles ) {
 
-        // TODO DESTROY MISSILES
+        if ( RayShot.getIntersection( ActiveMissile->getPosition(), ActiveMissile->getRadius(), Intersection, Distance ) ) {
 
-        }
+            if ( Distance < TargetDistance ) {
+
+                Target = nullptr;
+                TargetDistance = Distance;
+                TargetIntersection = Intersection;
+
+                if ( AffectMissiles ) {
+
+                    ActiveMissile->onShot();
+
+                    // TODO PARTICLE EFFECT ON HIT
+
+                    } } } }
 
     for ( auto ActivePlanet : Planets ) {
 
@@ -765,7 +777,7 @@ PowerUp * GameModule::detectPowerUp ( Spaceship * Requester, float &Distance, fl
         float AngleDifference = atan2f( ActivePowerUp->getPosition().y - Requester->getPosition().y, ActivePowerUp->getPosition().x - Requester->getPosition().x );
         AngleDifference = Requester->normalizeAngle( Requester->getVelocityAngle() - AngleDifference );
 
-        if ( fabsf( AngleDifference ) <= ( PI / 6.f ) ) {
+        if ( fabsf( AngleDifference ) <= ( PI / 3.f ) ) {
 
             Distance = getDistance( Requester->getPosition(), ActivePowerUp->getPosition() );
 
@@ -816,8 +828,8 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         AsteroidPauseTime = AsteroidPauseDuration;
 
-        float Mass = 1000.f + getRandomFloat() * 9000.f;
-        float Radius = 2.f * cbrtf( Mass / 10.f ) * ( 0.75f + getRandomFloat() * 0.5f );
+        float Mass = 1000.f + getRandomFloat() * 14000.f;
+        float Radius = cbrtf( ( Mass / 1.f ) / ( PI * 0.75f ) ) * ( 0.75f + getRandomFloat() * 0.5f );
 
         auto * NewAsteroid = new Asteroid ( Graphics, Mass, Radius );
 
@@ -830,9 +842,10 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         Asteroids.push_back( NewAsteroid ); }
 
-    std::cout << Asteroids.size() << "/" << AsteroidCount << " " << AsteroidPauseTime.asSeconds();
-    if ( AsteroidPowerUp != nullptr ) std::cout << " POWER_UP";
-    std::cout << std::endl;
+    // TODO
+    //std::cout << Asteroids.size() << "/" << AsteroidCount << " " << AsteroidPauseTime.asSeconds();
+    //if ( AsteroidPowerUp != nullptr ) std::cout << " POWER_UP";
+    //std::cout << std::endl;
 
     // Update gravity acceleration, detect collisions with planets
 
@@ -965,7 +978,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
             Acceleration.x = Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().x - ActiveSpaceship->getPosition().x ) / ( Distance * Distance * Distance );
             Acceleration.y = Gravity * ActiveAsteroid->getMass() * ( ActiveAsteroid->getPosition().y - ActiveSpaceship->getPosition().y ) / ( Distance * Distance * Distance );
 
-            if ( ( Distance - ActiveAsteroid->getRadius() ) < ClosestBodyDistance ) {
+            if ( ( Distance - ActiveAsteroid->getRadius() ) < ClosestBodyDistance && ( Distance - ActiveAsteroid->getRadius() ) < 100.f ) {
 
                 ClosestBodyDistance = Distance - ActiveAsteroid->getRadius();
                 ClosestBodyAcceleration = Acceleration; }
@@ -1272,8 +1285,8 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
         PowerUpPauseTime = PowerUpPauseDuration;
 
         sf::Vector2f Position ( 1000000.f, 1000000.f );
-        float MinimumPlanetDistance = 150.f;
-        float MinimumPowerUpDistance = 50.f;
+        float MinimumPlanetDistance = 200.f;
+        float MinimumPowerUpDistance = 100.f;
         unsigned int Attempts = 25;
 
         while ( Attempts > 0 && Position == sf::Vector2f ( 1000000.f, 1000000.f ) ) {
@@ -1314,49 +1327,49 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
                 if ( Draw < 0.15f ) {
 
-                    NewPowerUp = new LowHealthPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); }
+                    NewPowerUp = new LowHealthPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
                 else {
 
-                    NewPowerUp = new HighHealthPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); } }
+                    NewPowerUp = new HighHealthPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 
             else if ( Draw < 0.6f ) { // Energy Power Ups
 
                 if ( Draw < 0.45f ) {
 
-                    NewPowerUp = new LowEnergyPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); }
+                    NewPowerUp = new LowEnergyPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
                 else {
 
-                    NewPowerUp = new HighEnergyPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); } }
+                    NewPowerUp = new HighEnergyPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 
             else if ( Draw < 0.9f ) { // Missile Power Ups
 
-                NewPowerUp = new MissilePowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); }
+                NewPowerUp = new MissilePowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
             else if ( Draw < 0.95f ) { // Asteroid Power Ups
 
                 if ( Draw < 0.925f ) {
 
-                    NewPowerUp = new NoAsteroidsPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); }
+                    NewPowerUp = new NoAsteroidsPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
                 else {
 
-                    NewPowerUp = new MoreAsteroidsPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); } }
+                    NewPowerUp = new MoreAsteroidsPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 
             else { // Gravity Power Ups
 
                 if ( Draw < 0.965f ) {
 
-                    NewPowerUp = new LowGravityPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); }
+                    NewPowerUp = new LowGravityPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
                 else if ( Draw < 0.98f ) {
 
-                    NewPowerUp = new HighGravityPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); }
+                    NewPowerUp = new HighGravityPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
                 else {
 
-                    NewPowerUp = new RandomGravityPowerUp ( Graphics, PowerUpRadius, &Gravity, &AsteroidCount ); } }
+                    NewPowerUp = new RandomGravityPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 
             NewPowerUp->setPosition( Position );
 
@@ -1538,7 +1551,7 @@ void GameModule::renderViewsOutline ( sf::RenderWindow &Window ) {
 
     Window.draw( &ViewsOutline[0], ViewsOutline.size(), sf::Lines ); }
 
-void GameModule::prepareAreaLimit ( ) {
+void GameModule::initAreaLimit ( ) {
 
     AreaLimit.resize( 1000 );
 

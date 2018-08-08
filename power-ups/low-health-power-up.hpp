@@ -8,8 +8,8 @@ class LowHealthPowerUp : public PowerUp {
 
 public:
 
-    LowHealthPowerUp ( GraphicsModule * Graphics, float Radius, float * Gravity, unsigned int * AsteroidCount ) :
-                       PowerUp ( Radius, sf::seconds( 60.f ), Gravity, AsteroidCount ) {
+    LowHealthPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
+                       PowerUp ( sf::seconds( 60.f ), Gravity, AsteroidCount ) {
 
         Texture = Graphics->getTexture( "power-up-low-health" ); }
 

@@ -1,6 +1,6 @@
 #include "power-up.hpp"
 
-PowerUp::PowerUp ( float Radius, sf::Time Duration, float * Gravity, unsigned int * AsteroidCount ) {
+PowerUp::PowerUp ( sf::Time Duration, float * Gravity, unsigned int * AsteroidCount ) {
 
     MySpaceship = nullptr;
     this->Gravity = Gravity;
@@ -10,7 +10,9 @@ PowerUp::PowerUp ( float Radius, sf::Time Duration, float * Gravity, unsigned in
     Expired = false;
     GravityModifier = false;
     AsteroidModifier = false;
-    this->Radius = Radius;
+
+    FadeDuration = sf::seconds( 1.f );
+    OscillationFrequency = sf::Vector2f( 0.25f + getRandomFloat() * 0.25f, 0.25f + getRandomFloat() * 0.25f );
     ExistenceTime = Duration; }
 
 bool PowerUp::isCaught ( ) {
@@ -41,11 +43,17 @@ float PowerUp::getRadius ( ) {
 
     return Radius; }
 
-void PowerUp::setRadius ( float Radius ) {
-
-    this->Radius = Radius; }
-
 void PowerUp::update ( sf::Time ElapsedTime ) {
+
+    OscillationTime += ElapsedTime;
+
+    if ( FadeTime < FadeDuration ) {
+
+        FadeTime += ElapsedTime; }
+
+    else {
+
+        FadeTime = FadeDuration; }
 
     if ( !Expired ) {
 
@@ -65,24 +73,21 @@ void PowerUp::render ( sf::RenderWindow &Window ) {
 
     if ( !Caught ) {
 
-        // TODO TEMP ->
-        sf::CircleShape Circle;
-        Circle.setRadius( getRadius() );
-        Circle.setOrigin( getRadius(), getRadius() );
-        Circle.setPosition( getPosition() );
-        Circle.setFillColor( sf::Color( 0, 255, 0 ) );
-        Window.draw( Circle );
-        // -> TEMP
-
         sf::Sprite Sprite ( Texture );
 
         Sprite.setOrigin( Texture.getSize().x / 2.f, Texture.getSize().y / 2.f );
         Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
-        Sprite.setPosition( getPosition() );
+        Sprite.setPosition( getPosition() + getRadius() * sf::Vector2f( cosf( PI * OscillationTime.asSeconds() * OscillationFrequency.x ), sinf( PI * OscillationTime.asSeconds() * OscillationFrequency.y ) ) );
 
-        // TODO Window.draw( Sprite );
+        if ( FadeTime <= FadeDuration ) {
 
-        } }
+            Sprite.setColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255 * FadeTime.asSeconds() / FadeDuration.asSeconds() ) ) ); }
+
+        else if ( ExistenceTime <= FadeDuration ) {
+
+            Sprite.setColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255 * ExistenceTime.asSeconds() / FadeDuration.asSeconds() ) ) ); }
+
+        Window.draw( Sprite ); } }
 
 void PowerUp::finish ( ) {
 

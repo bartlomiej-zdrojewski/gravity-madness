@@ -8,7 +8,7 @@ class PowerUp {
 
 public:
 
-    PowerUp ( float Radius, sf::Time Duration, float * Gravity, unsigned int * AsteroidCount );
+    PowerUp ( sf::Time Duration, float * Gravity, unsigned int * AsteroidCount );
 
     bool isCaught ( );
     bool isExpired ( );
@@ -20,7 +20,6 @@ public:
     void setPosition ( sf::Vector2f Position );
 
     float getRadius ( );
-    void setRadius ( float Radius );
 
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
@@ -52,8 +51,13 @@ protected:
 
 private:
 
-    float Radius;
     sf::Vector2f Position;
+    const float Radius = 16.f;
+
+    sf::Time FadeTime;
+    sf::Time FadeDuration;
+    sf::Time OscillationTime;
+    sf::Vector2f OscillationFrequency;
     sf::Time ExistenceTime;
 
     };
