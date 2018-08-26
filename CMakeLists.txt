@@ -10,7 +10,7 @@ if(WIN32) # TODO fix version 2.2
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
     set(SFML_STATIC_LIBRARIES TRUE)
 
-    #SET(GUI_TYPE WIN32) # Comment to launch with the console
+    #set(GUI_TYPE WIN32) # Comment to launch with the console
     set(SFML_PATH "C:/Development/SFML-2.5.0-64") # Put your own path to SFML 2.x directory
 
     if(EXISTS ${SFML_PATH})

@@ -11,7 +11,7 @@ public:
     HighHealthPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
                         PowerUp ( sf::seconds( 60.f ), Gravity, AsteroidCount ) {
 
-        Texture = Graphics->getTexture( "power-up-high-health" ); }
+        Texture = Graphics->getTexture( "PowerUpHighHealth" ); }
 
 private:
 

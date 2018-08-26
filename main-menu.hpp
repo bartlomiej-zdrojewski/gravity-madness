@@ -81,6 +81,7 @@ private:
     unsigned int WindowHeight;
     bool FullScreen;
     unsigned int AntialiasingLevel;
+    bool EpilepsyProtection;
 
     unsigned int MenuOption;
     unsigned int MenuOptionCount;
@@ -100,9 +101,9 @@ private:
 
     unsigned int SettingsOption;
     unsigned int SettingsOptionCount;
-    std::string SettingsOptionText [7];
+    std::string SettingsOptionText [9];
     unsigned int SettingsOptionFontSize;
-    sf::Vector2f SettingsOptionPosition [7];
+    sf::Vector2f SettingsOptionPosition [9];
 
     std::vector <sf::Vertex> ControllersTable;
     std::vector <sf::Text> ControllersTableHeader;

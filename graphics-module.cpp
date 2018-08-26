@@ -249,6 +249,18 @@ void GraphicsModule::disableFullScreen ( ) {
 
     FullScreen = false; }
 
+bool GraphicsModule::isEpilepsyProtectionEnabled ( ) {
+
+    return EpilepsyProtection; }
+
+void GraphicsModule::enableEpilepsyProtection ( ) {
+
+    EpilepsyProtection = true; }
+
+void GraphicsModule::disableEpilepsyProtection ( ) {
+
+    EpilepsyProtection = false; }
+
 unsigned int GraphicsModule::getAntialiasingLevel ( ) {
 
     return AntialiasingLevel; }

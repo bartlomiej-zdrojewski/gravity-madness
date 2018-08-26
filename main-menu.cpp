@@ -30,11 +30,12 @@ MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
     GameplayOptionText[1][2] = "Enemies personality";
     GameplayOptionText[1][3] = "Show the spaceships!";
 
-    SettingsOptionCount = 4;
+    SettingsOptionCount = 5;
     SettingsOptionText[0] = "Resolution";
     SettingsOptionText[1] = "Fullscreen";
     SettingsOptionText[2] = "Antialiasing";
-    SettingsOptionText[3] = "Check out controllers!";
+    SettingsOptionText[3] = "Epilepsy protection";
+    SettingsOptionText[4] = "Check out controllers!";
 
     BackgroundPauseDuration = sf::seconds( 2.f );
     BackgroundPauseTime = BackgroundPauseDuration;
@@ -174,6 +175,7 @@ void MainMenu::reset ( ) {
     WindowHeight = Graphics->getWindowHeight();
     FullScreen = Graphics->isFullScreenEnabled();
     AntialiasingLevel = Graphics->getAntialiasingLevel();
+    EpilepsyProtection = Graphics->isEpilepsyProtectionEnabled();
 
     MenuOption = 0;
     GameplayPage = 0;
@@ -237,6 +239,7 @@ bool MainMenu::onVideoChanged ( ) {
         Graphics->setWindowSize( WindowWidth, WindowHeight );
         FullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
         Graphics->setAntialiasingLevel( AntialiasingLevel );
+
         reset();
 
         VideoChanged = false;
@@ -248,6 +251,11 @@ bool MainMenu::onVideoChanged ( ) {
 bool MainMenu::onSettingsChanged ( ) {
 
     if ( SettingsChanged && getMode() != Modes::SettingsMode && getMode() != Modes::ControllersMode ) {
+
+        Graphics->setWindowSize( WindowWidth, WindowHeight );
+        FullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
+        Graphics->setAntialiasingLevel( AntialiasingLevel );
+        EpilepsyProtection ? Graphics->enableEpilepsyProtection() : Graphics->disableEpilepsyProtection();
 
         SettingsChanged = false;
 
@@ -1092,7 +1100,8 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
 void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
     SettingsOptionText[ SettingsOptionCount + 0 ] = std::to_string( WindowWidth ) + " x " + std::to_string( WindowHeight );
-    SettingsOptionText[ SettingsOptionCount + 1 ] = FullScreen ? "true" : "false";
+    SettingsOptionText[ SettingsOptionCount + 1 ] = FullScreen ? "enable" : "disable";
+    SettingsOptionText[ SettingsOptionCount + 3 ] = EpilepsyProtection ? "enable" : "disable";
 
     if ( AntialiasingLevel == 0 ) {
 
@@ -1248,7 +1257,7 @@ void MainMenu::updateSettingsSection ( sf::Event &Event ) {
 
             case sf::Keyboard::Return: {
 
-                if ( SettingsOption == 3 ) {
+                if ( SettingsOption == 4 ) {
 
                     setMode( Modes::ControllersMode ); }
 
@@ -1379,6 +1388,14 @@ void MainMenu::updateSettingsSection_BindLeft ( ) {
 
             break; }
 
+        case 3: {
+
+            EpilepsyProtection = !EpilepsyProtection;
+
+            SettingsChanged = true;
+
+            break; }
+
         default: {
 
             break; } } }
@@ -1476,6 +1493,14 @@ void MainMenu::updateSettingsSection_BindRight ( ) {
                     break; } }
 
             VideoChanged = true;
+            SettingsChanged = true;
+
+            break; }
+
+        case 3: {
+
+            EpilepsyProtection = !EpilepsyProtection;
+
             SettingsChanged = true;
 
             break; }

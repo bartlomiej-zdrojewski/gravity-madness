@@ -16,6 +16,7 @@ public:
         WindowWidth = 0;
         WindowHeight = 0;
         FullScreen = false;
+        EpilepsyProtection = false;
         AntialiasingLevel = 0;
 
         initDefault(); }
@@ -32,6 +33,10 @@ public:
     bool isFullScreenEnabled ( );
     void enableFullScreen ( );
     void disableFullScreen ( );
+
+    bool isEpilepsyProtectionEnabled ( );
+    void enableEpilepsyProtection ( );
+    void disableEpilepsyProtection ( );
 
     unsigned int getAntialiasingLevel ( );
     void setAntialiasingLevel ( unsigned int AntialiasingLevel );
@@ -62,6 +67,7 @@ private:
     unsigned int WindowWidth;
     unsigned int WindowHeight;
     bool FullScreen;
+    bool EpilepsyProtection;
     unsigned int AntialiasingLevel;
 
     std::unordered_map <std::string, sf::Texture*> Textures;

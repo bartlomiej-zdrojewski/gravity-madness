@@ -20,6 +20,7 @@ public:
     void setPosition ( sf::Vector2f Position );
 
     float getRadius ( );
+    float getInfluenceRadius ( );
 
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );

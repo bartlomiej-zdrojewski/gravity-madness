@@ -8,6 +8,7 @@
     <WindowHeight>600</WindowHeight>
     <FullScreen>false</FullScreen>
     <Antialiasing>4</Antialiasing>
+    <EpilepsyProtection>false</EpilepsyProtection>
     <Controllers>KEYBOARD,W,S,A,D,SPACE,Q|KEYBOARD,UP,DOWN,LEFT,RIGHT,NUM_0,CONTROL_RIGHT|KEYBOARD,NONE,NONE,NONE,NONE,NONE,NONE|KEYBOARD,NONE,NONE,NONE,NONE,NONE,NONE</Controllers>
     <HighScore>0</HighScore>
     <Debug>false</Debug>

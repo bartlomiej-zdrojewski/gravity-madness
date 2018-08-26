@@ -7,6 +7,15 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
     MySpaceship = nullptr;
     Viewport = sf::FloatRect( 0.f, 0.f, Graphics->getWindowWidth(), Graphics->getWindowHeight() );
 
+    Health = 0;
+    HealthLimit = 100;
+    Energy = 0;
+    EnergyLimit = 100;
+
+    MissileCount = 0;
+    MissileLimit = 3;
+    MissileTexture = Graphics->getTexture( "MissileIcon" );
+
     ActivatedOpacity = 0.87f;
     UnactivatedOpacity = 0.34f;
     TransitionDuration = sf::seconds( 0.3f );
@@ -20,10 +29,9 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
     FadeOutDelay = sf::seconds( 3.f );
     FadeOutDuration = sf::seconds( 8.f );
 
-    Health = 0;
-    HealthLimit = 100;
-    Energy = 0;
-    EnergyLimit = 100;
+    DamageFade = false;
+    DamageFadeTime = sf::seconds( 0.f );
+    DamageFadeDuration = sf::seconds( 0.5f );
 
     }
 
@@ -44,11 +52,42 @@ void PlayerInterface::beginFadeOut ( ) {
 
     FadeOut = true; }
 
+void PlayerInterface::endFadeOut ( ) {
+
+    FadeOut = true;
+    float FadeAlpha = 0.f;
+
+    if ( FadeOutTime > FadeOutDelay ) {
+
+        FadeAlpha = ( FadeOutTime.asSeconds() - FadeOutDelay.asSeconds() ) / ( FadeOutDuration.asSeconds() - FadeOutDelay.asSeconds() ); }
+
+    FadeOutDuration = FadeOutDelay + sf::seconds( 1.f );
+    FadeOutTime = FadeOutDelay + sf::seconds( FadeAlpha ); }
+
 bool PlayerInterface::isFadedOut ( ) {
 
     return ( FadeOutTime >= ( FadeOutDuration + sf::seconds( 1.f ) ) ); }
 
 void PlayerInterface::update ( sf::Time ElapsedTime ) {
+
+    if ( MySpaceship ) {
+
+        Health = MySpaceship->getHealth();
+        HealthLimit = MySpaceship->getHealthLimit();
+
+        Energy = MySpaceship->getEnergy();
+        EnergyLimit = MySpaceship->getEnergyLimit();
+
+        MissileCount = MySpaceship->getMissileCount();
+        MissileLimit = MySpaceship->getMissileLimit(); }
+
+    if ( DamageFade ) {
+
+        DamageFadeTime -= ElapsedTime;
+
+        if ( DamageFadeTime.asSeconds() <= 0.f ) {
+
+            DamageFade = false; } }
 
     if ( FadeIn ) {
 
@@ -62,16 +101,9 @@ void PlayerInterface::update ( sf::Time ElapsedTime ) {
 
         FadeOutTime += ElapsedTime; }
 
-    if ( MySpaceship ) {
-
-        Health = MySpaceship->getHealth();
-        HealthLimit = MySpaceship->getHealthLimit();
-
-        Energy = MySpaceship->getEnergy();
-        EnergyLimit = MySpaceship->getEnergyLimit(); }
-
     updateHealthBar( ElapsedTime );
     updateEnergyBar( ElapsedTime );
+    updateMissileTab( ElapsedTime );
     // ...
 
     }
@@ -80,15 +112,14 @@ void PlayerInterface::render ( sf::RenderWindow &Window ) {
 
     renderHealthBar( Window );
     renderEnergyBar( Window );
-    renderMissileBar( Window );
-    renderScoreBar( Window );
+    renderMissileTab( Window );
+    renderScoreTab( Window );
     renderFade( Window ); }
 
-void PlayerInterface::onShot ( ) {
+void PlayerInterface::onDamage ( ) {
 
-    // TODO
-
-    }
+    DamageFade = true;
+    DamageFadeTime = DamageFadeDuration; }
 
 void PlayerInterface::updateHealthBar ( sf::Time ElapsedTime ) {
 
@@ -97,11 +128,13 @@ void PlayerInterface::updateHealthBar ( sf::Time ElapsedTime ) {
 
     if ( Viewport.height < 600.f ) {
 
-        ElementSize = 8.f; }
+        ElementSize = 8.f;
+        ElementMargin = 4.f; }
 
     else if ( Viewport.height > 800 ) {
 
-        ElementSize = 15.f; }
+        ElementSize = 15.f;
+        ElementMargin = 6.f; }
 
     updateBar( ElapsedTime, HealthBarOpacity, 15.f, ElementSize, ElementMargin, Health, HealthLimit ); }
 
@@ -112,13 +145,49 @@ void PlayerInterface::updateEnergyBar ( sf::Time ElapsedTime ) {
 
     if ( Viewport.height < 600.f ) {
 
-        ElementSize = 8.f; }
+        ElementSize = 8.f;
+        ElementMargin = 4.f; }
 
     else if ( Viewport.height > 800.f ) {
 
-        ElementSize = 15.f; }
+        ElementSize = 15.f;
+        ElementMargin = 6.f; }
 
     updateBar( ElapsedTime, EnergyBarOpacity, 15.f, ElementSize, ElementMargin, Energy, EnergyLimit ); }
+
+void PlayerInterface::updateMissileTab ( sf::Time ElapsedTime ) {
+
+    if ( MissileTabOpacity.size() != MissileLimit ) {
+
+        MissileTabOpacity.resize( MissileLimit );
+
+        for ( unsigned int i = 0; i < MissileLimit; i++ ) {
+
+            MissileTabOpacity[i] = UnactivatedOpacity; } }
+
+    for ( unsigned int i = 0; i < MissileCount; i++ ) {
+
+        if ( MissileTabOpacity[i] < ActivatedOpacity ) {
+
+            MissileTabOpacity[i] += ( ActivatedOpacity - UnactivatedOpacity ) * ( ElapsedTime.asSeconds() / TransitionDuration.asSeconds() ); }
+
+        else {
+
+            MissileTabOpacity[i] = ActivatedOpacity; } }
+
+    for ( unsigned int i = MissileCount; i < MissileLimit; i++ ) {
+
+        if ( MissileTabOpacity[i] > UnactivatedOpacity ) {
+
+            MissileTabOpacity[i] -= ( ActivatedOpacity - UnactivatedOpacity ) * ( ElapsedTime.asSeconds() / TransitionDuration.asSeconds() ); }
+
+        else {
+
+            MissileTabOpacity[i] = UnactivatedOpacity; } }
+
+
+
+    }
 
 void PlayerInterface::renderHealthBar ( sf::RenderWindow &Window ) {
 
@@ -127,11 +196,13 @@ void PlayerInterface::renderHealthBar ( sf::RenderWindow &Window ) {
 
     if ( Viewport.height < 600.f ) {
 
-        ElementSize = sf::Vector2f ( 20.f, 8.f ); }
+        ElementSize = sf::Vector2f ( 20.f, 8.f );
+        ElementMargin = sf::Vector2f ( 20.f, 4.f ); }
 
     else if ( Viewport.height > 800.f ) {
 
-        ElementSize = sf::Vector2f ( 40.f, 15.f ); }
+        ElementSize = sf::Vector2f ( 40.f, 15.f );
+        ElementMargin = sf::Vector2f ( 20.f, 6.f ); }
 
     renderBar( Window, HealthBarOpacity, sf::Color( 255, 23, 68 ), sf::Vector2f( 15.f, 15.f ), ElementSize, ElementMargin ); }
 
@@ -142,21 +213,46 @@ void PlayerInterface::renderEnergyBar ( sf::RenderWindow &Window ) {
 
     if ( Viewport.height < 600.f ) {
 
-        ElementSize = sf::Vector2f ( 20.f, 8.f ); }
+        ElementSize = sf::Vector2f ( 20.f, 8.f );
+        ElementMargin = sf::Vector2f ( 20.f, 4.f ); }
 
     else if ( Viewport.height > 800 ) {
 
-        ElementSize = sf::Vector2f ( 40.f, 15.f ); }
+        ElementSize = sf::Vector2f ( 40.f, 15.f );
+        ElementMargin = sf::Vector2f ( 20.f, 6.f ); }
 
     renderBar( Window, EnergyBarOpacity, sf::Color( 61, 90, 254 ), sf::Vector2f( ElementSize.x + ElementMargin.y + 15.f, 15.f ), ElementSize, ElementMargin ); }
 
-void PlayerInterface::renderMissileBar ( sf::RenderWindow &Window ) {
+void PlayerInterface::renderMissileTab ( sf::RenderWindow &Window ) {
 
-    // ...
+    float ElementSize = 40.f;
+    float ElementMargin = 5.f;
 
-    }
+    if ( Viewport.height < 600.f ) {
 
-void PlayerInterface::renderScoreBar ( sf::RenderWindow &Window ) {
+        ElementSize = 30.f;
+        ElementMargin = 3.f; }
+
+    else if ( Viewport.height > 800.f ) {
+
+        ElementSize = 60.f;
+        ElementMargin = 7.f; }
+
+    sf::Sprite MissileSprite ( MissileTexture );
+
+    MissileSprite.setScale( ElementSize / MissileTexture.getSize().x, ElementSize / MissileTexture.getSize().y );
+    MissileSprite.setPosition( sf::Vector2f( Viewport.left + Viewport.width - 15.f, Viewport.top + Viewport.height - 15.f - ElementSize ) );
+
+    for ( unsigned int i = 0; i < MissileTabOpacity.size(); i++ ) {
+
+        MissileSprite.move( sf::Vector2f( - ElementSize, 0.f ) );
+
+        MissileSprite.setColor( sf::Color( 255, 255, 255, (sf::Uint8) ( MissileTabOpacity[i] * 255 ) ) );
+        Window.draw( MissileSprite );
+
+        MissileSprite.move( sf::Vector2f( - ElementMargin, 0.f ) ); } }
+
+void PlayerInterface::renderScoreTab ( sf::RenderWindow &Window ) {
 
     // ...
 
@@ -168,6 +264,14 @@ void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
 
     Fade.setPosition( Viewport.left, Viewport.top );
     Fade.setSize( sf::Vector2f( Viewport.width, Viewport.height ) );
+
+    if ( DamageFade ) {
+
+        Fade.setFillColor( sf::Color( 255, 0, 0, (sf::Uint8) ( 200.f * DamageFadeTime.asSeconds() / DamageFadeDuration.asSeconds() ) ) );
+
+        if ( !Graphics->isEpilepsyProtectionEnabled() ) {
+
+            Window.draw( Fade ); } }
 
     if ( FadeIn ) {
 

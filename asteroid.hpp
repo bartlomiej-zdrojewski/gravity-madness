@@ -48,7 +48,7 @@ public:
 
 private:
 
-    float getRandomFloat ( );
+    static float getRandomFloat ( );
 
 private:
 

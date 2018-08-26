@@ -45,7 +45,7 @@ want to expand the project, you can update it by editing files in
 
 ## Copyright & License
 
-Copyright 2018 Bartłomiej Zdrojewski
+Copyright (c) 2018 Bartłomiej Zdrojewski
 
 Licensed under the Apache License, Version 2.0. Details can be found in
 the `LICENSE` file.

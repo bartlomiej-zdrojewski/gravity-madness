@@ -146,7 +146,7 @@ void DebugModule::prepareTest ( ) {
 
 Planet * DebugModule::getPlanet ( ) {
 
-    auto * NewPlanet = new Planet ( 2500.f, 100.f );
+    auto * NewPlanet = new Planet ( Graphics, 2500.f, 100.f );
 
     return NewPlanet; }
 

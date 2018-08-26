@@ -70,6 +70,9 @@ private:
     bool isOnScreen ( sf::Vector2f Center, float Radius );
     bool isOnScreen ( sf::FloatRect Area );
 
+    unsigned int getAlivePlayerCount ( );
+    int getLastAlivePlayer ( );
+
     Spaceship * getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection, bool AffectMissiles = true );
     Spaceship * getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle );
     Spaceship * getAngularTarget ( Missile * Requester, float MaximumAngle );
@@ -103,6 +106,7 @@ private:
     float AreaRadius;
     sf::Time GameplayTime;
     float ScoreMultiplier;
+    sf::Time SkipProtectionTime;
 
     unsigned int PlayerCount;
     const static int MaximumPlayerCount = 4;

@@ -43,6 +43,10 @@ float PowerUp::getRadius ( ) {
 
     return Radius; }
 
+float PowerUp::getInfluenceRadius ( ) {
+
+    return ( 1.5f * Radius ); }
+
 void PowerUp::update ( sf::Time ElapsedTime ) {
 
     OscillationTime += ElapsedTime;

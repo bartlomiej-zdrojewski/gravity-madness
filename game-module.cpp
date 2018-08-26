@@ -38,21 +38,25 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
         case GameplaySettings::AsteroidFrequencies::Occasionally: {
 
-            AsteroidCount = (unsigned int) ( 4.f * powf( AreaRadius / 1000.f, 2 ) );
+            AsteroidCount = (unsigned int) ( 3.f * powf( AreaRadius / 1000.f, 2 ) );
 
             break; }
 
         case GameplaySettings::AsteroidFrequencies::Often: {
 
-            AsteroidCount = (unsigned int) ( 6.f * powf( AreaRadius / 1000.f, 2 ) );
+            AsteroidCount = (unsigned int) ( 4.f * powf( AreaRadius / 1000.f, 2 ) );
 
             break; }
 
         default: {
 
-            AsteroidCount = (unsigned int) ( 2.f * powf( AreaRadius / 1000.f, 2 ) );
+            AsteroidCount = (unsigned int) ( 3.f * powf( AreaRadius / 1000.f, 2 ) );
 
             break; } }
+
+    if ( AsteroidCount >= 25 ) {
+
+        AsteroidPauseDuration = sf::seconds( 0.5f ); }
 
     switch ( Gameplay->getAIPersonality() ) {
 
@@ -81,7 +85,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         float Mass = 1000000.f * ( 4.f + getRandomFloat() * 2.f );
         float Radius = cbrtf( ( Mass / 0.25f ) / ( PI * 0.75f ) ) * ( 0.75f + getRandomFloat() * 0.5f );
 
-        auto NewPlanet = new Planet ( Mass, Radius );
+        auto NewPlanet = new Planet ( Graphics, Mass, Radius );
         sf::Vector2f Position ( 1000000.f, 1000000.f );
 
         unsigned int Attempts = 25;
@@ -252,78 +256,74 @@ void GameModule::update ( ) {
 
             Interface[i]->update( ElapsedTime ); } }
 
-    if ( Gameplay && !EndingCondition ) {
+    if ( Gameplay ) {
 
-        unsigned int AlivePlayers = 0;
-        int LastAlivePlayer = -1;
+        if ( !EndingCondition ) {
 
-        for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+            if ( getAlivePlayerCount() == 0 ) {
 
-            if ( PlayerSpaceship[i] ) {
+                EndingCondition = true; }
 
-                AlivePlayers++;
-                LastAlivePlayer = i; } }
+            else {
 
-        if ( !AlivePlayers ) {
+                switch ( Gameplay->getEndingCondition() ) {
 
-            EndingCondition = true; }
+                    case GameplaySettings::EndingConditions::Time: {
+
+                        if ( GameplayTime.asSeconds() <= 0.f ) {
+
+                            EndingCondition = true;
+                            Gameplay->setWinner( getLastAlivePlayer() ); }
+
+                        break; }
+
+                    case GameplaySettings::EndingConditions::NoEnemies: {
+
+                        if ( getAlivePlayerCount() == Spaceships.size() ) {
+
+                            EndingCondition = true; }
+
+                        break; }
+
+                    case GameplaySettings::EndingConditions::LastPlayer: {
+
+                        if ( getAlivePlayerCount() == 1 ) {
+
+                            EndingCondition = true;
+                            Gameplay->setWinner( getLastAlivePlayer() ); }
+
+                        break; }
+
+                    case GameplaySettings::EndingConditions::LastSpaceship: {
+
+                        if ( getAlivePlayerCount() == 1 && Spaceships.size() == 1 ) {
+
+                            EndingCondition = true;
+                            Gameplay->setWinner( getLastAlivePlayer() ); }
+
+                        break; }
+
+                    default: {
+
+                        break; } } }
+
+            if ( EndingCondition ) {
+
+                auto * ScoreCopy = new unsigned int [ PlayerCount ];
+
+                for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                    ScoreCopy[i] = PlayerScore[i];
+
+                    if ( !Interface[i]->isFadedOut() ) {
+
+                        Interface[i]->beginFadeOut(); } }
+
+                Gameplay->setScore( ScoreCopy ); } }
 
         else {
 
-            switch ( Gameplay->getEndingCondition() ) {
-
-                case GameplaySettings::EndingConditions::Time: {
-
-                    if ( GameplayTime.asSeconds() <= 0.f ) {
-
-                        EndingCondition = true;
-                        Gameplay->setWinner( LastAlivePlayer ); }
-
-                    break; }
-
-                case GameplaySettings::EndingConditions::NoEnemies: {
-
-                    if ( AlivePlayers == Spaceships.size() ) {
-
-                        EndingCondition = true; }
-
-                    break; }
-
-                case GameplaySettings::EndingConditions::LastPlayer: {
-
-                    if ( AlivePlayers == 1 ) {
-
-                        EndingCondition = true;
-                        Gameplay->setWinner( LastAlivePlayer ); }
-
-                    break; }
-
-                case GameplaySettings::EndingConditions::LastSpaceship: {
-
-                    if ( AlivePlayers == 1 && Spaceships.size() == 1 ) {
-
-                        EndingCondition = true;
-                        Gameplay->setWinner( LastAlivePlayer ); }
-
-                    break; }
-
-                default: {
-
-                    break; } } }
-
-        if ( EndingCondition ) {
-
-            auto * ScoreCopy = new unsigned int [ PlayerCount ];
-
-            for ( unsigned int i = 0; i < PlayerCount; i++ ) {
-
-                ScoreCopy[i] = PlayerScore[i];
-
-                if ( !Interface[i]->isFadedOut() ) {
-
-                    Interface[i]->beginFadeOut(); } }
-
-            Gameplay->setScore( ScoreCopy ); } } }
+            SkipProtectionTime -= ElapsedTime; } } }
 
 void GameModule::update ( sf::Event &Event ) {
 
@@ -342,6 +342,19 @@ void GameModule::update ( sf::Event &Event ) {
                 Pause = true;
 
                 return; } } }
+
+    else if ( SkipProtectionTime.asSeconds() <= 0.f ) {
+
+        if ( Event.type == sf::Event::KeyPressed ) {
+
+            if ( Event.key.code == sf::Keyboard::Escape || Event.key.code == sf::Keyboard::Enter ||
+                 Event.key.code == sf::Keyboard::Space ) {
+
+                for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                    if ( !Interface[i]->isFadedOut() ) {
+
+                        Interface[i]->endFadeOut(); } } } } }
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -469,10 +482,11 @@ void GameModule::reset ( ) {
     DetectionDistance = 600.f;
     AreaRadius = 1500.f;
     ScoreMultiplier = 1.f;
+    SkipProtectionTime = sf::seconds( 0.5f );
     PlayerCount = 0;
 
-    AsteroidCount = 5;
-    AsteroidPauseDuration = sf::seconds( 2.f );
+    AsteroidCount = 18;
+    AsteroidPauseDuration = sf::seconds( 1.f );
     AsteroidPauseTime = sf::seconds( 2.f );
 
     PowerUpLimit = 10;
@@ -628,6 +642,30 @@ bool GameModule::isOnScreen ( sf::FloatRect Area ) { // TODO
     return true;
 
     }
+
+unsigned int GameModule::getAlivePlayerCount ( ) {
+
+    unsigned int AlivePlayers = 0;
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        if ( PlayerSpaceship[i] ) {
+
+            AlivePlayers++; } }
+
+    return AlivePlayers; }
+
+int GameModule::getLastAlivePlayer ( ) {
+
+    int LastAlivePlayer = -1;
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        if ( PlayerSpaceship[i] ) {
+
+            LastAlivePlayer = i; } }
+
+    return LastAlivePlayer; }
 
 Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection, bool AffectMissiles ) {
 
@@ -993,7 +1031,17 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     if ( Explosion ) {
 
-                        ParticleSystems.push_back( Explosion ); } } } }
+                        ParticleSystems.push_back( Explosion ); }
+
+                    if ( isPlayer( ActiveSpaceship ) ) {
+
+                        for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                            if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                                Interface[i]->onDamage();
+
+                                break; } } } } } }
 
         if ( !isPlayer( ActiveSpaceship ) && ActiveSpaceship->getController() != nullptr ) {
 
@@ -1036,7 +1084,27 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                         if ( Explosion ) {
 
-                            ParticleSystems.push_back( Explosion ); } } } } } }
+                            ParticleSystems.push_back( Explosion ); }
+
+                        if ( isPlayer( FirstSpaceship ) ) {
+
+                            for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                                if ( PlayerSpaceship[i] == FirstSpaceship ) {
+
+                                    Interface[i]->onDamage();
+
+                                    break; } } }
+
+                        if ( isPlayer( SecondSpaceship ) ) {
+
+                            for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                                if ( PlayerSpaceship[i] == SecondSpaceship ) {
+
+                                    Interface[i]->onDamage();
+
+                                    break; } } } } } } } }
 
     // Update spaceships' state and spaceship controllers
 
@@ -1102,9 +1170,9 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-                        if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+                        if ( PlayerSpaceship[i] == Target ) {
 
-                            Interface[i]->onShot();
+                            Interface[i]->onDamage();
 
                             break; } } }
 
@@ -1220,7 +1288,19 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
                     if ( Explosion ) {
 
-                        ParticleSystems.push_back( Explosion ); } } } } }
+                        ParticleSystems.push_back( Explosion ); }
+
+                    if ( isPlayer( ActiveSpaceship ) ) {
+
+                        for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                            if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                                Interface[i]->onDamage();
+
+                                break; } } }
+
+                    } } } }
 
     // Detect collisions between missiles
 
@@ -1383,7 +1463,7 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
             for ( auto ActiveSpaceship : Spaceships ) {
 
-                float MinimumDistance = ActivePowerUp->getRadius() + ActiveSpaceship->getRadius();
+                float MinimumDistance = ActivePowerUp->getInfluenceRadius() + ActiveSpaceship->getRadius();
 
                 if ( getMinDistance( ActivePowerUp->getPosition(), ActiveSpaceship->getPosition() ) <= MinimumDistance ) {
 

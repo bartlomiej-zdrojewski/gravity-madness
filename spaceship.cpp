@@ -60,6 +60,7 @@ void Spaceship::updateHealth ( float DeltaHealth ) {
 
         Health = 0.f;
         Energy = 0.f;
+        MissileCount = 0;
 
         destruct(); }
 

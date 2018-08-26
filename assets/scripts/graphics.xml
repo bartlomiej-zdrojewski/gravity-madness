@@ -7,6 +7,11 @@
         <Path>assets/graphics/textures/</Path>
 
         <Texture>
+            <Name>MissileIcon</Name>
+            <Path>missile-icon.png</Path>
+        </Texture>
+
+        <Texture>
             <Name>Thruster</Name>
             <Path>thruster.png</Path>
         </Texture>
@@ -77,13 +82,13 @@
         </Texture>
 
         <Texture>
-            <Name>power-up-low-health</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpLowHealth</Name>
+            <Path>power-up-low-health.png</Path>
         </Texture>
 
         <Texture>
-            <Name>power-up-high-health</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpHighHealth</Name>
+            <Path>power-up-high-health.png</Path>
         </Texture>
 
         <Texture>

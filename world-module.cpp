@@ -418,6 +418,7 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
     InitWindowHeight = 0;
     InitAntialiasing = 0;
     InitFullScreen = false;
+    InitEpilepsyProtection = false;
     HighScore = 0;
     Debugging = false;
 
@@ -473,6 +474,10 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
         else if ( std::string( Setting.name() ) == "Antialiasing" ) {
 
             InitAntialiasing = (unsigned int) Script::getIntegerValue( Setting ); }
+
+        else if ( std::string( Setting.name() ) == "EpilepsyProtection" ) {
+
+            InitEpilepsyProtection = Script::getBooleanValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "Controllers" ) {
 
@@ -562,8 +567,9 @@ void WorldModule::saveSettings ( ) {
 
     bool WindowWidthSuccess = false;
     bool WindowHeightSuccess = false;
-    bool AntialiasingSuccess = false;
     bool FullScreenSuccess = false;
+    bool AntialiasingSuccess = false;
+    bool EpilepsyProtectionSuccess = false;
     bool ControllersSuccess = false;
     bool HighScoreSuccess = false;
 
@@ -606,6 +612,12 @@ void WorldModule::saveSettings ( ) {
             Script::setValue( Setting, (int) Graphics->getAntialiasingLevel() );
 
             AntialiasingSuccess = true; }
+
+        else if ( std::string( Setting.name() ) == "EpilepsyProtection" ) {
+
+            Script::setValue( Setting, (bool) Graphics->isEpilepsyProtectionEnabled() );
+
+            EpilepsyProtectionSuccess = true; }
 
         else if ( std::string( Setting.name() ) == "Controllers" ) {
 
@@ -668,6 +680,11 @@ void WorldModule::saveSettings ( ) {
 
         pugi::xml_node Setting = SettingsNode[0].append_child( "Antialiasing" );
         Script::setValue( Setting.append_child( pugi::node_pcdata ), (int) Graphics->getAntialiasingLevel() ); }
+
+    if ( !EpilepsyProtectionSuccess ) {
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "EpilepsyProtection" );
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), (bool) Graphics->isEpilepsyProtectionEnabled() ); }
 
     if ( !ControllersSuccess ) {
 

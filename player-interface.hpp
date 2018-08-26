@@ -15,22 +15,24 @@ public:
     void setViewport ( sf::FloatRect Viewport );
 
     void beginFadeOut ( );
+    void endFadeOut ( );
     bool isFadedOut ( );
 
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
 
-    void onShot ( );
+    void onDamage ( );
 
 private:
 
     void updateHealthBar ( sf::Time ElapsedTime );
     void updateEnergyBar ( sf::Time ElapsedTime );
+    void updateMissileTab ( sf::Time ElapsedTime );
 
     void renderHealthBar ( sf::RenderWindow &Window );
     void renderEnergyBar ( sf::RenderWindow &Window );
-    void renderMissileBar ( sf::RenderWindow &Window );
-    void renderScoreBar ( sf::RenderWindow &Window );
+    void renderMissileTab ( sf::RenderWindow &Window );
+    void renderScoreTab ( sf::RenderWindow &Window );
     void renderFade ( sf::RenderWindow &Window );
 
     void updateBar ( sf::Time ElapsedTime, std::vector <float> &Opacity, float BarMargin, float ElementSize, float ElementMargin, float Value, float Limit );
@@ -42,6 +44,19 @@ private:
 
     Spaceship * MySpaceship;
     sf::FloatRect Viewport;
+
+    float Health;
+    float HealthLimit;
+    std::vector <float> HealthBarOpacity;
+
+    float Energy;
+    float EnergyLimit;
+    std::vector <float> EnergyBarOpacity;
+
+    unsigned int MissileCount;
+    unsigned int MissileLimit;
+    sf::Texture MissileTexture;
+    std::vector <float> MissileTabOpacity;
 
     float ActivatedOpacity;
     float UnactivatedOpacity;
@@ -56,13 +71,9 @@ private:
     sf::Time FadeOutDelay;
     sf::Time FadeOutDuration;
 
-    float Health;
-    float HealthLimit;
-    std::vector <float> HealthBarOpacity;
-
-    float Energy;
-    float EnergyLimit;
-    std::vector <float> EnergyBarOpacity;
+    bool DamageFade;
+    sf::Time DamageFadeTime;
+    sf::Time DamageFadeDuration;
 
     };
 
