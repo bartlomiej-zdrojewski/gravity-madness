@@ -83,7 +83,7 @@ void PowerUp::render ( sf::RenderWindow &Window ) {
         Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
         Sprite.setPosition( getPosition() + getRadius() * sf::Vector2f( cosf( PI * OscillationTime.asSeconds() * OscillationFrequency.x ), sinf( PI * OscillationTime.asSeconds() * OscillationFrequency.y ) ) );
 
-        if ( FadeTime <= FadeDuration ) {
+        if ( FadeTime < FadeDuration ) {
 
             Sprite.setColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255 * FadeTime.asSeconds() / FadeDuration.asSeconds() ) ) ); }
 

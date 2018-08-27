@@ -2,7 +2,7 @@
 
 void HighGravityPowerUp::onEffectBegin ( ) {
 
-    *Gravity = 4.f; }
+    *Gravity = 5.f; }
 
 void HighGravityPowerUp::onEffectEnd ( ) {
 

@@ -9,7 +9,7 @@ class LowHealthPowerUp : public PowerUp {
 public:
 
     LowHealthPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
-                       PowerUp ( sf::seconds( 60.f ), Gravity, AsteroidCount ) {
+                       PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
 
         Texture = Graphics->getTexture( "PowerUpLowHealth" ); }
 

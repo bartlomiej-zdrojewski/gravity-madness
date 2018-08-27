@@ -9,9 +9,9 @@ class NoAsteroidsPowerUp : public PowerUp {
 public:
 
     NoAsteroidsPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
-                         PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+                         PowerUp ( sf::seconds( 15.f ), Gravity, AsteroidCount ) {
 
-        Texture = Graphics->getTexture( "power-up-no-asteroids" );
+        Texture = Graphics->getTexture( "PowerUpNoAsteroids" );
         AsteroidModifier = true;
         EffectDuration = sf::seconds( 30.f ); }
 

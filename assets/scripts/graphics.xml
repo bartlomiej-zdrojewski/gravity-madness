@@ -102,33 +102,33 @@
         </Texture>
 
         <Texture>
-            <Name>power-up-missile</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpMissile</Name>
+            <Path>power-up-missile.png</Path>
         </Texture>
 
         <Texture>
-            <Name>power-up-no-asteroids</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpNoAsteroids</Name>
+            <Path>power-up-no-asteroids.png</Path>
         </Texture>
 
         <Texture>
-            <Name>power-up-more-asteroids</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpMoreAsteroids</Name>
+            <Path>power-up-more-asteroids.png</Path>
         </Texture>
 
         <Texture>
-            <Name>power-up-low-gravity</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpLowGravity</Name>
+            <Path>power-up-low-gravity.png</Path>
         </Texture>
 
         <Texture>
-            <Name>power-up-high-gravity</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpHighGravity</Name>
+            <Path>power-up-high-gravity.png</Path>
         </Texture>
 
         <Texture>
-            <Name>power-up-random-gravity</Name>
-            <Path>power-up.png</Path>
+            <Name>PowerUpRandomGravity</Name>
+            <Path>power-up-random-gravity.png</Path>
         </Texture>
 
     </Textures>

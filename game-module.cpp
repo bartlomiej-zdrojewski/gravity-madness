@@ -78,7 +78,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
     initAreaLimit();
 
-    auto PlanetCount = (unsigned int) ( 0.10f * ( powf( AreaRadius, 2.f ) / powf( 200.f, 2.f ) ) ); // Average planet radius is ~ 200
+    auto PlanetCount = (unsigned int) ( 0.10f * ( powf( AreaRadius, 2.f ) / powf( 200.f, 2.f ) ) ); // Average planet radius is ~200
 
     for ( unsigned int i = 0; i < PlanetCount; i++ ) {
 
@@ -1403,51 +1403,51 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
             PowerUp * NewPowerUp = nullptr;
             float Draw = getRandomFloat();
 
-            if ( Draw < 0.3f ) { // Health Power Ups
+            if ( Draw < 0.3f ) { // Health Power Ups (30%)
 
-                if ( Draw < 0.15f ) {
+                if ( Draw < 0.15f ) { // Low Health Power Up (15%)
 
                     NewPowerUp = new LowHealthPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
-                else {
+                else { // High Health Power Up (15%)
 
                     NewPowerUp = new HighHealthPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 
-            else if ( Draw < 0.6f ) { // Energy Power Ups
+            else if ( Draw < 0.6f ) { // Energy Power Ups (30%)
 
-                if ( Draw < 0.45f ) {
+                if ( Draw < 0.45f ) { // Low Energy Power Up (15%)
 
                     NewPowerUp = new LowEnergyPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
-                else {
+                else { // High Energy Power Up (15%)
 
                     NewPowerUp = new HighEnergyPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 
-            else if ( Draw < 0.9f ) { // Missile Power Ups
+            else if ( Draw < 0.9f ) { // Missile Power Up (30%)
 
                 NewPowerUp = new MissilePowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
-            else if ( Draw < 0.95f ) { // Asteroid Power Ups
+            else if ( Draw < 0.95f ) { // Asteroid Power Ups (5%)
 
-                if ( Draw < 0.925f ) {
+                if ( Draw < 0.925f ) { // No Asteroid Power Up (2.5%)
 
                     NewPowerUp = new NoAsteroidsPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
-                else {
+                else { // More Asteroids Power Up (2.5%)
 
                     NewPowerUp = new MoreAsteroidsPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 
-            else { // Gravity Power Ups
+            else { // Gravity Power Ups (5%)
 
-                if ( Draw < 0.965f ) {
+                if ( Draw < 0.965f ) { // Low Gravity Power Up (1.5%)
 
                     NewPowerUp = new LowGravityPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
-                else if ( Draw < 0.98f ) {
+                else if ( Draw < 0.98f ) { // High Gravity Power Up (1.5%)
 
                     NewPowerUp = new HighGravityPowerUp ( Graphics, &Gravity, &AsteroidCount ); }
 
-                else {
+                else { // Random Gravity Power Up (2%)
 
                     NewPowerUp = new RandomGravityPowerUp ( Graphics, &Gravity, &AsteroidCount ); } }
 

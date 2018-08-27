@@ -9,9 +9,9 @@ class RandomGravityPowerUp : public PowerUp {
 public:
 
     RandomGravityPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
-                           PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+                           PowerUp ( sf::seconds( 15.f ), Gravity, AsteroidCount ) {
 
-        Texture = Graphics->getTexture( "power-up-random-gravity" );
+        Texture = Graphics->getTexture( "PowerUpRandomGravity" );
         GravityModifier = true;
 
         EffectTime = sf::seconds( 0.f );

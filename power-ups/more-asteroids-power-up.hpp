@@ -9,9 +9,9 @@ class MoreAsteroidsPowerUp : public PowerUp {
 public:
 
     MoreAsteroidsPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
-                           PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+                           PowerUp ( sf::seconds( 15.f ), Gravity, AsteroidCount ) {
 
-        Texture = Graphics->getTexture( "power-up-more-asteroids" );
+        Texture = Graphics->getTexture( "PowerUpMoreAsteroids" );
         AsteroidModifier = true;
         EffectDuration = sf::seconds( 30.f ); }
 

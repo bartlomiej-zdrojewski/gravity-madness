@@ -9,9 +9,9 @@ class LowGravityPowerUp : public PowerUp {
 public:
 
     LowGravityPowerUp ( GraphicsModule * Graphics, float * Gravity, unsigned int * AsteroidCount ) :
-                        PowerUp ( sf::seconds( 30.f ), Gravity, AsteroidCount ) {
+                        PowerUp ( sf::seconds( 15.f ), Gravity, AsteroidCount ) {
 
-        Texture = Graphics->getTexture( "power-up-low-gravity" );
+        Texture = Graphics->getTexture( "PowerUpLowGravity" );
         GravityModifier = true;
         EffectDuration = sf::seconds( 15.f ); }
 

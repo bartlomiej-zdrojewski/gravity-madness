@@ -2,7 +2,7 @@
 
 void LowGravityPowerUp::onEffectBegin ( ) {
 
-    *Gravity = 0.25f; }
+    *Gravity = 0.2f; }
 
 void LowGravityPowerUp::onEffectEnd ( ) {
 
