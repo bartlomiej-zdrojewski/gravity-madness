@@ -4,8 +4,8 @@
     <AudioSettings>assets/scripts/audio.xml</AudioSettings>
     <SpaceshipsSettings>assets/scripts/spaceships.xml</SpaceshipsSettings>
     <Log>log.txt</Log>
-    <WindowWidth>800</WindowWidth>
-    <WindowHeight>600</WindowHeight>
+    <WindowWidth>1024</WindowWidth>
+    <WindowHeight>768</WindowHeight>
     <FullScreen>false</FullScreen>
     <Antialiasing>4</Antialiasing>
     <EpilepsyProtection>false</EpilepsyProtection>

@@ -1,11 +1,13 @@
-#ifndef GRAVITY_MADNESS_GAMEPLAY_HPP
-#define GRAVITY_MADNESS_GAMEPLAY_HPP
+#ifndef GRAVITY_MADNESS_GAMEPLAY
+#define GRAVITY_MADNESS_GAMEPLAY
 
 #include <sstream>
 #include <vector>
-#include <SFML/Graphics.hpp>
-#include "logger.hpp"
+#include <SFML/System.hpp>
+#include "constants.hpp"
 #include "controllers/player-controller-settings.hpp"
+#include "logger.hpp"
+#include "score-counter.hpp"
 #include "script.hpp"
 
 class GameplaySettings : public Logger {
@@ -79,8 +81,7 @@ public:
         AIPersonality = AIPersonalities::Random;
         EndingCondition = EndingConditions::NoEnemies;
         TimeLimit = sf::seconds( 5.f * 60.f );
-        Score = nullptr;
-        Winner = -1;
+        Winner = 0;
 
         loadDefaultSpaceshipPrototypes(); }
 
@@ -88,7 +89,6 @@ public:
 
     void loadSpaceshipPrototypes ( Script * Config );
     void assignSpaceships ( std::vector <int> SpaceshipAssignment );
-
     std::vector <SpaceshipPrototype> getSpaceshipPrototypes ( );
     SpaceshipPrototype getSpaceshipPrototype ( unsigned int Index );
 
@@ -108,7 +108,6 @@ public:
     void setNextAsteroidFrequency ( );
     void setPreviousAsteroidFrequency ( );
 
-    unsigned int getMaximumPlayerCount ( );
     unsigned int getPlayerCount ( );
     void setPlayerCount ( unsigned int PlayerCount );
 
@@ -130,11 +129,10 @@ public:
     sf::Time getTimeLimit ( );
     void setTimeLimit ( sf::Time TimeLimit );
 
-    unsigned int * getScore ( );
-    void setScore ( unsigned int * Score );
+    ScoreCounter * getScores ( );
 
-    int getWinner ( );
-    void setWinner ( int Winner );
+    unsigned char getWinner ( );
+    void setWinner ( unsigned char Winner );
 
 private:
 
@@ -144,19 +142,18 @@ private:
 
     AreaSizes AreaSize;
     AsteroidFrequencies AsteroidFrequency;
-    const static int MaximumPlayerCount = 4;
     unsigned int PlayerCount;
     unsigned int SpaceshipCount;
     AIPersonalities AIPersonality;
     EndingConditions EndingCondition;
     sf::Time TimeLimit;
 
-    unsigned int * Score;
-    int Winner;
+    ScoreCounter Scores [ MAXIMUM_PLAYER_COUNT ];
+    unsigned char Winner;
 
     std::vector <SpaceshipPrototype> SpaceshipPrototypes;
     std::vector <int> SpaceshipAssignment;
-    PlayerControllerSettings * PlayerControllerSettingsRegister [ MaximumPlayerCount ];
+    PlayerControllerSettings * PlayerControllerSettingsRegister [ MAXIMUM_PLAYER_COUNT ];
 
     };
 

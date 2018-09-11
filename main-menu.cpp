@@ -1690,37 +1690,37 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
     // TODO HEADERS TEXTS
 
-    for ( unsigned int i = 0; i < Gameplay->getMaximumPlayerCount(); i++ ) {
+    for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
         auto Controller = Gameplay->getPlayerControllerSettings( i );
 
         if ( Controller->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
             ControllersTableContent.emplace_back( sf::Text() );
-            ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() ].setString( "Joystick " + std::to_string( Controller->getJoystickIdentifier() ) ); }
+            ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT ].setString( "Joystick " + std::to_string( Controller->getJoystickIdentifier() ) ); }
 
         else {
 
             ControllersTableContent.emplace_back( sf::Text() );
-            ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() ].setString( "Keyboard" ); }
+            ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT ].setString( "Keyboard" ); }
 
         ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 1 ].setString( PlayerControllerSettings::encodeKey( Controller->getForwardKey() ) );
+        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 1 ].setString( PlayerControllerSettings::encodeKey( Controller->getForwardKey() ) );
 
         ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 2 ].setString( PlayerControllerSettings::encodeKey( Controller->getBackwardKey() ) );
+        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 2 ].setString( PlayerControllerSettings::encodeKey( Controller->getBackwardKey() ) );
 
         ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 3 ].setString( PlayerControllerSettings::encodeKey( Controller->getLeftKey() ) );
+        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 3 ].setString( PlayerControllerSettings::encodeKey( Controller->getLeftKey() ) );
 
         ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 4 ].setString( PlayerControllerSettings::encodeKey( Controller->getRightKey() ) );
+        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 4 ].setString( PlayerControllerSettings::encodeKey( Controller->getRightKey() ) );
 
         ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 5 ].setString( PlayerControllerSettings::encodeKey( Controller->getRayShotKey() ) );
+        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 5 ].setString( PlayerControllerSettings::encodeKey( Controller->getRayShotKey() ) );
 
         ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * Gameplay->getMaximumPlayerCount() + 6 ].setString( PlayerControllerSettings::encodeKey( Controller->getMissileShotKey() ) ); }
+        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 6 ].setString( PlayerControllerSettings::encodeKey( Controller->getMissileShotKey() ) ); }
 
     // TODO TableHeaderFontSize;
     // TODO TableContentFontSize

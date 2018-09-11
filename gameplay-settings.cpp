@@ -2,7 +2,9 @@
 
 GameplaySettings::~GameplaySettings ( ) {
 
-    delete Score; }
+    for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
+
+        delete PlayerControllerSettingsRegister[i]; } }
 
 void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
 
@@ -49,10 +51,12 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     auto ScoreMultiplierNode = Config->getChildren( SpaceshipNode, "ScoreMultiplier" );
 
                     const unsigned int NodesCount = 17;
+
                     std::vector <pugi::xml_node> * Nodes [NodesCount] = { &NameNode, &TextureNode, &AccentTextureNode,
                         &MassNode, &RadiusNode, &HealthLimitNode, &HealthRestorationNode, &EnergyLimitNode, &EnergyRestorationNode,
                         &ThrustNode, &SuppressingFactorNode, &ExhaustColorNode, &RayPowerNode, &RayColorNode, &MissileCountNode,
                         &MissileLimitNode, &ScoreMultiplierNode };
+
                     std::string NodeNames [NodesCount] = { "Name", "Texture", "AccentTexture", "Mass", "Radius", "HealthLimit",
                         "HealthRestoration", "EnergyLimit", "EnergyRestoration", "Thrust", "SuppressingFactor", "ExhaustColor",
                         "RayPower", "RayColor", "MissileCount", "MissileLimit", "ScoreMultiplier" };
@@ -119,7 +123,7 @@ GameplaySettings::SpaceshipPrototype GameplaySettings::getSpaceshipPrototype ( u
 
     unsigned int PrototypeIndex = 0;
 
-    if ( Index < MaximumPlayerCount ) {
+    if ( Index < MAXIMUM_PLAYER_COUNT ) {
 
         if ( Index < SpaceshipAssignment.size() ) {
 
@@ -131,7 +135,7 @@ GameplaySettings::SpaceshipPrototype GameplaySettings::getSpaceshipPrototype ( u
 
             return SpaceshipPrototypes[ PrototypeIndex ]; } }
 
-    Index -= MaximumPlayerCount;
+    Index -= MAXIMUM_PLAYER_COUNT;
 
     while ( PrototypeIndex < SpaceshipPrototypes.size() && PrototypeIndex < SpaceshipAssignment.size() ) {
 
@@ -149,7 +153,7 @@ GameplaySettings::SpaceshipPrototype GameplaySettings::getSpaceshipPrototype ( u
 
 void GameplaySettings::loadPlayerControllerSettingsRegister ( std::string Config ) {
 
-    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
+    for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
         PlayerControllerSettingsRegister[i] = new PlayerControllerSettings ( ); }
 
@@ -159,7 +163,7 @@ void GameplaySettings::loadPlayerControllerSettingsRegister ( std::string Config
 
     while ( getline( DataA, ResultA, '|' ) ) {
 
-        if ( IndexA >= MaximumPlayerCount ) {
+        if ( IndexA >= MAXIMUM_PLAYER_COUNT ) {
 
             break; }
 
@@ -245,7 +249,7 @@ PlayerControllerSettings ** GameplaySettings::getPlayerControllerSettingsRegiste
 
 PlayerControllerSettings * GameplaySettings::getPlayerControllerSettings ( unsigned int Index ) {
 
-    if ( Index >= MaximumPlayerCount ) {
+    if ( Index >= MAXIMUM_PLAYER_COUNT ) {
 
         return nullptr; }
 
@@ -454,10 +458,6 @@ void GameplaySettings::setPreviousAsteroidFrequency ( ) {
             AsteroidFrequency = AsteroidFrequencies::Occasionally;
 
             break; } } }
-
-unsigned int GameplaySettings::getMaximumPlayerCount ( ) {
-
-    return MaximumPlayerCount; }
 
 unsigned int GameplaySettings::getPlayerCount ( ) {
 
@@ -687,19 +687,15 @@ void GameplaySettings::setTimeLimit ( sf::Time TimeLimit ) {
 
     this->TimeLimit = TimeLimit; }
 
-unsigned int * GameplaySettings::getScore ( ) {
+ScoreCounter * GameplaySettings::getScores ( ) {
 
-    return Score; }
+    return Scores; }
 
-void GameplaySettings::setScore ( unsigned int * Score ) {
-
-    this->Score = Score; }
-
-int GameplaySettings::getWinner ( ) {
+unsigned char GameplaySettings::getWinner ( ) {
 
     return Winner; }
 
-void GameplaySettings::setWinner ( int Winner ) {
+void GameplaySettings::setWinner ( unsigned char Winner ) {
 
     this->Winner = Winner; }
 

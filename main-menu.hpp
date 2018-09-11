@@ -1,9 +1,8 @@
-#ifndef GRAVITY_MADNESS_MAIN_MENU_HPP
-#define GRAVITY_MADNESS_MAIN_MENU_HPP
+#ifndef GRAVITY_MADNESS_MAIN_MENU
+#define GRAVITY_MADNESS_MAIN_MENU
 
 #include <cmath>
 #include <list>
-#include <SFML/Graphics.hpp>
 #include "constants.hpp"
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"

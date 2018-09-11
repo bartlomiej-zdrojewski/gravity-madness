@@ -1,5 +1,5 @@
-#ifndef GRAVITY_MADNESS_MISSILE_HPP
-#define GRAVITY_MADNESS_MISSILE_HPP
+#ifndef GRAVITY_MADNESS_MISSILE
+#define GRAVITY_MADNESS_MISSILE
 
 #include "asteroid.hpp"
 #include "body.hpp"
@@ -9,6 +9,7 @@
 #include "graphics-module.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
+#include "score-counter.hpp"
 
 class Missile : public Body {
 
@@ -16,17 +17,20 @@ public:
 
     Missile ( ) : Body ( 50.f, 15.f ) {
 
+        MySpaceship = nullptr;
+        MyScore = nullptr;
+        Target = nullptr;
+
         ExplosionOnDestruction = true;
         ExplosionPower = 100.f;
         Thrust = 250.f;
         ThrustReduction = 25.f;
 
         ExplosionDelay = sf::seconds( 5.f );
-        ExplosionTime = ExplosionDelay;
+        ExplosionTime = ExplosionDelay; }
 
-        Target = nullptr;
-
-        }
+    void setSpaceship ( Spaceship * MySpaceship );
+    void setScoreCounter ( ScoreCounter * MyScore );
 
     float getInfluenceRadius ( );
 
@@ -57,6 +61,10 @@ public:
 
 private:
 
+    Spaceship * MySpaceship;
+    ScoreCounter * MyScore;
+    Spaceship * Target;
+
     bool ExplosionOnDestruction;
     float ExplosionPower;
     float Thrust;
@@ -64,8 +72,6 @@ private:
 
     sf::Time ExplosionTime;
     sf::Time ExplosionDelay;
-
-    Spaceship * Target;
 
     };
 

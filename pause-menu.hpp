@@ -1,8 +1,7 @@
-#ifndef GRAVITY_MADNESS_PAUSE_MENU_HPP
-#define GRAVITY_MADNESS_PAUSE_MENU_HPP
+#ifndef GRAVITY_MADNESS_PAUSE_MENU
+#define GRAVITY_MADNESS_PAUSE_MENU
 
 #include <cmath>
-#include <SFML/Graphics.hpp>
 #include "graphics-module.hpp"
 
 class PauseMenu {

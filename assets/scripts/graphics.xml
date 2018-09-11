@@ -7,6 +7,11 @@
         <Path>assets/graphics/textures/</Path>
 
         <Texture>
+            <Name>Arrow</Name>
+            <Path>arrow.png</Path>
+        </Texture>
+
+        <Texture>
             <Name>MissileIcon</Name>
             <Path>missile-icon.png</Path>
         </Texture>
@@ -155,6 +160,21 @@
         <Font>
             <Name>TableContent</Name>
             <Path>StintUltraCondensed-Regular.ttf</Path>
+        </Font>
+
+        <Font>
+            <Name>Notification</Name>
+            <Path>RobotoCondensed-Light.ttf</Path>
+        </Font>
+
+        <Font>
+            <Name>Score</Name>
+            <Path>ShareTechMono-Regular.ttf</Path>
+        </Font>
+
+        <Font>
+            <Name>ScoreMultiplier</Name>
+            <Path>ShareTechMono-Regular.ttf</Path>
         </Font>
 
         <Font>

@@ -6,9 +6,10 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
 
     this->Graphics = Graphics;
 
-    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
+    for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
         PlayerSpaceship[i] = nullptr;
+        PlayerScore[i] = nullptr;
         Interface[i] = nullptr; }
 
     reset(); }
@@ -24,9 +25,11 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
     this->Gameplay = Gameplay;
     EndingCondition = false;
     AreaRadius = Gameplay->getAreaSize();
-    GameplayTime = ( Gameplay->getEndingCondition() == GameplaySettings::EndingConditions::Time ) ? Gameplay->getTimeLimit() : sf::seconds( 0.f );
     PlayerCount = Gameplay->getPlayerCount();
+    GameplayTime = ( Gameplay->getEndingCondition() == GameplaySettings::EndingConditions::Time ) ? Gameplay->getTimeLimit() : sf::seconds( 0.f );
     PowerUpLimit = (unsigned int) ( 5.f * powf( AreaRadius / 1000.f, 2 ) );
+
+    initAreaLimit();
 
     switch ( Gameplay->getAsteroidFrequency() ) {
 
@@ -76,8 +79,6 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
             break; } }
 
-    initAreaLimit();
-
     auto PlanetCount = (unsigned int) ( 0.10f * ( powf( AreaRadius, 2.f ) / powf( 200.f, 2.f ) ) ); // Average planet radius is ~200
 
     for ( unsigned int i = 0; i < PlanetCount; i++ ) {
@@ -124,7 +125,12 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
         SpaceshipOrder[i] = i; }
 
-    std::random_shuffle( &SpaceshipOrder[0], &SpaceshipOrder[ Gameplay->getSpaceshipCount() ] );
+    std::shuffle( &SpaceshipOrder[0], &SpaceshipOrder[ Gameplay->getSpaceshipCount() ], std::mt19937( (unsigned int) time( nullptr ) ) );
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        PlayerScore[i] = &( Gameplay->getScores()[i] );
+        PlayerScore[i]->reset(); }
 
     for ( unsigned int i = 0; i < Gameplay->getSpaceshipCount(); i++ ) {
 
@@ -159,9 +165,11 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
             PlayerSpaceship[i] = NewSpaceship;
             PlayerSpaceship[i]->setController( new PlayerController ( Gameplay->getPlayerControllerSettings( i ) ) );
-            PlayerScoreMultiplier[i] = Prototype.ScoreMultiplier;
+            PlayerScore[i]->addMultiplier( ScoreMultiplier );
+            PlayerScore[i]->addMultiplier( Prototype.ScoreMultiplier );
             Interface[i] = new PlayerInterface ( Graphics );
-            Interface[i]->setSpaceship( PlayerSpaceship[i] ); }
+            Interface[i]->setSpaceship( PlayerSpaceship[i] );
+            Interface[i]->setScoreCounter( PlayerScore[i] ); }
 
         else {
 
@@ -227,7 +235,33 @@ void GameModule::update ( ) {
 
             if ( Gameplay->getEndingCondition() == GameplaySettings::EndingConditions::Time ) {
 
-                GameplayTime -= ElapsedTime; }
+                auto Minutes = (unsigned int) ( GameplayTime.asSeconds() / 60.f );
+
+                GameplayTime -= ElapsedTime;
+
+                auto MinutesAfter = (unsigned int) ( GameplayTime.asSeconds() / 60.f );
+
+                if ( Minutes != MinutesAfter ) {
+
+                    std::string MinutesNotification;
+
+                    if ( Minutes >= 5 ) {
+
+                        if ( Minutes % 5 == 0 ) {
+
+                            MinutesNotification = std::to_string( Minutes ) + " minutes are left"; } }
+
+                    else if ( Minutes > 1 ) {
+
+                        MinutesNotification = std::to_string( Minutes ) + " minutes are left"; }
+
+                    else if ( Minutes == 1 ) {
+
+                        MinutesNotification = std::to_string( Minutes ) + " minute is left"; }
+
+                    if ( !MinutesNotification.empty() ) {
+
+                        displayNotification( MinutesNotification ); } } }
 
             else {
 
@@ -254,7 +288,14 @@ void GameModule::update ( ) {
 
                 Views[i].setCenter( Views[i].getCenter() + PlayerFinalVelocity[i] * ElapsedTime.asSeconds() ); }
 
+            PlayerScore[i]->update( ElapsedTime );
             Interface[i]->update( ElapsedTime ); } }
+
+    else {
+
+        // TODO LOW FPS COUNTER AND MESSAGE
+
+        }
 
     if ( Gameplay ) {
 
@@ -273,7 +314,20 @@ void GameModule::update ( ) {
                         if ( GameplayTime.asSeconds() <= 0.f ) {
 
                             EndingCondition = true;
-                            Gameplay->setWinner( getLastAlivePlayer() ); }
+                            Gameplay->setWinner( 0 );
+
+                            for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                                if ( PlayerSpaceship[i] ) {
+
+                                    unsigned char Bit = 0x01;
+
+                                    for ( unsigned int j = 0; j < i; j++ ) {
+
+                                        Bit *= 2; }
+
+                                    Gameplay->setWinner( Gameplay->getWinner() | Bit );
+                                    PlayerScore[i]->update( ScoreCounter::Event::Time, Gameplay->getTimeLimit().asSeconds() ); } } }
 
                         break; }
 
@@ -281,7 +335,20 @@ void GameModule::update ( ) {
 
                         if ( getAlivePlayerCount() == Spaceships.size() ) {
 
-                            EndingCondition = true; }
+                            EndingCondition = true;
+                            Gameplay->setWinner( 0 );
+
+                            for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                                if ( PlayerSpaceship[i] ) {
+
+                                    unsigned char Bit = 0x01;
+
+                                    for ( unsigned int j = 0; j < i; j++ ) {
+
+                                        Bit *= 2; }
+
+                                    Gameplay->setWinner( Gameplay->getWinner() | Bit ); } } }
 
                         break; }
 
@@ -289,8 +356,14 @@ void GameModule::update ( ) {
 
                         if ( getAlivePlayerCount() == 1 ) {
 
+                            unsigned char Bit = 0x01;
+
+                            for ( unsigned int j = 0; j < getLastAlivePlayer(); j++ ) {
+
+                                Bit *= 2; }
+
                             EndingCondition = true;
-                            Gameplay->setWinner( getLastAlivePlayer() ); }
+                            Gameplay->setWinner( Bit ); }
 
                         break; }
 
@@ -298,8 +371,14 @@ void GameModule::update ( ) {
 
                         if ( getAlivePlayerCount() == 1 && Spaceships.size() == 1 ) {
 
+                            unsigned char Bit = 0x01;
+
+                            for ( unsigned int j = 0; j < getLastAlivePlayer(); j++ ) {
+
+                                Bit *= 2; }
+
                             EndingCondition = true;
-                            Gameplay->setWinner( getLastAlivePlayer() ); }
+                            Gameplay->setWinner( Bit ); }
 
                         break; }
 
@@ -309,17 +388,11 @@ void GameModule::update ( ) {
 
             if ( EndingCondition ) {
 
-                auto * ScoreCopy = new unsigned int [ PlayerCount ];
-
                 for ( unsigned int i = 0; i < PlayerCount; i++ ) {
-
-                    ScoreCopy[i] = PlayerScore[i];
 
                     if ( !Interface[i]->isFadedOut() ) {
 
-                        Interface[i]->beginFadeOut(); } }
-
-                Gameplay->setScore( ScoreCopy ); } }
+                        Interface[i]->beginFadeOut(); } } } }
 
         else {
 
@@ -347,8 +420,7 @@ void GameModule::update ( sf::Event &Event ) {
 
         if ( Event.type == sf::Event::KeyPressed ) {
 
-            if ( Event.key.code == sf::Keyboard::Escape || Event.key.code == sf::Keyboard::Enter ||
-                 Event.key.code == sf::Keyboard::Space ) {
+            if ( Event.key.code == sf::Keyboard::Escape || Event.key.code == sf::Keyboard::Enter || Event.key.code == sf::Keyboard::Space ) {
 
                 for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -364,7 +436,7 @@ void GameModule::update ( sf::Event &Event ) {
 
 void GameModule::render ( sf::RenderWindow &Window ) {
 
-    if ( PlayerCount > 0 ) {
+    if ( PlayerCount > 0 ) { // Players' view (for game mode)
 
         for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -386,7 +458,9 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
                 for ( auto ActivePowerUp : PowerUps ) {
 
-                    ActivePowerUp->render( Window ); }
+                    if ( isOnScreen( ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
+
+                        ActivePowerUp->render( Window ); } }
 
                 for ( auto ActivePlanet : Planets ) {
 
@@ -418,10 +492,10 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
         renderViewsOutline( Window ); }
 
-    else {
+    else { // No player view (for debug mode)
 
-        float ViewWidth = ( 1200.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
-        float ViewHeight = 1200.f;
+        float ViewWidth = ( 900.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
+        float ViewHeight = 900.f;
 
         sf::View NoPlayerView;
         NoPlayerView.setSize( ViewWidth, ViewHeight );
@@ -443,7 +517,9 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
         for ( auto ActivePowerUp : PowerUps ) {
 
-            ActivePowerUp->render( Window ); }
+            if ( isOnScreen( ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
+
+                ActivePowerUp->render( Window ); } }
 
         for ( auto ActivePlanet : Planets ) {
 
@@ -495,7 +571,7 @@ void GameModule::reset ( ) {
     GravityPowerUp = nullptr;
     AsteroidPowerUp = nullptr;
 
-    for ( unsigned int i = 0; i < MaximumPlayerCount; i++ ) {
+    for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
         if ( PlayerSpaceship[i] ) {
 
@@ -508,9 +584,7 @@ void GameModule::reset ( ) {
             delete Interface[i]; }
 
         PlayerSpaceship[i] = nullptr;
-        Interface[i] = nullptr;
-        PlayerScore[i] = 0;
-        PlayerScoreMultiplier[i] = 1.f; }
+        Interface[i] = nullptr; }
 
     for ( auto i = Planets.begin(); i != Planets.end(); ) {
 
@@ -595,32 +669,6 @@ float GameModule::getRandomFloat ( ) {
 
     return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }
 
-void GameModule::destructBody ( Body * Object ) {
-
-    ParticleSystem * Explosion = Object->onDestruction();
-
-    if ( Explosion ) {
-
-        ParticleSystems.push_back( Explosion ); }
-
-    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
-
-        if ( Object == PlayerSpaceship[i] ) {
-
-            PlayerFinalVelocity[i] = PlayerSpaceship[i]->getVelocity();
-            Interface[i]->update( sf::seconds( 0.01f ) );
-            Interface[i]->beginFadeOut();
-
-            delete PlayerSpaceship[i]->getController();
-            PlayerSpaceship[i]->setController( nullptr );
-
-            PlayerSpaceship[i] = nullptr;
-            Interface[i]->setSpaceship( nullptr );
-
-            break; } }
-
-    delete Object; }
-
 bool GameModule::isPlayer ( Spaceship * MySpaceship ) {
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
@@ -666,6 +714,38 @@ int GameModule::getLastAlivePlayer ( ) {
             LastAlivePlayer = i; } }
 
     return LastAlivePlayer; }
+
+void GameModule::destructBody ( Body * Object ) {
+
+    ParticleSystem * Explosion = Object->onDestruction();
+
+    if ( Explosion ) {
+
+        ParticleSystems.push_back( Explosion ); }
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        if ( Object == PlayerSpaceship[i] ) {
+
+            Interface[i]->update( sf::seconds( 0.01f ) );
+            Interface[i]->beginFadeOut();
+
+            delete PlayerSpaceship[i]->getController();
+            PlayerSpaceship[i]->setController( nullptr );
+
+            PlayerFinalVelocity[i] = PlayerSpaceship[i]->getVelocity();
+            PlayerSpaceship[i] = nullptr;
+            Interface[i]->setSpaceship( nullptr );
+
+            break; } }
+
+    delete Object; }
+
+void GameModule::displayNotification ( std::string Message ) {
+
+    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+        Interface[i]->displayNotification( Message ); } }
 
 Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection, bool AffectMissiles ) {
 
@@ -880,11 +960,6 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
         Asteroids.push_back( NewAsteroid ); }
 
-    // TODO
-    //std::cout << Asteroids.size() << "/" << AsteroidCount << " " << AsteroidPauseTime.asSeconds();
-    //if ( AsteroidPowerUp != nullptr ) std::cout << " POWER_UP";
-    //std::cout << std::endl;
-
     // Update gravity acceleration, detect collisions with planets
 
     for ( auto ActiveAsteroid : Asteroids ) {
@@ -1056,6 +1131,26 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 ( (AIController*) ActiveSpaceship->getController() )->enableLimitPanic(); }
 
+            if ( Distance > ( AreaRadius + 450.f ) && isPlayer( ActiveSpaceship ) ) {
+
+                for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                    if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                        Interface[i]->enableArrow();
+
+                        break; } } }
+
+            else {
+
+                for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                    if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                        Interface[i]->disableArrow();
+
+                        break; } } }
+
             if ( Distance > AreaRadius ) {
 
                 ActiveSpaceship->updateHealth( - 10.f * ElapsedTime.asSeconds() ); } }
@@ -1166,6 +1261,20 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 Target->updateHealth( - 0.5f *  ActiveSpaceship->getRayPower() );
 
+                if ( isPlayer( ActiveSpaceship ) ) {
+
+                    for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                        if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                            PlayerScore[i]->update( ScoreCounter::Event::ShotHit );
+
+                            if ( Target->isDestructed() ) {
+
+                                PlayerScore[i]->update( ScoreCounter::Event::ShotDestruction ); }
+
+                            break; } } }
+
                 if ( isPlayer( Target ) ) {
 
                     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
@@ -1198,6 +1307,17 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             auto * NewMissile = new Missile ( );
 
+            if ( isPlayer( ActiveSpaceship ) ) {
+
+                for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                    if ( PlayerSpaceship[i] == ActiveSpaceship ) {
+
+                        NewMissile->setSpaceship( ActiveSpaceship );
+                        NewMissile->setScoreCounter( PlayerScore[i] );
+
+                        break; } } }
+
             float TargetDistance, TargetAngle;
             Spaceship * Target = getAngularTarget( ActiveSpaceship, 2.f * PI / 3.f, TargetDistance, TargetAngle );
 
@@ -1216,6 +1336,66 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
     for ( auto i = Spaceships.begin(); i != Spaceships.end(); ) {
 
         if ( (*i)->isDestructed() ) {
+
+            if ( Gameplay ) { // Messages for players' interfaces
+
+                if ( !isPlayer( *i ) ) {
+
+                    std::string EnemiesNotification;
+                    auto EnemiesCount = (unsigned int) ( Spaceships.size() - getAlivePlayerCount() - 1 );
+
+                    if ( EnemiesCount >= 5 ) {
+
+                        if ( EnemiesCount % 5 == 0 ) {
+
+                            EnemiesNotification = std::to_string( EnemiesCount ) + " enemies are left"; } }
+
+                    else if ( EnemiesCount > 1 ) {
+
+                        EnemiesNotification = std::to_string( EnemiesCount ) + " enemies are left"; }
+
+                    else if ( EnemiesCount == 1 ) {
+
+                        EnemiesNotification = "1 enemy is left"; }
+
+                    else {
+
+                        EnemiesNotification = "No enemies are left"; }
+
+                    if ( !EnemiesNotification.empty() ) {
+
+                        for ( unsigned int j = 0; j < PlayerCount; j++ ) {
+
+                            displayNotification( EnemiesNotification ); } } }
+
+                else if ( Gameplay->getEndingCondition() == GameplaySettings::LastPlayer || Gameplay->getEndingCondition() == GameplaySettings::LastSpaceship ) {
+
+                    std::string AlivePlayersNotification;
+                    unsigned int AlivePlayersCount = getAlivePlayerCount() - 1;
+
+                    if ( AlivePlayersCount >= 5 ) {
+
+                        if ( AlivePlayersCount % 5 == 0 ) {
+
+                            AlivePlayersNotification = std::to_string( AlivePlayersCount ) + " players are left"; } }
+
+                    else if ( AlivePlayersCount > 1 ) {
+
+                        AlivePlayersNotification = std::to_string( AlivePlayersCount ) + " players are left"; }
+
+                    else if ( AlivePlayersCount == 1 ) {
+
+                        AlivePlayersNotification = "1 players is left"; }
+
+                    else {
+
+                        AlivePlayersNotification = "No players are left"; }
+
+                    if ( !AlivePlayersNotification.empty() ) {
+
+                        for ( unsigned int j = 0; j < PlayerCount; j++ ) {
+
+                            displayNotification( AlivePlayersNotification ); } } } }
 
             destructBody( *i );
             i = Spaceships.erase( i ); }
@@ -1477,6 +1657,10 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
                                 GravityPowerUp->finish(); }
 
+                            else {
+
+                                displayNotification( "Gravity will act weird for a while" ); }
+
                             GravityPowerUp = ActivePowerUp; }
 
                         if ( ActivePowerUp->isAsteroidModifier() ) {
@@ -1484,6 +1668,10 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
                             if ( AsteroidPowerUp != nullptr ) {
 
                                 AsteroidPowerUp->finish(); }
+
+                            else {
+
+                                displayNotification( "Asteroids will be disturbed for a while" ); }
 
                             AsteroidPowerUp = ActivePowerUp; }
 
@@ -1503,11 +1691,15 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
             if ( (*i) == GravityPowerUp ) {
 
-                GravityPowerUp = nullptr; }
+                GravityPowerUp = nullptr;
+
+                displayNotification( "Gravity is back to normal" ); }
 
             if ( (*i) == AsteroidPowerUp ) {
 
-                AsteroidPowerUp = nullptr; }
+                AsteroidPowerUp = nullptr;
+
+                displayNotification( "Asteroids are back to normal" ); }
 
             delete (*i);
             i = PowerUps.erase( i ); }

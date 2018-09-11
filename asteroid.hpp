@@ -1,7 +1,6 @@
 #ifndef GRAVITY_MADNESS_ASTEROID
 #define GRAVITY_MADNESS_ASTEROID
 
-#include <SFML/Graphics.hpp>
 #include "body.hpp"
 #include "body-collision.hpp"
 #include "graphics-module.hpp"

@@ -1,5 +1,13 @@
 #include "missile.hpp"
 
+void Missile::setSpaceship ( Spaceship * MySpaceship ) {
+
+    this->MySpaceship = MySpaceship; }
+
+void Missile::setScoreCounter ( ScoreCounter * MyScore ) {
+
+    this->MyScore = MyScore; }
+
 float Missile::getInfluenceRadius ( ) {
 
     // TODO
@@ -160,8 +168,18 @@ ParticleSystem * Missile::onCollision ( Spaceship * Other ) {
 
     Other->updateHealth( - ExplosionPower );
     Other->updateHealth( - 10.f * Collision.getReleasedEnergy() );
-
     Other->setVelocity( Collision.getSecondVelocity() );
+
+    if ( MyScore ) {
+
+        if ( Other->isDestructed() ) {
+
+            MyScore->update( ScoreCounter::Event::MissileDestruction ); }
+
+        else {
+
+            MyScore->update( ScoreCounter::Event::MissileHit ); } }
+
     destruct();
 
     return Explosion; }

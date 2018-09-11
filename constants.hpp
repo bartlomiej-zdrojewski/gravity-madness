@@ -5,4 +5,6 @@
 #define SQRT2_2ND 0.70710678118f
 #define RAD_TO_DEG 57.2957795131f
 
+#define MAXIMUM_PLAYER_COUNT 4
+
 #endif

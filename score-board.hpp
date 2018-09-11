@@ -1,7 +1,6 @@
-#ifndef GRAVITY_MADNESS_SCORE_BOARD_HPP
-#define GRAVITY_MADNESS_SCORE_BOARD_HPP
+#ifndef GRAVITY_MADNESS_SCORE_BOARD
+#define GRAVITY_MADNESS_SCORE_BOARD
 
-#include <SFML/Graphics.hpp>
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 

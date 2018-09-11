@@ -4,16 +4,15 @@
 #include <algorithm>
 #include <cmath>
 #include <list>
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
+#include <random>
+#include "asteroid.hpp"
+#include "body.hpp"
 #include "constants.hpp"
 #include "controllers/aggressive-ai-controller.hpp"
 #include "controllers/ai-controller.hpp"
 #include "controllers/passive-ai-controller.hpp"
 #include "controllers/player-controller.hpp"
 #include "controllers/reasonable-ai-controller.hpp"
-#include "asteroid.hpp"
-#include "body.hpp"
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 #include "missile.hpp"
@@ -64,14 +63,15 @@ private:
     static float getDistance ( sf::Vector2f A, sf::Vector2f B );
     static float getRandomFloat ( );
 
-    void destructBody ( Body * Object );
-
     bool isPlayer ( Spaceship * MySpaceship );
     bool isOnScreen ( sf::Vector2f Center, float Radius );
     bool isOnScreen ( sf::FloatRect Area );
 
     unsigned int getAlivePlayerCount ( );
     int getLastAlivePlayer ( );
+
+    void destructBody ( Body * Object );
+    void displayNotification ( std::string Message );
 
     Spaceship * getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection, bool AffectMissiles = true );
     Spaceship * getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle );
@@ -109,13 +109,11 @@ private:
     sf::Time SkipProtectionTime;
 
     unsigned int PlayerCount;
-    const static int MaximumPlayerCount = 4;
-    Spaceship * PlayerSpaceship [MaximumPlayerCount];
-    unsigned int PlayerScore [MaximumPlayerCount];
-    float PlayerScoreMultiplier [MaximumPlayerCount];
-    sf::Vector2f PlayerFinalVelocity [MaximumPlayerCount];
-    sf::View Views [MaximumPlayerCount];
-    PlayerInterface * Interface [MaximumPlayerCount];
+    Spaceship * PlayerSpaceship [ MAXIMUM_PLAYER_COUNT ];
+    ScoreCounter * PlayerScore [ MAXIMUM_PLAYER_COUNT ];
+    sf::Vector2f PlayerFinalVelocity [ MAXIMUM_PLAYER_COUNT ];
+    sf::View Views [ MAXIMUM_PLAYER_COUNT ];
+    PlayerInterface * Interface [ MAXIMUM_PLAYER_COUNT ];
 
     unsigned int AsteroidCount;
     sf::Time AsteroidPauseTime;

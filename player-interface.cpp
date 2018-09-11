@@ -1,3 +1,4 @@
+#include <iostream>
 #include "player-interface.hpp"
 
 PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
@@ -5,6 +6,7 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
     this->Graphics = Graphics;
 
     MySpaceship = nullptr;
+    MyScore = nullptr;
     Viewport = sf::FloatRect( 0.f, 0.f, Graphics->getWindowWidth(), Graphics->getWindowHeight() );
 
     Health = 0;
@@ -15,6 +17,28 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
     MissileCount = 0;
     MissileLimit = 3;
     MissileTexture = Graphics->getTexture( "MissileIcon" );
+
+    ScoreValue = 0;
+    ScoreValueFloating = 0.f;
+    ScoreValueSpeed = 5000.f;
+    ScoreFontSize = 100;
+    ScoreHorizontalOffset = 0.f;
+    ScoreMultiplierTextWidth = 0.f;
+
+    ScoreMultiplierValue = 1.f;
+    ScoreMultiplierValueSpeed = 1.f;
+    ScoreMultiplierFontSize = 100;
+    ScoreMultiplierHorizontalOffset = 0.f;
+
+    Arrow = false;
+    ArrowAngle = 0.f;
+    ArrowTexture = Graphics->getTexture( "Arrow" );
+
+    NotificationOpacity = 0.f;
+    NotificationFontSize = 100;
+    NotificationDuration = sf::seconds( 3.5f );
+    NotificationFadeInDuration = sf::seconds( 0.5f );
+    NotificationFadeOutDuration = sf::seconds( 1.f );
 
     ActivatedOpacity = 0.87f;
     UnactivatedOpacity = 0.34f;
@@ -31,13 +55,21 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
 
     DamageFade = false;
     DamageFadeTime = sf::seconds( 0.f );
-    DamageFadeDuration = sf::seconds( 0.5f );
-
-    }
+    DamageFadeDuration = sf::seconds( 0.5f ); }
 
 void PlayerInterface::setSpaceship ( Spaceship * MySpaceship ) {
 
     this->MySpaceship = MySpaceship; }
+
+void PlayerInterface::setScoreCounter ( ScoreCounter * MyScore ) {
+
+    this->MyScore = MyScore;
+
+    if ( MyScore ) {
+
+        ScoreValue = MyScore->getScore();
+        ScoreValueFloating = ScoreValue;
+        ScoreMultiplierValue = MyScore->getMultiplier(); } }
 
 void PlayerInterface::setViewport ( sf::FloatRect Viewport ) {
 
@@ -47,6 +79,18 @@ void PlayerInterface::setViewport ( sf::FloatRect Viewport ) {
     Viewport.height = Graphics->getWindowHeight() * Viewport.height;
 
     this->Viewport = Viewport; }
+
+void PlayerInterface::enableArrow ( ) {
+
+    Arrow = true; }
+
+void PlayerInterface::disableArrow ( ) {
+
+    Arrow = false; }
+
+void PlayerInterface::displayNotification ( std::string Notification ) {
+
+    NextNotification = Notification; }
 
 void PlayerInterface::beginFadeOut ( ) {
 
@@ -104,9 +148,9 @@ void PlayerInterface::update ( sf::Time ElapsedTime ) {
     updateHealthBar( ElapsedTime );
     updateEnergyBar( ElapsedTime );
     updateMissileTab( ElapsedTime );
-    // ...
-
-    }
+    updateScoreTab( ElapsedTime );
+    updateArrow( ElapsedTime );
+    updateNotification( ElapsedTime ); }
 
 void PlayerInterface::render ( sf::RenderWindow &Window ) {
 
@@ -114,12 +158,30 @@ void PlayerInterface::render ( sf::RenderWindow &Window ) {
     renderEnergyBar( Window );
     renderMissileTab( Window );
     renderScoreTab( Window );
+    renderArrow( Window );
+    renderNotification( Window );
     renderFade( Window ); }
 
 void PlayerInterface::onDamage ( ) {
 
     DamageFade = true;
     DamageFadeTime = DamageFadeDuration; }
+
+std::string PlayerInterface::getScoreText ( ) {
+
+    std::string Data = std::to_string( ScoreValue );
+
+    Data = "00000000000" + Data;
+    Data = Data.substr( Data.size() - 12, 12 );
+
+    return Data; }
+
+std::string PlayerInterface::getScoreMultiplierText ( ) {
+
+    char Buffer [256];
+    std::sprintf( Buffer, "%.2f", ScoreMultiplierValue );
+
+    return "multiplier " + std::string( Buffer ); }
 
 void PlayerInterface::updateHealthBar ( sf::Time ElapsedTime ) {
 
@@ -183,11 +245,141 @@ void PlayerInterface::updateMissileTab ( sf::Time ElapsedTime ) {
 
         else {
 
-            MissileTabOpacity[i] = UnactivatedOpacity; } }
+            MissileTabOpacity[i] = UnactivatedOpacity; } } }
 
+void PlayerInterface::updateScoreTab ( sf::Time ElapsedTime ) {
 
+    float ElementSize = 35.f;
 
-    }
+    if ( Viewport.height < 600.f ) {
+
+        ElementSize = 25.f; }
+
+    else if ( Viewport.height > 800.f ) {
+
+        ElementSize = 50.f; }
+
+    if ( MyScore ) {
+
+        if ( ScoreValue < MyScore->getScore() ) {
+
+            float SpeedMultiplier = 1.f;
+
+            while ( ( MyScore->getScore() - ScoreValue ) > ( 3.f * SpeedMultiplier * ScoreValueSpeed ) ) {
+
+                SpeedMultiplier *= 2.f; }
+
+            ScoreValueFloating += SpeedMultiplier * ScoreValueSpeed * ElapsedTime.asSeconds(); }
+
+        if ( ScoreValueFloating > MyScore->getScore() ) {
+
+            ScoreValueFloating = MyScore->getScore(); }
+
+        if ( ScoreMultiplierValue < MyScore->getMultiplier() ) {
+
+            ScoreMultiplierValue += ScoreMultiplierValueSpeed * ElapsedTime.asSeconds();
+
+            if ( ScoreMultiplierValue > MyScore->getMultiplier() ) {
+
+                ScoreMultiplierValue = MyScore->getMultiplier(); } }
+
+        if ( ScoreMultiplierValue > MyScore->getMultiplier() ) {
+
+            ScoreMultiplierValue -= ScoreMultiplierValueSpeed * ElapsedTime.asSeconds();
+
+            if ( ScoreMultiplierValue < MyScore->getMultiplier() ) {
+
+                ScoreMultiplierValue = MyScore->getMultiplier(); } }
+
+        ScoreValue = (unsigned int) ScoreValueFloating; }
+
+    ScoreFontSize = 100;
+    ScoreMultiplierFontSize = 100;
+
+    sf::Text TextPrototype;
+    TextPrototype.setString( "000123456789" );
+    TextPrototype.setFont( Graphics->getFont( "Score" ) );
+    TextPrototype.setCharacterSize( ScoreFontSize );
+
+    while ( TextPrototype.getLocalBounds().height > ElementSize ) {
+
+        TextPrototype.setCharacterSize( --ScoreFontSize ); }
+
+    if ( fabsf( ScoreMultiplierTextWidth - ( 0.75f * TextPrototype.getLocalBounds().width ) ) > 10.f ) { // Shaking text fix
+
+        ScoreMultiplierTextWidth = 0.75f * TextPrototype.getLocalBounds().width; }
+
+    TextPrototype.setString( "multiplier 0.00" );
+    TextPrototype.setFont( Graphics->getFont( "ScoreMultiplier" ) );
+    TextPrototype.setCharacterSize( ScoreMultiplierFontSize );
+
+    while ( TextPrototype.getLocalBounds().width > ScoreMultiplierTextWidth ) {
+
+        TextPrototype.setCharacterSize( --ScoreMultiplierFontSize ); } }
+
+void PlayerInterface::updateArrow ( sf::Time ElapsedTime ) {
+
+    if ( MySpaceship ) {
+
+        ArrowAngle = atan2f( - MySpaceship->getPosition().y, - MySpaceship->getPosition().x ); } }
+
+void PlayerInterface::updateNotification ( sf::Time ElapsedTime ) {
+
+    if ( Notification.empty() ) {
+
+        Notification = NextNotification;
+        NextNotification.clear();
+
+        NotificationTime = sf::seconds( 0.f ); }
+
+    if ( !Notification.empty() ) {
+
+        NotificationTime += ElapsedTime;
+
+        if ( NotificationTime < NotificationFadeInDuration ) {
+
+            NotificationOpacity = NotificationTime / NotificationFadeInDuration; }
+
+        else if ( NotificationTime < ( NotificationFadeInDuration + NotificationDuration ) ) {
+
+            NotificationOpacity = 1.f; }
+
+        else if ( NotificationTime < ( NotificationFadeInDuration + NotificationDuration + NotificationFadeOutDuration ) ) {
+
+            NotificationOpacity = 1.f - ( ( NotificationTime - NotificationFadeInDuration - NotificationDuration ) / NotificationFadeOutDuration ); }
+
+        else {
+
+            Notification.clear();
+
+            NotificationOpacity = 0.f; } }
+
+    float ElementSize = 35.f;
+
+    if ( Viewport.height < 600.f ) {
+
+        ElementSize = 25.f; }
+
+    else if ( Viewport.height > 800.f ) {
+
+        ElementSize = 50.f; }
+
+    NotificationFontSize = 100;
+
+    sf::Text TextPrototype;
+    TextPrototype.setString( "The quick brown fox jumps over the lazy dog." );
+    TextPrototype.setFont( Graphics->getFont( "Notification" ) );
+    TextPrototype.setCharacterSize( NotificationFontSize );
+
+    while ( TextPrototype.getLocalBounds().height > ElementSize ) {
+
+        TextPrototype.setCharacterSize( --NotificationFontSize ); }
+
+    TextPrototype.setString( Notification );
+
+    while ( TextPrototype.getLocalBounds().width > ( 0.75f * Viewport.width ) ) {
+
+        TextPrototype.setCharacterSize( --NotificationFontSize ); } }
 
 void PlayerInterface::renderHealthBar ( sf::RenderWindow &Window ) {
 
@@ -254,9 +446,90 @@ void PlayerInterface::renderMissileTab ( sf::RenderWindow &Window ) {
 
 void PlayerInterface::renderScoreTab ( sf::RenderWindow &Window ) {
 
-    // ...
+    sf::Text ScoreText;
+    ScoreText.setString( getScoreText() );
+    ScoreText.setFont( Graphics->getFont( "Score" ) );
+    ScoreText.setCharacterSize( ScoreFontSize );
 
-    }
+    sf::Text ScoreMultiplierText;
+    ScoreMultiplierText.setString( getScoreMultiplierText() );
+    ScoreMultiplierText.setFont( Graphics->getFont( "ScoreMultiplier" ) );
+    ScoreMultiplierText.setCharacterSize( ScoreMultiplierFontSize );
+
+    #if ( SFML_VERSION_MINOR > 4 )
+
+        ScoreText.setLetterSpacing( 0.35f );
+        ScoreMultiplierText.setLetterSpacing( 0.35f );
+
+    #endif
+
+    ScoreText.setPosition( sf::Vector2f( Viewport.width - ScoreText.getLocalBounds().width - 15.f, 15.f ) );
+    ScoreMultiplierText.setPosition( sf::Vector2f( Viewport.width - ScoreMultiplierText.getLocalBounds().width - 15.f, ScoreText.getPosition().y + ScoreText.getLocalBounds().height + 15.f ) );
+    ScoreText.move( - ( ScoreText.getLocalBounds().width * 0.025f ), - ScoreText.getLocalBounds().height * 0.45f ); // Offset fix
+    ScoreMultiplierText.move( - ( ScoreMultiplierText.getLocalBounds().width * 0.025f ), - ScoreMultiplierText.getLocalBounds().height * 0.45f ); // Offset fix
+
+    if ( fabsf( ScoreHorizontalOffset - ScoreText.getPosition().x ) > 5.f ) { // Shaking text fix
+
+        ScoreHorizontalOffset = ScoreText.getPosition().x; }
+
+    else {
+
+        ScoreText.setPosition( ScoreHorizontalOffset, ScoreText.getPosition().y ); }
+
+    if ( fabsf( ScoreMultiplierHorizontalOffset - ScoreMultiplierText.getPosition().x ) > 5.f ) { // Shaking text fix
+
+        ScoreMultiplierHorizontalOffset = ScoreMultiplierText.getPosition().x; }
+
+    else {
+
+        ScoreMultiplierText.setPosition( ScoreMultiplierHorizontalOffset, ScoreMultiplierText.getPosition().y ); }
+
+    #if ( SFML_VERSION_MINOR >= 4 )
+
+        ScoreText.setOutlineThickness( 1.f );
+        ScoreText.setOutlineColor( sf::Color( 33, 33, 33 ) );
+        ScoreText.setFillColor( sf::Color( 250, 250, 250 ) );
+
+        ScoreMultiplierText.setOutlineThickness( 1.f );
+        ScoreMultiplierText.setOutlineColor( sf::Color( 33, 33, 33 ) );
+        ScoreMultiplierText.setFillColor( sf::Color( 238, 238, 238 ) );
+
+    #else
+
+        ScoreText.setColor( sf::Color( 250, 250, 250 ) );
+        ScoreMultiplierText.setColor( sf::Color( 238, 238, 238 ) );
+
+    #endif
+
+    Window.draw( ScoreText );
+    Window.draw( ScoreMultiplierText ); }
+
+void PlayerInterface::renderArrow ( sf::RenderWindow &Window ) {
+
+    if ( Arrow ) {
+
+        float ArrowSize = Viewport.height * 0.1f;
+        float ArrowModule = Viewport.height * 0.25f;
+
+        sf::Sprite Sprite ( ArrowTexture );
+        Sprite.setOrigin( ArrowTexture.getSize().x / 2.f, ArrowTexture.getSize().y / 2.f );
+        Sprite.setScale( ArrowSize / ArrowTexture.getSize().x, ArrowSize / ArrowTexture.getSize().y );
+        Sprite.setPosition( ( Viewport.width * 0.5f ) + ArrowModule * cosf( ArrowAngle ), ( Viewport.height * 0.5f ) + ArrowModule * sinf( ArrowAngle ) );
+        Sprite.setRotation( RAD_TO_DEG * ArrowAngle + 90.f );
+
+        Window.draw( Sprite ); } }
+
+void PlayerInterface::renderNotification ( sf::RenderWindow &Window ) {
+
+    sf::Text Text;
+
+    Text.setString( Notification );
+    Text.setFont( Graphics->getFont( "Notification" ) );
+    Text.setCharacterSize( NotificationFontSize );
+    Text.setPosition( ( Viewport.width - Text.getLocalBounds().width ) / 2.f, 0.25f * Viewport.height );
+    Text.setFillColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255 * NotificationOpacity ) ) );
+
+    Window.draw( Text ); }
 
 void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
 

@@ -2,7 +2,7 @@
 #define GRAVITY_MADNESS_BODY
 
 #include <cmath>
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "constants.hpp"
 #include "particle-system.hpp"
 

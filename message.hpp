@@ -1,7 +1,6 @@
-#ifndef GRAVITY_MADNESS_MESSAGE_HPP
-#define GRAVITY_MADNESS_MESSAGE_HPP
+#ifndef GRAVITY_MADNESS_MESSAGE
+#define GRAVITY_MADNESS_MESSAGE
 
-#include <SFML/Graphics.hpp>
 #include "graphics-module.hpp"
 
 class Message {

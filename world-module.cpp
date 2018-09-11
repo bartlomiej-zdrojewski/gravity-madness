@@ -623,7 +623,7 @@ void WorldModule::saveSettings ( ) {
 
             std::string Data;
 
-            for ( unsigned int i = 0; i < Gameplay->getMaximumPlayerCount(); i++ ) {
+            for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
                 if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
@@ -647,7 +647,7 @@ void WorldModule::saveSettings ( ) {
                 Data += ",";
                 Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getMissileShotKey() );
 
-                if ( i != ( Gameplay->getMaximumPlayerCount() - 1 ) ) {
+                if ( i != ( MAXIMUM_PLAYER_COUNT - 1 ) ) {
 
                     Data += "|"; } }
 
@@ -690,7 +690,7 @@ void WorldModule::saveSettings ( ) {
 
         std::string Data;
 
-        for ( unsigned int i = 0; i < Gameplay->getMaximumPlayerCount(); i++ ) {
+        for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
             if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
@@ -714,7 +714,7 @@ void WorldModule::saveSettings ( ) {
             Data += ",";
             Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getMissileShotKey() );
 
-            if ( i != ( Gameplay->getMaximumPlayerCount() - 1 ) ) {
+            if ( i != ( MAXIMUM_PLAYER_COUNT - 1 ) ) {
 
                 Data += "|"; } }
 

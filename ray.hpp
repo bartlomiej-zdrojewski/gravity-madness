@@ -1,5 +1,5 @@
-#ifndef GRAVITY_MADNESS_RAY_HPP
-#define GRAVITY_MADNESS_RAY_HPP
+#ifndef GRAVITY_MADNESS_RAY
+#define GRAVITY_MADNESS_RAY
 
 #include <cmath>
 #include <SFML/Graphics.hpp>

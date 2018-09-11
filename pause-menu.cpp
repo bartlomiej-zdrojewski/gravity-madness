@@ -17,20 +17,30 @@ PauseMenu::PauseMenu ( GraphicsModule * Graphics ) {
 
 void PauseMenu::update ( ) {
 
-    sf::Vector2f SectionMargin = sf::Vector2f ( 20.f, 30.f );
-    sf::Vector2f OptionMargin = sf::Vector2f ( 0.f, 15.f );
+    sf::Vector2f SectionMargin;
+    sf::Vector2f OptionMargin;
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
         SectionMargin = sf::Vector2f ( 12.f, 20.f );
         OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
 
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+
+        SectionMargin = sf::Vector2f ( 20.f, 30.f );
+        OptionMargin = sf::Vector2f ( 0.f, 15.f ); }
+
     else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
 
         SectionMargin = sf::Vector2f ( 60.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
 
-    else if ( Graphics->getWindowHeight() > 1000 ) {
+    else if ( ( (float) Graphics->getWindowWidth() / Graphics->getWindowHeight() ) < 1.5f ) {
+
+        SectionMargin = sf::Vector2f ( 60.f, 60.f );
+        OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
+
+    else {
 
         SectionMargin = sf::Vector2f ( 100.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }

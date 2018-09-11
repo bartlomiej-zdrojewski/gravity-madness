@@ -1,7 +1,6 @@
-#ifndef GRAVITY_MADNESS_DEBUG_MODULE_HPP
-#define GRAVITY_MADNESS_DEBUG_MODULE_HPP
+#ifndef GRAVITY_MADNESS_DEBUG_MODULE
+#define GRAVITY_MADNESS_DEBUG_MODULE
 
-#include <SFML/Graphics.hpp>
 #include "game-module.hpp"
 #include "graphics-module.hpp"
 #include "logger.hpp"
