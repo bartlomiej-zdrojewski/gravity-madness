@@ -29,7 +29,7 @@ public:
         EnergyLimit = 5000.f;
         EnergyRestoration = 40.f;
         Thrust = 120.f;
-        SuppressingFactor = 0.75f;
+        BrakingFactor = 0.75f;
         RayPower = 30.f;
         RayColor = sf::Color( 255, 0, 0 );
         MissileCount = 3;
@@ -64,8 +64,8 @@ public:
     float getThrust ( );
     void setThrust ( float Thrust );
 
-    float getSuppressingFactor ( );
-    void setSuppressingFactor ( float SuppressingFactor );
+    float getBrakingFactor ( );
+    void setBrakingFactor ( float BrakingFactor );
 
     float getRayPower ( );
     void setRayPower ( float RayPower );
@@ -80,7 +80,7 @@ public:
 
     void setTexture ( sf::Texture &Texture );
     void setAccentTexture ( sf::Texture &AccentTexture, sf::Color AccentColor );
-    void setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color ThrusterExhaustColor );
+    void setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color ThrusterFuelColor );
 
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );
@@ -109,7 +109,7 @@ private:
     float EnergyRestoration;
     float EnergyLimit;
     float Thrust;
-    float SuppressingFactor;
+    float BrakingFactor;
     float RayPower;
     sf::Color RayColor;
     unsigned int MissileCount;
@@ -122,7 +122,7 @@ private:
     float ThrusterAngleOffset;
     float ThrusterMaximumAngleOffset;
     ParticleSystem ThrusterExhaust;
-    sf::Color ThrusterExhaustColor;
+    sf::Color ThrusterFuelColor;
 
     };
 

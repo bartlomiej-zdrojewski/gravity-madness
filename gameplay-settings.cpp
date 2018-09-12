@@ -42,8 +42,8 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     auto EnergyLimitNode = Config->getChildren( SpaceshipNode, "EnergyLimit" );
                     auto EnergyRestorationNode = Config->getChildren( SpaceshipNode, "EnergyRestoration" );
                     auto ThrustNode = Config->getChildren( SpaceshipNode, "Thrust" );
-                    auto SuppressingFactorNode = Config->getChildren( SpaceshipNode, "SuppressingFactor" );
-                    auto ExhaustColorNode = Config->getChildren( SpaceshipNode, "ExhaustColor" );
+                    auto BrakingFactorNode = Config->getChildren( SpaceshipNode, "BrakingFactor" );
+                    auto FuelColorNode = Config->getChildren( SpaceshipNode, "FuelColor" );
                     auto RayPowerNode = Config->getChildren( SpaceshipNode, "RayPower" );
                     auto RayColorNode = Config->getChildren( SpaceshipNode, "RayColor" );
                     auto MissileCountNode = Config->getChildren( SpaceshipNode, "MissileCount" );
@@ -54,11 +54,11 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
 
                     std::vector <pugi::xml_node> * Nodes [NodesCount] = { &NameNode, &TextureNode, &AccentTextureNode,
                         &MassNode, &RadiusNode, &HealthLimitNode, &HealthRestorationNode, &EnergyLimitNode, &EnergyRestorationNode,
-                        &ThrustNode, &SuppressingFactorNode, &ExhaustColorNode, &RayPowerNode, &RayColorNode, &MissileCountNode,
+                        &ThrustNode, &BrakingFactorNode, &FuelColorNode, &RayPowerNode, &RayColorNode, &MissileCountNode,
                         &MissileLimitNode, &ScoreMultiplierNode };
 
                     std::string NodeNames [NodesCount] = { "Name", "Texture", "AccentTexture", "Mass", "Radius", "HealthLimit",
-                        "HealthRestoration", "EnergyLimit", "EnergyRestoration", "Thrust", "SuppressingFactor", "ExhaustColor",
+                        "HealthRestoration", "EnergyLimit", "EnergyRestoration", "Thrust", "BrakingFactor", "FuelColor",
                         "RayPower", "RayColor", "MissileCount", "MissileLimit", "ScoreMultiplier" };
 
                     bool Skip = false;
@@ -89,8 +89,8 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     Prototype.EnergyLimit = Script::getRealValue( EnergyLimitNode[0] );
                     Prototype.EnergyRestoration = Script::getRealValue( EnergyRestorationNode[0] );
                     Prototype.Thrust = Script::getRealValue( ThrustNode[0] );
-                    Prototype.SuppressingFactor = Script::getRealValue( SuppressingFactorNode[0] );
-                    Prototype.ExhaustColor = Script::getColorValue( ExhaustColorNode[0] );
+                    Prototype.BrakingFactor = Script::getRealValue( BrakingFactorNode[0] );
+                    Prototype.FuelColor = Script::getColorValue( FuelColorNode[0] );
                     Prototype.RayPower = Script::getRealValue( RayPowerNode[0] );
                     Prototype.RayColor = Script::getColorValue( RayColorNode[0] );
                     Prototype.MissileCount = (unsigned int) Script::getIntegerValue( MissileCountNode[0] );
@@ -707,14 +707,14 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
     Prototype.Texture = "Spaceship";
     Prototype.AccentTexture = "SpaceshipAccent";
     Prototype.Mass = 400.f;
-    Prototype.Radius = 20.f;
+    Prototype.Radius = 25.f;
     Prototype.HealthLimit = 200;
     Prototype.HealthRestoration = 2.f;
     Prototype.EnergyLimit = 2500;
     Prototype.EnergyRestoration = 20;
     Prototype.Thrust = 75;
-    Prototype.SuppressingFactor = 0.6;
-    Prototype.ExhaustColor = sf::Color( 255, 82, 82 );
+    Prototype.BrakingFactor = 0.6;
+    Prototype.FuelColor = sf::Color( 255, 82, 82 );
     Prototype.RayPower = 20;
     Prototype.RayColor = sf::Color( 255, 23, 68 );
     Prototype.MissileCount = 3;

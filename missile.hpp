@@ -26,6 +26,10 @@ public:
         Thrust = 250.f;
         ThrustReduction = 25.f;
 
+        // ThrusterTexture;
+        ThrusterAngleOffset = 0.f;
+        ThrusterMaximumAngleOffset = 0.1f * PI;
+
         ExplosionDelay = sf::seconds( 5.f );
         ExplosionTime = ExplosionDelay; }
 
@@ -45,6 +49,9 @@ public:
 
     sf::Time getExplosionDelay ( );
     void setExplosionDelay ( sf::Time ExplosionDelay );
+
+    void setTexture ( sf::Texture &Texture );
+    void setThrusterTexture ( sf::Texture &ThrusterTexture );
 
     Spaceship * getTarget ( );
     void setTarget ( Spaceship * Target );
@@ -69,6 +76,12 @@ private:
     float ExplosionPower;
     float Thrust;
     float ThrustReduction;
+
+    sf::Texture Texture;
+    sf::Texture ThrusterTexture;
+    float ThrusterAngleOffset;
+    float ThrusterMaximumAngleOffset;
+    ParticleSystem ThrusterExhaust;
 
     sf::Time ExplosionTime;
     sf::Time ExplosionDelay;

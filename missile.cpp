@@ -48,6 +48,14 @@ void Missile::setExplosionDelay ( sf::Time ExplosionDelay ) {
     ExplosionTime = ExplosionDelay;
     this->ExplosionDelay = ExplosionDelay; }
 
+void Missile::setTexture ( sf::Texture &Texture ) {
+
+    this->Texture = Texture; }
+
+void Missile::setThrusterTexture ( sf::Texture &ThrusterTexture ) {
+
+    this->ThrusterTexture = ThrusterTexture; }
+
 Spaceship * Missile::getTarget ( ) {
 
     return Target; }
@@ -73,13 +81,21 @@ void Missile::update ( sf::Time ElapsedTime ) {
             float AngleDifference = atan2f( Target->getPosition().y - getPosition().y, Target->getPosition().x - getPosition().x );
             AngleDifference = normalizeAngle( Angle - AngleDifference );
 
-            if ( AngleDifference > 0.f ) {
+            if ( fabsf( AngleDifference ) > ( PI / 18.f ) ) {
 
-                Angle -= PI / 3.f; }
+                if ( AngleDifference > 0.f ) {
 
-            else if ( AngleDifference < 0.f ) {
+                    Angle -= PI / 3.f;
+                    ThrusterAngleOffset = ThrusterMaximumAngleOffset; }
 
-                Angle += PI / 3.f; } }
+                else if ( AngleDifference < 0.f ) {
+
+                    Angle += PI / 3.f;
+                    ThrusterAngleOffset = - ThrusterMaximumAngleOffset; } }
+
+            else {
+
+                ThrusterAngleOffset = 0.f; } }
 
         Thrust -= ThrustReduction * ElapsedTime.asSeconds();
 
@@ -89,22 +105,55 @@ void Missile::update ( sf::Time ElapsedTime ) {
             Acceleration.x = Thrust * cosf( Angle );
             Acceleration.y = Thrust * sinf( Angle );
 
-            updateVelocity( Acceleration, ElapsedTime ); }
+            updateVelocity( Acceleration, ElapsedTime );
 
-        updatePosition( ElapsedTime ); } }
+            sf::Vector2f ThrusterPosition = getPosition();
+            ThrusterPosition += ( 0.84375f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
+            ThrusterPosition += ( 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
+
+            ThrusterExhaust.setOriginPosition( ThrusterPosition );
+            ThrusterExhaust.setOriginVelocity( getVelocity() );
+            ThrusterExhaust.setAngleRange( PI + getVelocityAngle() + ThrusterAngleOffset, 0.05f * PI );
+            ThrusterExhaust.setVelocityRange( 250.f, 500.f );
+            ThrusterExhaust.setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+            ThrusterExhaust.setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
+            ThrusterExhaust.generateParticles( (unsigned int) ( ( Thrust / 100.f ) * 200 * ElapsedTime.asSeconds() ) ); }
+
+        updatePosition( ElapsedTime );
+        ThrusterExhaust.update( ElapsedTime ); } }
 
 void Missile::render ( sf::RenderWindow &Window ) { // TODO
 
     sf::CircleShape Circle;
-
     Circle.setRadius( getRadius() );
     Circle.setOrigin( getRadius(), getRadius() );
     Circle.setPosition( getPosition() );
     Circle.setFillColor( sf::Color( 0, 0, 255 ) );
 
-    Window.draw( Circle );
+    // -------------------------------
 
-    }
+    sf::Sprite Sprite ( Texture );
+    sf::Sprite ThrusterSprite ( ThrusterTexture );
+
+    Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
+    Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
+    Sprite.setPosition( getPosition() );
+    Sprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
+
+    float ThrusterModule = 0.5f * getRadius();
+    float ThrusterAngle = PI + getVelocityAngle();
+
+    ThrusterSprite.setOrigin( (float) ThrusterTexture.getSize().x / 2, (float) ThrusterTexture.getSize().y / 2 );
+    ThrusterSprite.setScale( ( 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().x, ( 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().y );
+    ThrusterSprite.setOrigin( ThrusterTexture.getSize().x / 2.f, ThrusterTexture.getSize().y / 3.f );
+    ThrusterSprite.setPosition( getPosition() + ThrusterModule * sf::Vector2f( cosf( ThrusterAngle ), sinf( ThrusterAngle ) ) );
+    ThrusterSprite.setRotation( RAD_TO_DEG * ( PI + ThrusterAngle + ThrusterAngleOffset ) + 90.f );
+
+    Window.draw( Circle ); // TODO TEMP
+
+    ThrusterExhaust.render( Window );
+    Window.draw( ThrusterSprite );
+    Window.draw( Sprite ); }
 
 void Missile::onShot ( ) {
 

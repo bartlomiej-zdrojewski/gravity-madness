@@ -53,7 +53,7 @@ void GraphicsModule::init ( ) {
 
                         logWarning( "Graphics module config script has unexpected structure, 'Graphics/Textures/Path' node is not unique." ); }
 
-                    std::string PrePath = Config->getTextValue( PrePathNode[0] );
+                    std::string PrePath = Script::getTextValue( PrePathNode[0] );
 
                     if ( !TextureNodes.empty() ) {
 
@@ -66,8 +66,8 @@ void GraphicsModule::init ( ) {
 
                                 GraphicFile File;
 
-                                std::string Name = Config->getTextValue( NameNode[0] );
-                                std::string Path = Config->getTextValue( PathNode[0] );
+                                std::string Name = Script::getTextValue( NameNode[0] );
+                                std::string Path = Script::getTextValue( PathNode[0] );
 
                                 for ( size_t i = 0; i < Name.size(); i++ ) {
 
@@ -117,7 +117,7 @@ void GraphicsModule::init ( ) {
 
                         logWarning( "Graphics module config script has unexpected structure, 'Graphics/Fonts/Path' node is not unique." ); }
 
-                    std::string PrePath = Config->getTextValue( PrePathNode[0] );
+                    std::string PrePath = Script::getTextValue( PrePathNode[0] );
 
                     if ( !FontNodes.empty() ) {
 
@@ -130,8 +130,8 @@ void GraphicsModule::init ( ) {
 
                                 GraphicFile File;
 
-                                std::string Name = Config->getTextValue( NameNode[0] );
-                                std::string Path = Config->getTextValue( PathNode[0] );
+                                std::string Name = Script::getTextValue( NameNode[0] );
+                                std::string Path = Script::getTextValue( PathNode[0] );
 
                                 for ( size_t i = 0; i < Name.size(); i++ ) {
 

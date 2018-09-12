@@ -62,8 +62,8 @@ public:
         float EnergyLimit;
         float EnergyRestoration;
         float Thrust;
-        float SuppressingFactor;
-        sf::Color ExhaustColor;
+        float BrakingFactor;
+        sf::Color FuelColor;
         float RayPower;
         sf::Color RayColor;
         unsigned int MissileCount;

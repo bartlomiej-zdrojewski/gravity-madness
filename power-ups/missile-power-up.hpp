@@ -1,5 +1,5 @@
-#ifndef GRAVITY_MADNESS_MISSILE_POWER_UP_HPP
-#define GRAVITY_MADNESS_MISSILE_POWER_UP_HPP
+#ifndef GRAVITY_MADNESS_MISSILE_POWER_UP
+#define GRAVITY_MADNESS_MISSILE_POWER_UP
 
 #include "../graphics-module.hpp"
 #include "power-up.hpp"

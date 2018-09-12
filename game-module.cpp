@@ -144,14 +144,14 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setEnergy( Prototype.EnergyLimit );
         NewSpaceship->setEnergyRestoration( Prototype.EnergyRestoration );
         NewSpaceship->setThrust( Prototype.Thrust );
-        NewSpaceship->setSuppressingFactor( Prototype.SuppressingFactor );
+        NewSpaceship->setBrakingFactor( Prototype.BrakingFactor );
         NewSpaceship->setRayPower( Prototype.RayPower );
         NewSpaceship->setRayColor( Prototype.RayColor );
         NewSpaceship->setMissileLimit( Prototype.MissileLimit );
         NewSpaceship->setMissileCount( Prototype.MissileCount );
         NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
         NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color::Red ); // TODO MORE COLORS
-        NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.ExhaustColor );
+        NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.FuelColor );
 
         float PositionAngle = ( (float) SpaceshipOrder[i] / (float) Gameplay->getSpaceshipCount() ) * ( 2.f * PI );
         float PositionModule = AreaRadius - 200.f;
@@ -812,7 +812,7 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
 
     return Target; }
 
-Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float MaximumAngle, float &Distance, float &Angle ) {
+Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float DetectionAngle, float &Distance, float &Angle ) {
 
     float TargetDistance = 1000000.f;
     Spaceship * Target = nullptr;
@@ -835,7 +835,7 @@ Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float MaximumA
         float AngleDifference = atan2f( ActiveSpaceship->getPosition().y - Requester->getPosition().y, ActiveSpaceship->getPosition().x - Requester->getPosition().x );
         AngleDifference = Requester->normalizeAngle( Requester->getVelocityAngle() - AngleDifference );
 
-        if ( fabsf( AngleDifference ) <= ( 0.5f * MaximumAngle ) ) {
+        if ( fabsf( AngleDifference ) <= ( 0.5f * DetectionAngle ) ) {
 
             Distance = getDistance( Requester->getPosition(), ActiveSpaceship->getPosition() );
 
@@ -855,7 +855,7 @@ Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float MaximumA
 
     return Target; }
 
-Spaceship * GameModule::getAngularTarget ( Missile * Requester, float MaximumAngle ) {
+Spaceship * GameModule::getAngularTarget ( Missile * Requester, float DetectionAngle ) {
 
     float TargetDistance = 1000000.f;
     Spaceship * Target = nullptr;
@@ -869,7 +869,7 @@ Spaceship * GameModule::getAngularTarget ( Missile * Requester, float MaximumAng
         float AngleDifference = atan2f( ActiveSpaceship->getPosition().y - Requester->getPosition().y, ActiveSpaceship->getPosition().x - Requester->getPosition().x );
         AngleDifference = Requester->normalizeAngle( Requester->getVelocityAngle() - AngleDifference );
 
-        if ( fabsf( AngleDifference ) <= ( 0.5f * MaximumAngle ) ) {
+        if ( fabsf( AngleDifference ) <= ( 0.5f * DetectionAngle ) ) {
 
             float Distance = getDistance( Requester->getPosition(), ActiveSpaceship->getPosition() );
 
@@ -1327,6 +1327,8 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             NewMissile->setPosition( MissilePosition );
             NewMissile->setVelocity( ActiveSpaceship->getVelocity() );
+            // TODO NewMissile->setTexture( Graphics->getTexture( "Missile" ) );
+            NewMissile->setThrusterTexture( Graphics->getTexture( "Thruster" ) );
             NewMissile->setTarget( Target );
 
             Missiles.push_back( NewMissile ); } }

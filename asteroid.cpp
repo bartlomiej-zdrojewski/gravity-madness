@@ -28,7 +28,7 @@ void Asteroid::update ( sf::Time ElapsedTime ) {
 
     updatePosition( ElapsedTime ); }
 
-void Asteroid::render ( sf::RenderWindow &Window ) { // TODO
+void Asteroid::render ( sf::RenderWindow &Window ) {
 
     sf::Sprite Sprite ( Texture );
 
@@ -38,9 +38,7 @@ void Asteroid::render ( sf::RenderWindow &Window ) { // TODO
     Sprite.setRotation( RAD_TO_DEG * Angle );
     Sprite.setColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255.f * DestructionTime.asSeconds() / DestructionDuration.asSeconds() ) ) );
 
-    Window.draw( Sprite );
-
-    }
+    Window.draw( Sprite ); }
 
 ParticleSystem * Asteroid::onCollision ( Planet * Other ) {
 

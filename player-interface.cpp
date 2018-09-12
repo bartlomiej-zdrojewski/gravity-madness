@@ -16,7 +16,7 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
 
     MissileCount = 0;
     MissileLimit = 3;
-    MissileTexture = Graphics->getTexture( "MissileIcon" );
+    MissileTexture = Graphics->getTexture( "IconMissile" );
 
     ScoreValue = 0;
     ScoreValueFloating = 0.f;
@@ -32,7 +32,7 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
 
     Arrow = false;
     ArrowAngle = 0.f;
-    ArrowTexture = Graphics->getTexture( "Arrow" );
+    ArrowTexture = Graphics->getTexture( "IconArrow" );
 
     NotificationOpacity = 0.f;
     NotificationFontSize = 100;

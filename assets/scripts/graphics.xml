@@ -7,13 +7,13 @@
         <Path>assets/graphics/textures/</Path>
 
         <Texture>
-            <Name>Arrow</Name>
-            <Path>arrow.png</Path>
+            <Name>IconArrow</Name>
+            <Path>icon-arrow.png</Path>
         </Texture>
 
         <Texture>
-            <Name>MissileIcon</Name>
-            <Path>missile-icon.png</Path>
+            <Name>IconMissile</Name>
+            <Path>icon-missile.png</Path>
         </Texture>
 
         <Texture>
@@ -39,6 +39,16 @@
         <Texture>
             <Name>SpaceshipAccentAzrael</Name>
             <Path>spaceship-accent-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipGogmagog</Name>
+            <Path>spaceship-gogmagog.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentGogmagog</Name>
+            <Path>spaceship-accent-gogmagog.png</Path>
         </Texture>
 
         <Texture>

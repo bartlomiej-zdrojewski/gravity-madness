@@ -170,8 +170,8 @@ Spaceship * DebugModule::getSpaceship ( ) {
     Prototype.EnergyLimit = 2500;
     Prototype.EnergyRestoration = 20;
     Prototype.Thrust = 75;
-    Prototype.SuppressingFactor = 0.6;
-    Prototype.ExhaustColor = sf::Color( 213, 0, 0 );
+    Prototype.BrakingFactor = 0.6;
+    Prototype.FuelColor = sf::Color( 213, 0, 0 );
     Prototype.RayPower = 20;
     Prototype.RayColor = sf::Color( 255, 23, 68 );
     Prototype.MissileCount = 3;
@@ -187,14 +187,14 @@ Spaceship * DebugModule::getSpaceship ( ) {
     NewSpaceship->setEnergy( Prototype.EnergyLimit );
     NewSpaceship->setEnergyRestoration( Prototype.EnergyRestoration );
     NewSpaceship->setThrust( Prototype.Thrust );
-    NewSpaceship->setSuppressingFactor( Prototype.SuppressingFactor );
+    NewSpaceship->setBrakingFactor( Prototype.BrakingFactor );
     NewSpaceship->setRayPower( Prototype.RayPower );
     NewSpaceship->setRayColor( Prototype.RayColor );
     NewSpaceship->setMissileLimit( Prototype.MissileLimit );
     NewSpaceship->setMissileCount( Prototype.MissileCount );
     NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
     NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color::Red ); // TODO
-    NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.ExhaustColor );
+    NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.FuelColor );
 
     return NewSpaceship; }
 
