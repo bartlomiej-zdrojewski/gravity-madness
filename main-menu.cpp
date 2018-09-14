@@ -288,6 +288,18 @@ std::string MainMenu::getTimeText ( sf::Time Time ) {
 
     return std::to_string( (unsigned int) ( Time.asSeconds() / 60.f ) ) + " minutes"; }
 
+std::string MainMenu::blankUnderscore ( std::string Text ) {
+
+    size_t Position = Text.find( '_' );
+
+    while ( Position != std::string::npos ) {
+
+        Text.replace( Position, 1, " " );
+
+        Position = Text.find( '_' ); }
+
+    return Text; }
+
 void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
     sf::Vector2f SectionMargin;
@@ -952,7 +964,7 @@ void MainMenu::updateGameplaySection_BindRight ( ) {
 
             else if ( GameplayPage == 1 ) {
 
-                if ( Gameplay->getPlayerCount() < 4 ) {
+                if ( Gameplay->getPlayerCount() < MAXIMUM_PLAYER_COUNT ) {
 
                     Gameplay->setPlayerCount( Gameplay->getPlayerCount() + 1 ); } }
 
@@ -1789,26 +1801,26 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
     sf::Text TextPrototype;
     TextPrototype.setString( "" );
-    TextPrototype.setFont( Graphics->getFont( "StintUltraCondensedRegular" ) );
+    TextPrototype.setFont( Graphics->getFont( "SairaCondensedLight" ) );
     TextPrototype.setCharacterSize( TableColumnHeaderFontSize );
 
     // TODO COLUMN HEADER
 
     TextPrototype.setString( "" );
-    TextPrototype.setFont( Graphics->getFont( "StintUltraCondensedRegular" ) );
+    TextPrototype.setFont( Graphics->getFont( "SairaCondensedLight" ) );
     TextPrototype.setCharacterSize( TableRowHeaderFontSize );
 
     // TODO ROW HEADER
 
-    TextPrototype.setString( "SHIFT_RIGHT" );
-    TextPrototype.setFont( Graphics->getFont( "StintUltraCondensedRegular" ) );
+    TextPrototype.setString( "SHIFT RIGHT" );
+    TextPrototype.setFont( Graphics->getFont( "SairaCondensedLight" ) );
     TextPrototype.setCharacterSize( TableContentFontSize );
 
     while ( TextPrototype.getLocalBounds().width > ( SectionSize.x * 0.9f * TableCellWidth ) ) {
 
         TextPrototype.setCharacterSize( --TableContentFontSize ); }
 
-    while ( TextPrototype.getLocalBounds().height > ( SectionSize.y * 0.9f * TableCellHeight ) ) {
+    while ( TextPrototype.getLocalBounds().height > ( SectionSize.y * 0.8f * TableCellHeight ) ) {
 
         TextPrototype.setCharacterSize( --TableContentFontSize ); }
 
@@ -1838,6 +1850,18 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
         for ( unsigned int j = 1; j < ColumnsCount; j++ ) {
 
+            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setString( "SHIFT RIGHT" );
+            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setFont( Graphics->getFont( "SairaCondensedLight" ) );
+            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setCharacterSize( TableContentFontSize );
+
+            sf::Vector2f Position;
+            Position.x = TableLeft + ( 1.5f + 0.05f + ( j - 1 ) ) * TableCellWidth;
+            Position.y = TableTop + ( 2.5f + 0.05f + ( i - 2 ) ) * TableCellHeight;
+            Position.x *= SectionSize.x;
+            Position.y *= SectionSize.y;
+            Position += SectionPosition;
+            Position.y += ( SectionSize.y * TableCellHeight - ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].getLocalBounds().height ) / 2.f;
+
             int Key;
 
             switch ( i ) {
@@ -1851,17 +1875,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                 default: Key = -1; break; }
 
-            sf::Vector2f Position;
-            Position.x = TableLeft + ( 1.5f + 0.05f + ( j - 1 ) ) * TableCellWidth;
-            Position.y = TableTop + ( 2.5f + 0.05f + ( i - 2 ) ) * TableCellHeight;
-            Position.x *= SectionSize.x;
-            Position.y *= SectionSize.y;
-            Position += SectionPosition;
-            // TODO offset fix
-
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setString( PlayerControllerSettings::encodeKey( Key ) );
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setFont( Graphics->getFont( "StintUltraCondensedRegular" ) );
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setCharacterSize( TableContentFontSize );
+            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setString( blankUnderscore( PlayerControllerSettings::encodeKey( Key ) ) );
             ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setPosition( Position );
 
             sf::Color FillColor = sf::Color( 189, 189, 189 );
@@ -1904,158 +1918,8 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
     ControllersTableManual.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     ControllersTableManual.setCharacterSize( TableManualFontSize );
     ControllersTableManual.setPosition( Position );
+    ControllersTableManual.move( ControllersTableManual.getLocalBounds().height * CONTROLLERS_MANUAL_FONT_HORIZONTAL_OFFSET_FIX, ControllersTableManual.getLocalBounds().height * CONTROLLERS_MANUAL_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
 
-    // ------------------------
-/*
-
-    ControllersTable.clear();
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop ), sf::Color() ) );
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableBottom ), sf::Color() ) );
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + 1.5f * TableCellWidth, TableTop ), sf::Color() ) );
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + 1.5f * TableCellWidth, TableBottom ), sf::Color() ) );
-
-    for ( unsigned int i = 2; i <= 5; i++ ) {
-
-        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + ( i + 0.5f ) * TableCellWidth, TableTop ), sf::Color() ) );
-        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + ( i + 0.5f ) * TableCellWidth, TableBottom ), sf::Color() ) ); }
-
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop ), sf::Color() ) );
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableRight, TableTop ), sf::Color() ) );
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop + 1.5f * TableCellHeight ), sf::Color() ) );
-    ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableRight, TableTop + 1.5f * TableCellHeight ), sf::Color() ) );
-
-    for ( unsigned int i = 2; i <= 9; i++ ) {
-
-        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft, TableTop + ( i + 0.5f ) * TableCellHeight ), sf::Color() ) );
-        ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableRight, TableTop + ( i + 0.5f ) * TableCellHeight ), sf::Color() ) ); }
-
-    size_t LinesCount = ControllersTable.size();
-
-    for ( unsigned int i = 0; i < LinesCount; i += 2 ) {
-
-        ControllersTable[ 2 * i ].position.x *= SectionSize.x;
-        ControllersTable[ 2 * i ].position.y *= SectionSize.y;
-        ControllersTable[ 2 * i ].position += SectionPosition;
-        ControllersTable[ 2 * i ].color = TableColor;
-
-        ControllersTable[ 2 * i + 1 ].position.x *= SectionSize.x;
-        ControllersTable[ 2 * i + 1 ].position.y *= SectionSize.y;
-        ControllersTable[ 2 * i + 1 ].position += SectionPosition;
-        ControllersTable[ 2 * i + 1 ].color = TableColor;
-
-        if ( i <= 10 ) {
-
-            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i ].position.x + TableThickness, ControllersTable[ 2 * i ].position.y ), ControllersTable[ 2 * i ].color ) );
-            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i + 1 ].position.x + TableThickness, ControllersTable[ 2 * i + 1 ].position.y ), ControllersTable[ 2 * i + 1 ].color ) ); }
-
-        else {
-
-            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i ].position.x, ControllersTable[ 2 * i ].position.y + TableThickness ), ControllersTable[ 2 * i ].color ) );
-            ControllersTable.emplace( ControllersTable.begin() + 2 * i + 2, sf::Vertex( sf::Vector2f( ControllersTable[ 2 * i + 1 ].position.x, ControllersTable[ 2 * i + 1 ].position.y + TableThickness ), ControllersTable[ 2 * i + 1 ].color ) ); } }
-
-    unsigned int TableHeaderFontSize = 100;
-    unsigned int TableContentFontSize = 100;
-    sf::Color TableTextColor = sf::Color( 255, 255, 255 );
-    sf::Color ConnectedJoystickColor = sf::Color( 0, 255, 0 );
-    sf::Color DisconnectedJoystickColor = sf::Color( 255, 0, 0 );
-
-    for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
-
-        ControllersTableHeader[i].setFont( Graphics->getFont( "TableHeader" ) ); }
-
-    for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
-
-        ControllersTableContent[i].setFont( Graphics->getFont( "TableContent" ) ); }
-
-    // TODO HEADERS TEXTS
-
-    for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
-
-        auto Controller = Gameplay->getPlayerControllerSettings( i );
-
-        if ( Controller->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
-
-            ControllersTableContent.emplace_back( sf::Text() );
-            ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT ].setString( "Joystick " + std::to_string( Controller->getJoystickIdentifier() ) ); }
-
-        else {
-
-            ControllersTableContent.emplace_back( sf::Text() );
-            ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT ].setString( "Keyboard" ); }
-
-        ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 1 ].setString( PlayerControllerSettings::encodeKey( Controller->getForwardKey() ) );
-
-        ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 2 ].setString( PlayerControllerSettings::encodeKey( Controller->getBackwardKey() ) );
-
-        ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 3 ].setString( PlayerControllerSettings::encodeKey( Controller->getLeftKey() ) );
-
-        ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 4 ].setString( PlayerControllerSettings::encodeKey( Controller->getRightKey() ) );
-
-        ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 5 ].setString( PlayerControllerSettings::encodeKey( Controller->getRayShotKey() ) );
-
-        ControllersTableContent.emplace_back( sf::Text() );
-        ControllersTableContent[ i * MAXIMUM_PLAYER_COUNT + 6 ].setString( PlayerControllerSettings::encodeKey( Controller->getMissileShotKey() ) ); }
-
-    // TODO TableHeaderFontSize;
-    // TODO TableContentFontSize
-
-    // TODO TEXTS POSITIONS
-
-    #if ( SFML_VERSION_MINOR >= 4 )
-
-        for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
-
-            ControllersTableHeader[i].setCharacterSize( TableHeaderFontSize );
-            ControllersTableHeader[i].setFillColor( TableTextColor ); }
-
-        for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
-
-            ControllersTableContent[i].setCharacterSize( TableContentFontSize );
-            ControllersTableContent[i].setFillColor( TableTextColor ); }
-
-        for ( unsigned int i = 0; i < 4; i++ ) {
-
-            if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
-
-                if ( sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ) ) {
-
-                    ControllersTableContent[i].setFillColor( ConnectedJoystickColor ); }
-
-                else {
-
-                    ControllersTableContent[i].setFillColor( DisconnectedJoystickColor ); } } }
-
-    #else
-
-        for ( unsigned int i = 0; i < ControllersTableHeader.size(); i++ ) {
-
-            ControllersTableHeader[i].setCharacterSize( TableHeaderFontSize );
-            ControllersTableHeader[i].setColor( TableTextColor ); }
-
-        for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
-
-            ControllersTableContent[i].setCharacterSize( TableContentFontSize );
-            ControllersTableContent[i].setColor( TableTextColor ); }
-
-        for ( unsigned int i = 0; i < 4; i++ ) {
-
-            if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
-
-                if ( sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ) ) {
-
-                    ControllersTableContent[i].setColor( ConnectedJoystickColor ); }
-
-                else {
-
-                    ControllersTableContent[i].setColor( DisconnectedJoystickColor ); } } }
-
-    #endif
-*/
     }
 
 void MainMenu::updateControllersSection ( sf::Event &Event ) {
@@ -2141,7 +2005,9 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
                 if ( !ControllersModificationMode ) {
 
                     ControllersModificationMode = true;
-                    ControllersModificationState = 0; }
+                    ControllersModificationState = 0;
+
+                    SettingsChanged = true; }
 
                 break; }
 
@@ -2150,7 +2016,9 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
                 if ( !ControllersModificationMode ) {
 
                     ControllersModificationMode = true;
-                    ControllersModificationState = 0; }
+                    ControllersModificationState = 0;
+
+                    SettingsChanged = true; }
 
                 break; }
 
@@ -2193,6 +2061,15 @@ void MainMenu::renderControllersSection ( sf::RenderWindow &Window ) {
         Window.draw( ControllersTableRowHeader[i] ); }
 
     for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
+
+
+        sf::RectangleShape Rect;
+        Rect.setPosition( ControllersTableContent[i].getPosition() );
+        Rect.setSize( sf::Vector2f( ControllersTableContent[i].getLocalBounds().width, ControllersTableContent[i].getLocalBounds().height ) );
+        Rect.setFillColor( sf::Color::Green );
+        //Window.draw( Rect );
+
+        ControllersTableContent[i].move( ControllersTableManual.getLocalBounds().width * CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX, ControllersTableManual.getLocalBounds().height * CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
 
         Window.draw( ControllersTableContent[i] ); }
 

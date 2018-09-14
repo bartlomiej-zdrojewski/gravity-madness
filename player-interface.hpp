@@ -6,6 +6,9 @@
 #include "score-counter.hpp"
 #include "spaceship.hpp"
 
+#define SCORE_TAB_FONT_HORIZONTAL_OFFSET_FIX (-0.025f)
+#define SCORE_TAB_FONT_VERTICAL_OFFSET_FIX (-0.45f)
+
 class PlayerInterface {
 
 public:

@@ -465,8 +465,8 @@ void PlayerInterface::renderScoreTab ( sf::RenderWindow &Window ) {
 
     ScoreText.setPosition( sf::Vector2f( Viewport.width - ScoreText.getLocalBounds().width - 15.f, 15.f ) );
     ScoreMultiplierText.setPosition( sf::Vector2f( Viewport.width - ScoreMultiplierText.getLocalBounds().width - 15.f, ScoreText.getPosition().y + ScoreText.getLocalBounds().height + 15.f ) );
-    ScoreText.move( - ( ScoreText.getLocalBounds().width * 0.025f ), - ScoreText.getLocalBounds().height * 0.45f ); // Offset fix
-    ScoreMultiplierText.move( - ( ScoreMultiplierText.getLocalBounds().width * 0.025f ), - ScoreMultiplierText.getLocalBounds().height * 0.45f ); // Offset fix
+    ScoreText.move( ScoreText.getLocalBounds().width * SCORE_TAB_FONT_HORIZONTAL_OFFSET_FIX, ScoreText.getLocalBounds().height * SCORE_TAB_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
+    ScoreMultiplierText.move( ScoreMultiplierText.getLocalBounds().width * SCORE_TAB_FONT_HORIZONTAL_OFFSET_FIX, ScoreMultiplierText.getLocalBounds().height * SCORE_TAB_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
 
     if ( fabsf( ScoreHorizontalOffset - ScoreText.getPosition().x ) > 5.f ) { // Shaking text fix
 

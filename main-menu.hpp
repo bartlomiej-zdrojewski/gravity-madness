@@ -7,6 +7,11 @@
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
 
+#define CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
+#define CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX (-0.35f)
+#define CONTROLLERS_MANUAL_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
+#define CONTROLLERS_MANUAL_FONT_VERTICAL_OFFSET_FIX (-0.2f)
+
 class MainMenu {
 
 public:
@@ -39,6 +44,7 @@ private:
 
     static float getRandomFloat ( );
     static std::string getTimeText ( sf::Time Time );
+    static std::string blankUnderscore ( std::string Text );
 
     void updateMenu ( sf::Time ElapsedTime );
     void updateMenu ( sf::Event &Event );
