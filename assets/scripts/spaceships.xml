@@ -8,7 +8,7 @@
         <Texture>SpaceshipAzrael</Texture>
         <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
         <Mass>400.00</Mass>
-        <Radius>25.00</Radius>
+        <Radius>40.00</Radius>
         <HealthLimit>300.00</HealthLimit>
         <HealthRestoration>6.00</HealthRestoration>
         <EnergyLimit>4000.00</EnergyLimit>
@@ -30,7 +30,7 @@
         <Texture>SpaceshipAzrael</Texture>
         <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
         <Mass>400.00</Mass>
-        <Radius>25.00</Radius>
+        <Radius>40.00</Radius>
         <HealthLimit>250.00</HealthLimit>
         <HealthRestoration>2.00</HealthRestoration>
         <EnergyLimit>5000.00</EnergyLimit>
@@ -52,7 +52,7 @@
         <Texture>SpaceshipGogmagog</Texture>
         <AccentTexture>SpaceshipAccentGogmagog</AccentTexture>
         <Mass>1000.00</Mass>
-        <Radius>35.00</Radius>
+        <Radius>50.00</Radius>
         <HealthLimit>500.00</HealthLimit>
         <HealthRestoration>5.00</HealthRestoration>
         <EnergyLimit>8000.00</EnergyLimit>
@@ -74,7 +74,7 @@
         <Texture>SpaceshipAzrael</Texture>
         <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
         <Mass>800.00</Mass>
-        <Radius>30.00</Radius>
+        <Radius>45.00</Radius>
         <HealthLimit>400.00</HealthLimit>
         <HealthRestoration>3.00</HealthRestoration>
         <EnergyLimit>10000.00</EnergyLimit>

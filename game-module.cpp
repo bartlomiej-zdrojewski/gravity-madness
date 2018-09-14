@@ -1327,7 +1327,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             NewMissile->setPosition( MissilePosition );
             NewMissile->setVelocity( ActiveSpaceship->getVelocity() );
-            // TODO NewMissile->setTexture( Graphics->getTexture( "Missile" ) );
+            NewMissile->setTexture( Graphics->getTexture( "Missile" ) );
             NewMissile->setThrusterTexture( Graphics->getTexture( "Thruster" ) );
             NewMissile->setTarget( Target );
 

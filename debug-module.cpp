@@ -42,7 +42,7 @@ void DebugModule::render ( sf::RenderWindow &Window ) {
 
     sf::Text BottomText;
     BottomText.setString( TestTitle[ TestIndex ] );
-    BottomText.setFont( Graphics->getFont( "Debug" ) );
+    BottomText.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     BottomText.setCharacterSize( 20 );
     BottomText.setPosition( Graphics->getWindowWidth() - 15.f - BottomText.getLocalBounds().width, Graphics->getWindowHeight() - 34.f );
 

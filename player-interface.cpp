@@ -298,7 +298,7 @@ void PlayerInterface::updateScoreTab ( sf::Time ElapsedTime ) {
 
     sf::Text TextPrototype;
     TextPrototype.setString( "000123456789" );
-    TextPrototype.setFont( Graphics->getFont( "Score" ) );
+    TextPrototype.setFont( Graphics->getFont( "ShareTechMonoRegular" ) );
     TextPrototype.setCharacterSize( ScoreFontSize );
 
     while ( TextPrototype.getLocalBounds().height > ElementSize ) {
@@ -310,7 +310,7 @@ void PlayerInterface::updateScoreTab ( sf::Time ElapsedTime ) {
         ScoreMultiplierTextWidth = 0.75f * TextPrototype.getLocalBounds().width; }
 
     TextPrototype.setString( "multiplier 0.00" );
-    TextPrototype.setFont( Graphics->getFont( "ScoreMultiplier" ) );
+    TextPrototype.setFont( Graphics->getFont( "ShareTechMonoRegular" ) );
     TextPrototype.setCharacterSize( ScoreMultiplierFontSize );
 
     while ( TextPrototype.getLocalBounds().width > ScoreMultiplierTextWidth ) {
@@ -368,7 +368,7 @@ void PlayerInterface::updateNotification ( sf::Time ElapsedTime ) {
 
     sf::Text TextPrototype;
     TextPrototype.setString( "The quick brown fox jumps over the lazy dog." );
-    TextPrototype.setFont( Graphics->getFont( "Notification" ) );
+    TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     TextPrototype.setCharacterSize( NotificationFontSize );
 
     while ( TextPrototype.getLocalBounds().height > ElementSize ) {
@@ -448,12 +448,12 @@ void PlayerInterface::renderScoreTab ( sf::RenderWindow &Window ) {
 
     sf::Text ScoreText;
     ScoreText.setString( getScoreText() );
-    ScoreText.setFont( Graphics->getFont( "Score" ) );
+    ScoreText.setFont( Graphics->getFont( "ShareTechMonoRegular" ) );
     ScoreText.setCharacterSize( ScoreFontSize );
 
     sf::Text ScoreMultiplierText;
     ScoreMultiplierText.setString( getScoreMultiplierText() );
-    ScoreMultiplierText.setFont( Graphics->getFont( "ScoreMultiplier" ) );
+    ScoreMultiplierText.setFont( Graphics->getFont( "ShareTechMonoRegular" ) );
     ScoreMultiplierText.setCharacterSize( ScoreMultiplierFontSize );
 
     #if ( SFML_VERSION_MINOR > 4 )
@@ -524,7 +524,7 @@ void PlayerInterface::renderNotification ( sf::RenderWindow &Window ) {
     sf::Text Text;
 
     Text.setString( Notification );
-    Text.setFont( Graphics->getFont( "Notification" ) );
+    Text.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     Text.setCharacterSize( NotificationFontSize );
     Text.setPosition( ( Viewport.width - Text.getLocalBounds().width ) / 2.f, 0.25f * Viewport.height );
     Text.setFillColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255 * NotificationOpacity ) ) );

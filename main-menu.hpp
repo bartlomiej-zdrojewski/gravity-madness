@@ -105,10 +105,13 @@ private:
     sf::Vector2f SettingsOptionPosition [9];
 
     std::vector <sf::Vertex> ControllersTable;
-    std::vector <sf::Text> ControllersTableHeader;
+    std::vector <sf::Text> ControllersTableColumnHeader;
+    std::vector <sf::Text> ControllersTableRowHeader;
     std::vector <sf::Text> ControllersTableContent;
+    sf::Text ControllersTableManual;
     sf::Vector2i ControllersTablePointer;
-
+    bool ControllersModificationMode;
+    uint8_t ControllersModificationState;
 
     std::vector <sf::Vertex> Background;
     std::vector <unsigned int> ParticleIndexes;

@@ -22,6 +22,11 @@
         </Texture>
 
         <Texture>
+            <Name>Missile</Name>
+            <Path>missile.png</Path>
+        </Texture>
+
+        <Texture>
             <Name>Spaceship</Name>
             <Path>spaceship-azrael.png</Path>
         </Texture>
@@ -153,48 +158,18 @@
         <Path>assets/graphics/fonts/</Path>
 
         <Font>
-            <Name>Message</Name>
-            <Path>RobotoCondensed-Light.ttf</Path>
+            <Name>RobotoCondensedLight</Name>
+            <Path>roboto-condensed-light.ttf</Path>
         </Font>
 
         <Font>
-            <Name>MainMenu</Name>
-            <Path>RobotoCondensed-Light.ttf</Path>
+            <Name>StintUltraCondensedRegular</Name>
+            <Path>stint-ultra-condensed-regular.ttf</Path>
         </Font>
 
         <Font>
-            <Name>TableHeader</Name>
-            <Path>RobotoCondensed-Light.ttf</Path>
-        </Font>
-
-        <Font>
-            <Name>TableContent</Name>
-            <Path>StintUltraCondensed-Regular.ttf</Path>
-        </Font>
-
-        <Font>
-            <Name>Notification</Name>
-            <Path>RobotoCondensed-Light.ttf</Path>
-        </Font>
-
-        <Font>
-            <Name>Score</Name>
-            <Path>ShareTechMono-Regular.ttf</Path>
-        </Font>
-
-        <Font>
-            <Name>ScoreMultiplier</Name>
-            <Path>ShareTechMono-Regular.ttf</Path>
-        </Font>
-
-        <Font>
-            <Name>PauseMenu</Name>
-            <Path>RobotoCondensed-Light.ttf</Path>
-        </Font>
-
-        <Font>
-            <Name>Debug</Name>
-            <Path>RobotoCondensed-Light.ttf</Path>
+            <Name>ShareTechMonoRegular</Name>
+            <Path>share-tech-mono-regular.ttf</Path>
         </Font>
 
     </Fonts>

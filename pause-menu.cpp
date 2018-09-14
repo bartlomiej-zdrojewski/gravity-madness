@@ -11,7 +11,7 @@ PauseMenu::PauseMenu ( GraphicsModule * Graphics ) {
     Option = 0;
     OptionCount = 3;
 
-    OptionText[0] = "Let's get back to fun";
+    OptionText[0] = "Just get back to fun";
     OptionText[1] = "Try once again";
     OptionText[2] = "Give up and leave"; }
 
@@ -58,7 +58,7 @@ void PauseMenu::update ( ) {
         unsigned int LineCount = 0;
 
         TextPrototype.setString( OptionText[i] );
-        TextPrototype.setFont( Graphics->getFont( "PauseMenu" ) );
+        TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
         TextPrototype.setCharacterSize( OptionFontSize );
 
         do {
@@ -221,7 +221,7 @@ void PauseMenu::render ( sf::RenderWindow &Window ) {
 
     sf::Text Text;
 
-    Text.setFont( Graphics->getFont( "PauseMenu" ) );
+    Text.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     Text.setCharacterSize( OptionFontSize );
 
     for ( unsigned int i = 0; i < OptionCount; i++ ) {

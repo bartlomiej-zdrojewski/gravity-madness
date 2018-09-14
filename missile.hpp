@@ -15,18 +15,17 @@ class Missile : public Body {
 
 public:
 
-    Missile ( ) : Body ( 50.f, 15.f ) {
+    Missile ( ) : Body ( 50.f, 20.f ) {
 
         MySpaceship = nullptr;
         MyScore = nullptr;
         Target = nullptr;
 
-        ExplosionOnDestruction = true;
-        ExplosionPower = 100.f;
         Thrust = 250.f;
         ThrustReduction = 25.f;
+        ExplosionPower = 100.f;
+        ExplosionOnDestruction = true;
 
-        // ThrusterTexture;
         ThrusterAngleOffset = 0.f;
         ThrusterMaximumAngleOffset = 0.1f * PI;
 
@@ -72,10 +71,12 @@ private:
     ScoreCounter * MyScore;
     Spaceship * Target;
 
-    bool ExplosionOnDestruction;
-    float ExplosionPower;
     float Thrust;
     float ThrustReduction;
+    float ExplosionPower;
+    bool ExplosionOnDestruction;
+    sf::Time ReactionTime;
+    sf::Time ReactionDuration;
 
     sf::Texture Texture;
     sf::Texture ThrusterTexture;

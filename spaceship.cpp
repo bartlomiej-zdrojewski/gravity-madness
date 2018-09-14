@@ -239,8 +239,8 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
             updateVelocity( Acceleration, ElapsedTime );
 
             sf::Vector2f ThrusterPosition = getPosition();
-            ThrusterPosition += ( 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
-            ThrusterPosition += ( 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
+            ThrusterPosition += ( SQRT2_2ND * 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
+            ThrusterPosition += ( SQRT2_2ND * 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
 
             ThrusterExhaust.setOriginPosition( ThrusterPosition );
             ThrusterExhaust.setOriginVelocity( getVelocity() );
@@ -311,21 +311,21 @@ void Spaceship::render ( sf::RenderWindow &Window ) {
     sf::Sprite ThrusterSprite ( ThrusterTexture );
 
     Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
-    Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
+    Sprite.setScale( ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().x, ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().y );
     Sprite.setPosition( getPosition() );
     Sprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
 
     AccentSprite.setOrigin( (float) AccentTexture.getSize().x / 2, (float) AccentTexture.getSize().y / 2 );
-    AccentSprite.setScale( ( 2.f * getRadius() ) / AccentTexture.getSize().x, ( 2.f * getRadius() ) / AccentTexture.getSize().y );
+    AccentSprite.setScale( ( SQRT2_2ND * 2.f * getRadius() ) / AccentTexture.getSize().x, ( SQRT2_2ND * 2.f * getRadius() ) / AccentTexture.getSize().y );
     AccentSprite.setPosition( getPosition() );
     AccentSprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
     AccentSprite.setColor( AccentColor );
 
-    float ThrusterModule = 0.5f * getRadius();
+    float ThrusterModule = SQRT2_2ND * 0.5f * getRadius();
     float ThrusterAngle = PI + getVelocityAngle();
 
     ThrusterSprite.setOrigin( (float) ThrusterTexture.getSize().x / 2.f, (float) ThrusterTexture.getSize().y / 2.f );
-    ThrusterSprite.setScale( ( 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().x, ( 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().y );
+    ThrusterSprite.setScale( ( SQRT2_2ND * 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().x, ( SQRT2_2ND * 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().y );
     ThrusterSprite.setOrigin( ThrusterTexture.getSize().x / 2.f, ThrusterTexture.getSize().y / 3.f );
     ThrusterSprite.setPosition( getPosition() + ThrusterModule * sf::Vector2f( cosf( ThrusterAngle ), sinf( ThrusterAngle ) ) );
     ThrusterSprite.setRotation( RAD_TO_DEG * ( PI + ThrusterAngle + ThrusterAngleOffset ) + 90.f );

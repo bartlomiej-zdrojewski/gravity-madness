@@ -32,7 +32,7 @@ void Message::update ( ) {
         return; }
 
     sf::Text TextPrototype;
-    TextPrototype.setFont( Graphics->getFont( "Message" ) );
+    TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
 
     switch ( Type ) {
 
@@ -142,7 +142,7 @@ void Message::render ( sf::RenderWindow &Window ) {
 
     Window.draw( Frame );
 
-    TextPrototype.setFont( Graphics->getFont( "Message" ) );
+    TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     TextPrototype.setCharacterSize( FontSize );
     TextPrototype.setPosition( FramePosition + FrameMargin + sf::Vector2f( 0.f, FontFix ) );
 

@@ -122,11 +122,7 @@ const bool PlayerControllerSettings::isKeyboardKey ( int Key ) {
 
         return true; }
 
-    if ( Key >= sf::Keyboard::Menu && Key <= sf::Keyboard::Space ) {
-
-        return true; }
-
-    if ( Key >= sf::Keyboard::BackSpace && Key <= sf::Keyboard::Pause ) {
+    if ( Key >= sf::Keyboard::Menu && Key <= sf::Keyboard::Pause ) {
 
         return true; }
 
@@ -176,7 +172,7 @@ int PlayerControllerSettings::decodeKey ( std::string Key ) {
 
     return Data->second; }
 
-int PlayerControllerSettings::scanKeyboard ( ) { // Won't allow System, Enter and Escape keys
+int PlayerControllerSettings::scanKeyboard ( ) { // Won't allow System and Escape keys
 
     for ( int i = sf::Keyboard::A; i <= sf::Keyboard::Num9; i++ ) {
 
@@ -196,13 +192,7 @@ int PlayerControllerSettings::scanKeyboard ( ) { // Won't allow System, Enter an
 
             return i; } }
 
-    for ( int i = sf::Keyboard::Menu; i <= sf::Keyboard::Space; i++ ) {
-
-        if ( sf::Keyboard::isKeyPressed( (sf::Keyboard::Key ) i ) ) {
-
-            return i; } }
-
-    for ( int i = sf::Keyboard::BackSpace; i <= sf::Keyboard::Pause; i++ ) {
+    for ( int i = sf::Keyboard::Menu; i <= sf::Keyboard::Pause; i++ ) {
 
         if ( sf::Keyboard::isKeyPressed( (sf::Keyboard::Key ) i ) ) {
 
@@ -310,17 +300,17 @@ const std::unordered_map < int, std::string > PlayerControllerSettings::Encoder 
 
     { sf::Keyboard::Left, "LEFT" }, { sf::Keyboard::Right, "RIGHT" }, { sf::Keyboard::Up, "UP" }, { sf::Keyboard::Down, "DOWN" },
 
-    { sf::Keyboard::LControl, "CONTROL_LEFT" }, { sf::Keyboard::LShift, "SHIFT_LEFT" }, { sf::Keyboard::LAlt, "ALT_LEFT" },
-    { sf::Keyboard::RControl, "CONTROL_RIGHT" }, { sf::Keyboard::RShift, "SHIFT_RIGHT" }, { sf::Keyboard::RAlt, "ALT_RIGHT" },
+    { sf::Keyboard::LControl, "CTRL_LEFT" }, { sf::Keyboard::LShift, "SHIFT_LEFT" }, { sf::Keyboard::LAlt, "ALT_LEFT" },
+    { sf::Keyboard::RControl, "CTRL_RIGHT" }, { sf::Keyboard::RShift, "SHIFT_RIGHT" }, { sf::Keyboard::RAlt, "ALT_RIGHT" },
 
     { sf::Keyboard::Menu, "MENU" }, { sf::Keyboard::LBracket, "[" }, { sf::Keyboard::RBracket, "]" },
     { sf::Keyboard::SemiColon, ";" }, { sf::Keyboard::Comma, "COMMA" }, { sf::Keyboard::Period, "PERIOD" },
     { sf::Keyboard::Quote, "QUOTE" }, { sf::Keyboard::Slash, "/" }, { sf::Keyboard::BackSlash, "\\" },
     { sf::Keyboard::Tilde, "~" }, { sf::Keyboard::Equal, "=" }, { sf::Keyboard::Dash, "-" },
-    { sf::Keyboard::Space, "SPACE" }, { sf::Keyboard::BackSpace, "BACKSPACE" }, { sf::Keyboard::Tab, "TAB" },
-    { sf::Keyboard::PageUp , "PAGE_UP" }, { sf::Keyboard::PageDown, "PAGE_DOWN" }, { sf::Keyboard::End, "END" },
-    { sf::Keyboard::Home, "HOME" }, { sf::Keyboard::Insert, "INSERT" }, { sf::Keyboard::Delete, "DELETE" },
-    { sf::Keyboard::Pause, "PAUSE" },
+    { sf::Keyboard::Space, "SPACE" }, { sf::Keyboard::Enter, "ENTER" }, { sf::Keyboard::BackSpace, "BACKSPACE" },
+    { sf::Keyboard::Tab, "TAB" }, { sf::Keyboard::PageUp , "PAGE_UP" }, { sf::Keyboard::PageDown, "PAGE_DOWN" },
+    { sf::Keyboard::End, "END" }, { sf::Keyboard::Home, "HOME" }, { sf::Keyboard::Insert, "INSERT" },
+    { sf::Keyboard::Delete, "DELETE" }, { sf::Keyboard::Pause, "PAUSE" },
 
     { sf::Keyboard::Numpad0, "NUM_0" }, { sf::Keyboard::Numpad1, "NUM_1" }, { sf::Keyboard::Numpad2, "NUM_2" },
     { sf::Keyboard::Numpad3, "NUM_3" }, { sf::Keyboard::Numpad4, "NUM_4" }, { sf::Keyboard::Numpad5, "NUM_5" },
@@ -368,17 +358,17 @@ const std::unordered_map < std::string, int > PlayerControllerSettings::Decoder 
 
     { "LEFT", sf::Keyboard::Left }, { "RIGHT", sf::Keyboard::Right }, { "UP", sf::Keyboard::Up }, { "DOWN", sf::Keyboard::Down },
 
-    { "CONTROL_LEFT", sf::Keyboard::LControl }, { "SHIFT_LEFT", sf::Keyboard::LShift }, { "ALT_LEFT", sf::Keyboard::LAlt },
-    { "CONTROL_RIGHT", sf::Keyboard::RControl }, { "SHIFT_RIGHT", sf::Keyboard::RShift }, { "ALT_RIGHT", sf::Keyboard::RAlt },
+    { "CTRL_LEFT", sf::Keyboard::LControl }, { "SHIFT_LEFT", sf::Keyboard::LShift }, { "ALT_LEFT", sf::Keyboard::LAlt },
+    { "CTRL_RIGHT", sf::Keyboard::RControl }, { "SHIFT_RIGHT", sf::Keyboard::RShift }, { "ALT_RIGHT", sf::Keyboard::RAlt },
 
     { "MENU", sf::Keyboard::Menu }, { "[", sf::Keyboard::LBracket }, { "]", sf::Keyboard::RBracket },
     { ";", sf::Keyboard::SemiColon }, { "COMMA", sf::Keyboard::Comma }, { "PERIOD", sf::Keyboard::Period },
     { "QUOTE", sf::Keyboard::Quote }, { "/", sf::Keyboard::Slash }, { "\\", sf::Keyboard::BackSlash },
     { "~", sf::Keyboard::Tilde }, { "=", sf::Keyboard::Equal }, { "-", sf::Keyboard::Dash },
-    { "SPACE", sf::Keyboard::Space }, { "BACKSPACE", sf::Keyboard::BackSpace }, { "TAB", sf::Keyboard::Tab },
-    { "PAGE_UP", sf::Keyboard::PageUp }, { "PAGE_DOWN", sf::Keyboard::PageDown }, { "END", sf::Keyboard::End },
-    { "HOME", sf::Keyboard::Home }, { "INSERT", sf::Keyboard::Insert }, { "DELETE", sf::Keyboard::Delete },
-    { "PAUSE", sf::Keyboard::Pause },
+    { "SPACE", sf::Keyboard::Space }, { "ENTER", sf::Keyboard::Return }, { "BACKSPACE", sf::Keyboard::BackSpace },
+    { "TAB", sf::Keyboard::Tab }, { "PAGE_UP", sf::Keyboard::PageUp }, { "PAGE_DOWN", sf::Keyboard::PageDown },
+    { "END", sf::Keyboard::End }, { "HOME", sf::Keyboard::Home }, { "INSERT", sf::Keyboard::Insert },
+    { "DELETE", sf::Keyboard::Delete }, { "PAUSE", sf::Keyboard::Pause },
 
     { "NUM_0", sf::Keyboard::Numpad0 }, { "NUM_1", sf::Keyboard::Numpad1 }, { "NUM_2", sf::Keyboard::Numpad2 },
     { "NUM_3", sf::Keyboard::Numpad3 }, { "NUM_4", sf::Keyboard::Numpad4 }, { "NUM_5", sf::Keyboard::Numpad5 },
