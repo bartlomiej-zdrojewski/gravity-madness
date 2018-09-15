@@ -206,7 +206,7 @@ ParticleSystem * Missile::onCollision ( Spaceship * Other ) {
     float Velocity = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
     ExplosionOnDestruction = false;
 
-    Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( Other->getRadius() * cosf( Normal ), Other->getRadius() * sinf( Normal ) ) );
+    Explosion->setOriginPosition( Other->getPosition() + sf::Vector2f( SQRT2_2ND * 0.75f * Other->getRadius() * cosf( Normal ), SQRT2_2ND * 0.75f * Other->getRadius() * sinf( Normal ) ) );
     Explosion->setOriginVelocity( Collision.getSecondVelocity() );
     Explosion->setAngleRange( Normal, PI / 3.f );
     Explosion->setVelocityRange( 10.f, 20.f + 0.8f * Velocity );

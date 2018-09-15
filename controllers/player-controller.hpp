@@ -19,7 +19,7 @@ public:
         RayShotRestorationTime = sf::seconds( 0.f );
         RayShotRestorationDuration = sf::seconds( 0.05f );
         MissileShotRestorationTime = sf::seconds( 0.f );
-        MissileShotRestorationDuration = sf::seconds( 0.5f ); }
+        MissileShotRestorationDuration = sf::seconds( 0.75f ); }
 
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );

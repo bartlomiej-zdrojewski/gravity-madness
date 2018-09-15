@@ -41,6 +41,8 @@ MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
     ControllersTablePointer = { 1, 1 };
     ControllersModificationMode = false;
     ControllersModificationState = 0;
+    PreviousDevice = PlayerControllerSettings::Devices::Keyboard;
+    PreviousIdentifier = -1;
 
     BackgroundPauseDuration = sf::seconds( 2.f );
     BackgroundPauseTime = BackgroundPauseDuration;
@@ -1729,9 +1731,98 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             ManualText = "Use ARROWS to select device and ENTER to confirm.";
 
-            // TODO
+            int Key = PlayerControllerSettings::scanKeyboard();
+            PlayerControllerSettings::Devices Device = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getDevice();
 
-            }
+            if ( ControllersModificationState == 0 ) {
+
+                if ( Key == -1 ) {
+
+                    ControllersModificationState = 1; } }
+
+            else if ( ControllersModificationState == 1 ) {
+
+                if ( Key == sf::Keyboard::Left || Key == sf::Keyboard::A ) {
+
+                    if ( Device == PlayerControllerSettings::Devices::Keyboard ) {
+
+                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Joystick );
+                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( 7 ); }
+
+                    else if ( Device == PlayerControllerSettings::Devices::Joystick ) {
+
+                        int JoystickIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
+
+                        if ( JoystickIdentifier == 0 ) {
+
+                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
+
+                        else {
+
+                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( --JoystickIdentifier ); } }
+
+                    ControllersModificationState = 0; }
+
+                else if ( Key == sf::Keyboard::Right || Key == sf::Keyboard::D ) {
+
+                    if ( Device == PlayerControllerSettings::Devices::Keyboard ) {
+
+                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Joystick );
+                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( 0 ); }
+
+                    else if ( Device == PlayerControllerSettings::Devices::Joystick ) {
+
+                        int JoystickIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
+
+                        if ( JoystickIdentifier == 7 ) {
+
+                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
+
+                        else {
+
+                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( ++JoystickIdentifier ); } }
+
+
+                    ControllersModificationState = 0; }
+
+                else if ( Key == sf::Keyboard::Enter || Key == sf::Keyboard::Space ) {
+
+                    ControllersModificationState = 2; }
+
+                else if ( Key == sf::Keyboard::Backspace ) {
+
+                    ControllersModificationState = 3; } }
+
+            else if ( ControllersModificationState == 2 ) {
+
+                int JoystickIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
+
+                if ( ( Device != PreviousDevice ) || ( Device == PlayerControllerSettings::Devices::Joystick && JoystickIdentifier != PreviousIdentifier) ) {
+
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setForwardKey( KEY_NONE );
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setBackwardKey( KEY_NONE );
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setLeftKey( KEY_NONE );
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRightKey( KEY_NONE );
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRayShotKey( KEY_NONE );
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setMissileShotKey( KEY_NONE ); }
+
+                ControllersModificationState = 4; }
+
+            else if ( ControllersModificationState == 3 ) {
+
+                Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PreviousDevice );
+
+                if ( PreviousDevice == PlayerControllerSettings::Devices::Joystick ) {
+
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( PreviousIdentifier ); }
+
+                ControllersModificationState = 4; }
+
+            else if ( ControllersModificationState == 4 ) {
+
+                if ( Key == -1 ) {
+
+                    ControllersModificationState = 5; } } }
 
         if ( ControllersModificationState == 5 ) {
 
@@ -1747,10 +1838,10 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
     sf::Vector2f TableThickness = { 1.5f / SectionSize.x, 1.5f / SectionSize.y };
     sf::Color TableColor = sf::Color( 13, 71, 161 ); // #0D47A1
 
-    unsigned int RowsCount = 8;
-    unsigned int ColumnsCount = MAXIMUM_PLAYER_COUNT + 1;
-    float TableCellWidth = ( TableRight - TableLeft ) / ( ColumnsCount + 0.5f );
-    float TableCellHeight = ( TableBottom - TableTop ) / ( RowsCount + 0.5f );
+    unsigned int RowCount = 8;
+    unsigned int ColumnCount = MAXIMUM_PLAYER_COUNT + 1;
+    float TableCellWidth = ( TableRight - TableLeft ) / ( ColumnCount + 0.5f );
+    float TableCellHeight = ( TableBottom - TableTop ) / ( RowCount + 0.5f );
 
     ControllersTable.clear();
 
@@ -1766,9 +1857,9 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
     ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + TableThickness.x, TableBottom + TableThickness.y ), TableColor ) );
     ControllersTable.emplace_back( sf::Vertex( sf::Vector2f( TableLeft + TableThickness.x, TableTop + TableThickness.y ), TableColor ) );
 
-    for ( unsigned int i = 0; i < RowsCount; i++ ) {
+    for ( unsigned int i = 0; i < RowCount; i++ ) {
 
-        for ( unsigned int j = 0; j < ColumnsCount; j++ ) {
+        for ( unsigned int j = 0; j < ColumnCount; j++ ) {
 
             float Width = ( j > 0 ) ? TableCellWidth : 1.5f * TableCellWidth;
             float Height = ( i > 0 ) ? TableCellHeight : 1.5f * TableCellHeight;
@@ -1836,52 +1927,114 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
         TextPrototype.setCharacterSize( --TableManualFontSize ); }
 
-    ControllersTableRowHeader.resize( RowsCount - 1 );
+    ControllersTableRowHeader.resize( RowCount - 1 );
 
     // TODO COLUMN HEADER
 
-    ControllersTableColumnHeader.resize( ColumnsCount - 1 );
+    ControllersTableColumnHeader.resize( ColumnCount - 1 );
 
     // TODO ROW HEADER
 
-    ControllersTableContent.resize( ( RowsCount - 1 ) * ( ColumnsCount - 1 ) );
+    ControllersTableContent.resize( RowCount * ( ColumnCount - 1 ) );
 
-    for ( unsigned int i = 2; i < RowsCount; i++ ) {
+    for ( unsigned int c = 1; c < ColumnCount; c++ ) {
 
-        for ( unsigned int j = 1; j < ColumnsCount; j++ ) {
+        ControllersTableContent[ c - 1 ].setString( "SHIFT RIGHT" );
+        ControllersTableContent[ c - 1 ].setFont( Graphics->getFont( "SairaCondensedLight" ) );
+        ControllersTableContent[ c - 1 ].setCharacterSize( TableContentFontSize );
 
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setString( "SHIFT RIGHT" );
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setFont( Graphics->getFont( "SairaCondensedLight" ) );
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setCharacterSize( TableContentFontSize );
+        sf::Vector2f Position;
+        Position.x = TableLeft + ( 1.5f + 0.05f + ( c - 1 ) ) * TableCellWidth;
+        Position.y = TableTop + ( 1.5f + 0.05f ) * TableCellHeight;
+        Position.x *= SectionSize.x;
+        Position.y *= SectionSize.y;
+        Position += SectionPosition;
+        Position.y += ( SectionSize.y * TableCellHeight - ControllersTableContent[ c - 1 ].getLocalBounds().height ) / 2.f;
+        Position.x += ControllersTableContent[ c - 1 ].getLocalBounds().width * CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX; // Offset fix
+        Position.y += ControllersTableContent[ c - 1 ].getLocalBounds().height * CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX; // Offset fix
+
+        std::string Text;
+        Text = "KEYBOARD";
+
+        if ( Gameplay->getPlayerControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+            Text = "JOYSTICK " + std::to_string( Gameplay->getPlayerControllerSettings( c - 1 )->getJoystickIdentifier() ); }
+
+        ControllersTableContent[ c - 1 ].setString( Text );
+        ControllersTableContent[ c - 1 ].setPosition( Position );
+
+        sf::Color FillColor = sf::Color( 189, 189, 189 );
+        sf::Color OutlineColor = sf::Color( 33, 33, 33 );
+
+        if ( ControllersTablePointer.x == c && ControllersTablePointer.y == 1 ) {
+
+            if ( !ControllersModificationMode ) {
+
+                FillColor = sf::Color( 250, 250, 250 ); }
+
+            else {
+
+                FillColor = sf::Color( 239, 83, 80 ); // #EF5350
+                OutlineColor = sf::Color( 0, 0, 0 ); } }
+
+        else if ( Gameplay->getPlayerControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+            if ( !sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( c - 1 )->getJoystickIdentifier() ) ) {
+
+                FillColor = sf::Color( 117, 117, 117 ); } }
+
+        #if ( SFML_VERSION_MINOR >= 4 )
+
+                ControllersTableContent[ c - 1 ].setOutlineThickness( 1.f );
+                ControllersTableContent[ c - 1 ].setOutlineColor( OutlineColor );
+                ControllersTableContent[ c - 1 ].setFillColor( FillColor );
+
+        #else
+
+                ControllersTableContent[ c - 1 ].setColor( FillColor );
+
+        #endif
+
+        }
+
+    for ( unsigned int r = 2; r < RowCount; r++ ) {
+
+        for ( unsigned int c = 1; c < ColumnCount; c++ ) {
+
+            ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setString( "SHIFT RIGHT" );
+            ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setFont( Graphics->getFont( "SairaCondensedLight" ) );
+            ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setCharacterSize( TableContentFontSize );
 
             sf::Vector2f Position;
-            Position.x = TableLeft + ( 1.5f + 0.05f + ( j - 1 ) ) * TableCellWidth;
-            Position.y = TableTop + ( 2.5f + 0.05f + ( i - 2 ) ) * TableCellHeight;
+            Position.x = TableLeft + ( 1.5f + 0.05f + ( c - 1 ) ) * TableCellWidth;
+            Position.y = TableTop + ( 1.5f + 0.05f + ( r - 1 ) ) * TableCellHeight;
             Position.x *= SectionSize.x;
             Position.y *= SectionSize.y;
             Position += SectionPosition;
-            Position.y += ( SectionSize.y * TableCellHeight - ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].getLocalBounds().height ) / 2.f;
+            Position.y += ( SectionSize.y * TableCellHeight - ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].getLocalBounds().height ) / 2.f;
+            Position.x += ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].getLocalBounds().width * CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX; // Offset fix
+            Position.y += ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].getLocalBounds().height * CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX; // Offset fix
 
             int Key;
 
-            switch ( i ) {
+            switch ( r ) {
 
-                case 2: Key = Gameplay->getPlayerControllerSettings( j - 1 )->getForwardKey(); break;
-                case 3: Key = Gameplay->getPlayerControllerSettings( j - 1 )->getBackwardKey(); break;
-                case 4: Key = Gameplay->getPlayerControllerSettings( j - 1 )->getLeftKey(); break;
-                case 5: Key = Gameplay->getPlayerControllerSettings( j - 1 )->getRightKey(); break;
-                case 6: Key = Gameplay->getPlayerControllerSettings( j - 1 )->getRayShotKey(); break;
-                case 7: Key = Gameplay->getPlayerControllerSettings( j - 1 )->getMissileShotKey(); break;
+                case 2: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getForwardKey(); break;
+                case 3: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getBackwardKey(); break;
+                case 4: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getLeftKey(); break;
+                case 5: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getRightKey(); break;
+                case 6: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getRayShotKey(); break;
+                case 7: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getMissileShotKey(); break;
 
                 default: Key = -1; break; }
 
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setString( blankUnderscore( PlayerControllerSettings::encodeKey( Key ) ) );
-            ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setPosition( Position );
+            ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setString( blankUnderscore( PlayerControllerSettings::encodeKey( Key ) ) );
+            ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setPosition( Position );
 
             sf::Color FillColor = sf::Color( 189, 189, 189 );
             sf::Color OutlineColor = sf::Color( 33, 33, 33 );
 
-            if ( ControllersTablePointer.x == j && ControllersTablePointer.y == i ) {
+            if ( ControllersTablePointer.x == c && ControllersTablePointer.y == r ) {
 
                 if ( !ControllersModificationMode ) {
 
@@ -1898,29 +2051,32 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             #if ( SFML_VERSION_MINOR >= 4 )
 
-                ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setOutlineThickness( 1.f );
-                ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setOutlineColor( OutlineColor );
-                ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setFillColor( FillColor );
+                ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setOutlineThickness( 1.f );
+                ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setOutlineColor( OutlineColor );
+                ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setFillColor( FillColor );
 
             #else
 
-                ControllersTableContent[ ( i - 2 ) * ( ColumnsCount - 1 ) + ( j - 1 ) ].setColor( FillColor );
+                ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setColor( FillColor );
 
             #endif
 
             } }
 
+    ControllersTableManual.setString( "Use ARROWS to select device and ENTER to confirm." );
+    ControllersTableManual.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
+    ControllersTableManual.setCharacterSize( TableManualFontSize );
+
     sf::Vector2f Position;
-    Position.x = SectionPosition.x + ( SectionSize.x - ControllersTableManual.getLocalBounds().width ) / 2.f;
     Position.y = SectionPosition.y + SectionSize.y * TableBottom + ( SectionSize.y * ( 1.f - TableBottom ) - ControllersTableManual.getLocalBounds().height ) / 2.f;
 
     ControllersTableManual.setString( ManualText );
-    ControllersTableManual.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
-    ControllersTableManual.setCharacterSize( TableManualFontSize );
-    ControllersTableManual.setPosition( Position );
-    ControllersTableManual.move( ControllersTableManual.getLocalBounds().height * CONTROLLERS_MANUAL_FONT_HORIZONTAL_OFFSET_FIX, ControllersTableManual.getLocalBounds().height * CONTROLLERS_MANUAL_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
 
-    }
+    Position.x = SectionPosition.x + ( SectionSize.x - ControllersTableManual.getLocalBounds().width ) / 2.f;
+    Position.x += ControllersTableManual.getLocalBounds().width * CONTROLLERS_MANUAL_FONT_HORIZONTAL_OFFSET_FIX; // Offset fix
+    Position.y += ControllersTableManual.getLocalBounds().height * CONTROLLERS_MANUAL_FONT_VERTICAL_OFFSET_FIX; // Offset fix
+
+    ControllersTableManual.setPosition( Position ); }
 
 void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
@@ -1978,25 +2134,49 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
             case sf::Keyboard::W: {
 
-                // ...
+                if ( !ControllersModificationMode ) {
+
+                    ControllersTablePointer.y -= 1;
+
+                    if ( ControllersTablePointer.y == 0 ) {
+
+                        ControllersTablePointer.y = 7; } }
 
                 break; }
 
             case sf::Keyboard::S: {
 
-                // ...
+                if ( !ControllersModificationMode ) {
+
+                    ControllersTablePointer.y += 1;
+
+                    if ( ControllersTablePointer.y == 8 ) {
+
+                        ControllersTablePointer.y = 1; } }
 
                 break; }
 
             case sf::Keyboard::A: {
 
-                // ...
+                if ( !ControllersModificationMode ) {
+
+                    ControllersTablePointer.x -= 1;
+
+                    if ( ControllersTablePointer.x == 0 ) {
+
+                        ControllersTablePointer.x = MAXIMUM_PLAYER_COUNT; } }
 
                 break; }
 
             case sf::Keyboard::D: {
 
-                // ...
+                if ( !ControllersModificationMode ) {
+
+                    ControllersTablePointer.x += 1;
+
+                    if ( ControllersTablePointer.x == ( MAXIMUM_PLAYER_COUNT + 1 ) ) {
+
+                        ControllersTablePointer.x = 1; } }
 
                 break; }
 
@@ -2006,6 +2186,11 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
                     ControllersModificationMode = true;
                     ControllersModificationState = 0;
+
+                    if ( ControllersTablePointer.y == 1 ) {
+
+                        PreviousDevice = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getDevice();
+                        PreviousIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getJoystickIdentifier(); }
 
                     SettingsChanged = true; }
 
@@ -2017,6 +2202,11 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
                     ControllersModificationMode = true;
                     ControllersModificationState = 0;
+
+                    if ( ControllersTablePointer.y == 1 ) {
+
+                        PreviousDevice = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getDevice();
+                        PreviousIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getJoystickIdentifier(); }
 
                     SettingsChanged = true; }
 
@@ -2035,6 +2225,14 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
             case sf::Keyboard::Escape: {
 
+                if ( ControllersModificationMode && ControllersTablePointer.y == 1 ) {
+
+                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PreviousDevice );
+
+                    if ( PreviousDevice == PlayerControllerSettings::Devices::Joystick ) {
+
+                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( PreviousIdentifier ); } }
+
                 ControllersTablePointer = { 1, 1 };
                 ControllersModificationMode = false;
 
@@ -2047,6 +2245,13 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
                 break; } } } }
 
 void MainMenu::renderControllersSection ( sf::RenderWindow &Window ) {
+
+    // TODO TEMP
+    //sf::RectangleShape Rect;
+    //Rect.setPosition( ControllersTableContent[i].getPosition() );
+    //Rect.setSize( sf::Vector2f( ControllersTableContent[i].getLocalBounds().width, ControllersTableContent[i].getLocalBounds().height ) );
+    //Rect.setFillColor( sf::Color::Green );
+    //Window.draw( Rect );
 
     renderSectionBackground( Window, 2 );
 
@@ -2061,15 +2266,6 @@ void MainMenu::renderControllersSection ( sf::RenderWindow &Window ) {
         Window.draw( ControllersTableRowHeader[i] ); }
 
     for ( unsigned int i = 0; i < ControllersTableContent.size(); i++ ) {
-
-
-        sf::RectangleShape Rect;
-        Rect.setPosition( ControllersTableContent[i].getPosition() );
-        Rect.setSize( sf::Vector2f( ControllersTableContent[i].getLocalBounds().width, ControllersTableContent[i].getLocalBounds().height ) );
-        Rect.setFillColor( sf::Color::Green );
-        //Window.draw( Rect );
-
-        ControllersTableContent[i].move( ControllersTableManual.getLocalBounds().width * CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX, ControllersTableManual.getLocalBounds().height * CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
 
         Window.draw( ControllersTableContent[i] ); }
 

@@ -36,7 +36,7 @@ void PlayerController::update ( sf::Event &Event ) {
 
                 ForceMissileShot = true; } } }
 
-    if ( Event.type == sf::Event::KeyReleased ) {
+    else if ( Event.type == sf::Event::KeyReleased ) {
 
         if ( Keys->getDevice() == PlayerControllerSettings::Devices::Keyboard ) {
 
@@ -75,13 +75,13 @@ void PlayerController::update ( sf::Event &Event ) {
                 ForceMissileShot = false; } } }
 
     // TODO Joystick
+    // isButtonPressed
+    // != KEY_NONE
 
     if ( !ThrustForward && !ThrustBackward && ( ThrustLeft || ThrustRight ) ) {
 
         ForceThrust = true;
-        ThrustForward = true; }
-
-    }
+        ThrustForward = true; } }
 
 void PlayerController::update ( sf::Time ElapsedTime ) {
 

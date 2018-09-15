@@ -142,6 +142,10 @@ const bool PlayerControllerSettings::isJoystickKey ( int Key ) {
 
 bool PlayerControllerSettings::isAvailableKey ( int Key ) {
 
+    if ( Key == KEY_NONE ) {
+
+        return true; }
+
     if ( Device == Devices::Keyboard ) {
 
         return isKeyboardKey( Key ); }

@@ -8,6 +8,7 @@
 // Keyboard Keys: 0 - 199
 // Joystick Axises: 200 - 249
 // Joystick Buttons: 250 - 300
+#define KEY_NONE                    (-1)
 #define JOYSTICK_AXIS_X_POSITIVE    200
 #define JOYSTICK_AXIS_X_NEGATIVE    201
 #define JOYSTICK_AXIS_Y_POSITIVE    202

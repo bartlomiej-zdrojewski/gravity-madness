@@ -136,6 +136,4 @@ void Ray::render ( sf::RenderWindow &Window ) {
     Vertices.emplace_back( sf::Vertex( RayBegin, sf::Color( Color.r, Color.g, Color.b, (sf::Uint8) ( RayOpacity * 255.f ) ) ) );
     Vertices.emplace_back( sf::Vertex( RayEnd, sf::Color( Color.r, Color.g, Color.b, (sf::Uint8) ( RayOpacity * 255.f ) ) ) );
 
-    Window.draw( &Vertices[0], Vertices.size(), sf::Lines );
-
-    }
+    Window.draw( &Vertices[0], Vertices.size(), sf::Lines ); }

@@ -8,7 +8,7 @@
 #include "graphics-module.hpp"
 
 #define CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
-#define CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX (-0.35f)
+#define CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX (-0.4f)
 #define CONTROLLERS_MANUAL_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
 #define CONTROLLERS_MANUAL_FONT_VERTICAL_OFFSET_FIX (-0.2f)
 
@@ -118,6 +118,8 @@ private:
     sf::Vector2i ControllersTablePointer;
     bool ControllersModificationMode;
     uint8_t ControllersModificationState;
+    PlayerControllerSettings::Devices PreviousDevice;
+    int PreviousIdentifier;
 
     std::vector <sf::Vertex> Background;
     std::vector <unsigned int> ParticleIndexes;
