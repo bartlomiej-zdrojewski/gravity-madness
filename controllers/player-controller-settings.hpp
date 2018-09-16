@@ -68,6 +68,10 @@ public:
     const bool isJoystickKey ( int Key );
     bool isAvailableKey ( int Key );
 
+    static int normalizeJoystickKey ( int Key );
+    static int normalizeJoystickAxis ( sf::Joystick::Axis Axis, float Position );
+    static std::vector <int> getKeysFromJoysickAxis ( sf::Joystick::Axis Axis );
+
     static std::string encodeKey ( int Key );
     static int decodeKey ( std::string Key );
 

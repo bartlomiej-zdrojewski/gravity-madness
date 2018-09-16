@@ -67,8 +67,8 @@ void MainMenu::setMode ( Modes Mode ) {
 void MainMenu::update ( ) {
 
     sf::Time ElapsedTime = Clock.restart();
-    //_sleep( 250 );
-    if ( ElapsedTime.asSeconds() < 10.1f ) {
+
+    if ( ElapsedTime.asSeconds() < 0.1f ) {
 
         updateBackground( ElapsedTime );
 
@@ -570,7 +570,7 @@ void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
 
     sf::CircleShape Circle;
     Circle.setPosition( MenuOptionPointerPosition - sf::Vector2f( 1.f, 0.f ) );
-    Circle.setFillColor( sf::Color( 33, 150, 243 ) );
+    Circle.setFillColor( sf::Color( 33, 150, 243 ) ); // #2196F3
 
     if ( Graphics->getWindowHeight() < 600.f ) {
 
@@ -607,41 +607,41 @@ void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
         #if ( SFML_VERSION_MINOR >= 4 )
 
             Text.setOutlineThickness( 1.f );
-            Text.setOutlineColor( sf::Color( 33, 33, 33 ) );
+            Text.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
 
             if ( i == MenuOption ) {
 
-                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i + 1 ) == MenuOption || ( i - 1 ) == MenuOption ) {
 
-                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i + 2 ) == MenuOption || ( i - 2 ) == MenuOption ) {
 
-                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #else
 
             if ( i == MenuOption ) {
 
-                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i + 1 ) == MenuOption || ( i - 1 ) == MenuOption ) {
 
-                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i + 2 ) == MenuOption || ( i - 2 ) == MenuOption ) {
 
-                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #endif
 
@@ -1038,41 +1038,41 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
         #if ( SFML_VERSION_MINOR >= 4 )
 
             Text.setOutlineThickness( 1.f );
-            Text.setOutlineColor( sf::Color( 33, 33, 33 ) );
+            Text.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
 
             if ( i == GameplayOption ) {
 
-                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i + 1 ) == GameplayOption || ( i - 1 ) == GameplayOption ) {
 
-                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i + 2 ) == GameplayOption || ( i - 2 ) == GameplayOption ) {
 
-                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #else
 
             if ( i == GameplayOption ) {
 
-                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i + 1 ) == GameplayOption || ( i - 1 ) == GameplayOption ) {
 
-                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i + 2 ) == GameplayOption || ( i - 2 ) == GameplayOption ) {
 
-                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #endif
 
@@ -1088,41 +1088,41 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
         #if ( SFML_VERSION_MINOR >= 4 )
 
             Text.setOutlineThickness( 1.f );
-            Text.setOutlineColor( sf::Color( 33, 33, 33 ) );
+            Text.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
 
             if ( ( i - GameplayOptionCount[ GameplayPage ] ) == GameplayOption ) {
 
-                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i - GameplayOptionCount[ GameplayPage ] + 1 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 1 ) == GameplayOption ) {
 
-                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i - GameplayOptionCount[ GameplayPage ] + 2 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 2 ) == GameplayOption ) {
 
-                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #else
 
             if ( ( i - GameplayOptionCount[ GameplayPage ] ) == GameplayOption ) {
 
-                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i - GameplayOptionCount[ GameplayPage ] + 1 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 1 ) == GameplayOption ) {
 
-                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i - GameplayOptionCount[ GameplayPage ] + 2 ) == GameplayOption || ( i - GameplayOptionCount[ GameplayPage ] - 2 ) == GameplayOption ) {
 
-                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #endif
 
@@ -1556,41 +1556,41 @@ void MainMenu::renderSettingsSection ( sf::RenderWindow &Window ) {
         #if ( SFML_VERSION_MINOR >= 4 )
 
             Text.setOutlineThickness( 1.f );
-            Text.setOutlineColor( sf::Color( 33, 33, 33 ) );
+            Text.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
 
             if ( i == SettingsOption ) {
 
-                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i + 1 ) == SettingsOption || ( i - 1 ) == SettingsOption ) {
 
-                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i + 2 ) == SettingsOption || ( i - 2 ) == SettingsOption ) {
 
-                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #else
 
             if ( i == SettingsOption ) {
 
-                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i + 1 ) == SettingsOption || ( i - 1 ) == SettingsOption ) {
 
-                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i + 2 ) == SettingsOption || ( i - 2 ) == SettingsOption ) {
 
-                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #endif
 
@@ -1606,41 +1606,41 @@ void MainMenu::renderSettingsSection ( sf::RenderWindow &Window ) {
         #if ( SFML_VERSION_MINOR >= 4 )
 
             Text.setOutlineThickness( 1.f );
-            Text.setOutlineColor( sf::Color( 33, 33, 33 ) );
+            Text.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
 
             if ( ( i - SettingsOptionCount ) == SettingsOption ) {
 
-                Text.setFillColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setFillColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i - SettingsOptionCount + 1 ) == SettingsOption || ( i - SettingsOptionCount - 1 ) == SettingsOption ) {
 
-                Text.setFillColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setFillColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i - SettingsOptionCount + 2 ) == SettingsOption || ( i - SettingsOptionCount - 2 ) == SettingsOption ) {
 
-                Text.setFillColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setFillColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setFillColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setFillColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #else
 
             if ( ( i - SettingsOptionCount ) == SettingsOption ) {
 
-                Text.setColor( sf::Color( 250, 250, 250 ) ); }
+                Text.setColor( sf::Color( 250, 250, 250 ) ); } // #FAFAFA
 
             else if ( ( i - SettingsOptionCount + 1 ) == SettingsOption || ( i - SettingsOptionCount - 1 ) == SettingsOption ) {
 
-                Text.setColor( sf::Color( 189, 189, 189 ) ); }
+                Text.setColor( sf::Color( 189, 189, 189 ) ); } // #BDBDBD
 
             else if ( ( i - SettingsOptionCount + 2 ) == SettingsOption || ( i - SettingsOptionCount - 2 ) == SettingsOption ) {
 
-                Text.setColor( sf::Color( 117, 117, 117 ) ); }
+                Text.setColor( sf::Color( 117, 117, 117 ) ); } // #757575
 
             else {
 
-                Text.setColor( sf::Color( 66, 66, 66 ) ); }
+                Text.setColor( sf::Color( 66, 66, 66 ) ); } // #424242
 
         #endif
 
@@ -1671,7 +1671,15 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                 if ( Key == -1 ) {
 
-                    ControllersModificationState = 1; } }
+                    ControllersModificationState = 1; }
+
+                if ( Key < -1 ) { // Joystick is not connected
+
+                    ManualText = "Joystick is not connected. Choose one with brighter color.";
+
+                    if ( PlayerControllerSettings::scanKeyboard() == -1 ) {
+
+                        ControllersModificationState = 5; } } }
 
             if ( ControllersModificationState == 1 ) {
 
@@ -1963,25 +1971,39 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
         ControllersTableContent[ c - 1 ].setString( Text );
         ControllersTableContent[ c - 1 ].setPosition( Position );
 
-        sf::Color FillColor = sf::Color( 189, 189, 189 );
-        sf::Color OutlineColor = sf::Color( 33, 33, 33 );
+        sf::Color FillColor = sf::Color( 189, 189, 189 ); // #BDBDBD
+        sf::Color OutlineColor = sf::Color( 33, 33, 33 ); // #212121
 
         if ( ControllersTablePointer.x == c && ControllersTablePointer.y == 1 ) {
 
             if ( !ControllersModificationMode ) {
 
-                FillColor = sf::Color( 250, 250, 250 ); }
+                FillColor = sf::Color( 250, 250, 250 ); } // #FAFAFA
 
             else {
 
-                FillColor = sf::Color( 239, 83, 80 ); // #EF5350
-                OutlineColor = sf::Color( 0, 0, 0 ); } }
+                if ( Gameplay->getPlayerControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+                    if ( sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( c - 1 )->getJoystickIdentifier() ) ) {
+
+                        FillColor = sf::Color( 239, 83, 80 ); // #EF5350
+                        OutlineColor = sf::Color( 0, 0, 0 ); } // #000000
+
+                    else {
+
+                        FillColor = sf::Color( 198, 40, 40 ); // #C62828
+                        OutlineColor = sf::Color( 0, 0, 0 ); } } // #000000
+
+                else {
+
+                    FillColor = sf::Color( 239, 83, 80 ); // #EF5350
+                    OutlineColor = sf::Color( 0, 0, 0 ); } } } // #000000
 
         else if ( Gameplay->getPlayerControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
             if ( !sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( c - 1 )->getJoystickIdentifier() ) ) {
 
-                FillColor = sf::Color( 117, 117, 117 ); } }
+                FillColor = sf::Color( 117, 117, 117 ); } } // #757575
 
         #if ( SFML_VERSION_MINOR >= 4 )
 
@@ -2031,14 +2053,14 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
             ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setString( blankUnderscore( PlayerControllerSettings::encodeKey( Key ) ) );
             ControllersTableContent[ ( r - 1 ) * ( ColumnCount - 1 ) + ( c - 1 ) ].setPosition( Position );
 
-            sf::Color FillColor = sf::Color( 189, 189, 189 );
-            sf::Color OutlineColor = sf::Color( 33, 33, 33 );
+            sf::Color FillColor = sf::Color( 189, 189, 189 ); // #BDBDBD
+            sf::Color OutlineColor = sf::Color( 33, 33, 33 ); // #212121
 
             if ( ControllersTablePointer.x == c && ControllersTablePointer.y == r ) {
 
                 if ( !ControllersModificationMode ) {
 
-                    FillColor = sf::Color( 250, 250, 250 ); }
+                    FillColor = sf::Color( 250, 250, 250 ); } // #FAFAFA
 
                 else {
 
@@ -2047,7 +2069,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             else if ( Key == -1 ) {
 
-                FillColor = sf::Color( 117, 117, 117 ); }
+                FillColor = sf::Color( 117, 117, 117 ); } // #757575
 
             #if ( SFML_VERSION_MINOR >= 4 )
 
@@ -2372,13 +2394,13 @@ void MainMenu::renderSectionBackground ( sf::RenderWindow &Window, unsigned int 
 
         return; }
 
-    Box.setFillColor( sf::Color( 0, 0, 0 ) );
+    Box.setFillColor( sf::Color( 0, 0, 0 ) ); // #000000
     Box.setOutlineThickness( 2.f );
     Box.setOutlineColor( sf::Color ( 13, 71, 161 ) ); // #0D47A1
 
     Shade.setPosition( 0.f, 0.f );
     Shade.setSize( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() ) );
-    Shade.setFillColor( sf::Color( 0, 0, 0, 155 ) );
+    Shade.setFillColor( sf::Color( 0, 0, 0, 155 ) ); // #000000
 
     if ( Position >= 2 ) {
 

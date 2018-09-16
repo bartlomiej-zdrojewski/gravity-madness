@@ -156,6 +156,128 @@ bool PlayerControllerSettings::isAvailableKey ( int Key ) {
 
     return false; }
 
+int PlayerControllerSettings::normalizeJoystickKey ( int Key ) {
+
+    if ( Key == KEY_NONE ) {
+
+        return -1; }
+
+    return ( JOYSTICK_BUTTON + Key ); }
+
+int PlayerControllerSettings::normalizeJoystickAxis ( sf::Joystick::Axis Axis, float Position ) {
+
+    if ( Axis == sf::Joystick::Axis::X && Position > 50 ) {
+
+        return JOYSTICK_AXIS_X_POSITIVE; }
+
+    if ( Axis == sf::Joystick::Axis::X && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_X_NEGATIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::Y && Position > 50 ) {
+
+        return JOYSTICK_AXIS_Y_POSITIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::Y && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_Y_NEGATIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::Z && Position > 50 ) {
+
+        return JOYSTICK_AXIS_Z_POSITIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::Z && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_Z_NEGATIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::R && Position > 50 ) {
+
+        return JOYSTICK_AXIS_R_POSITIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::R && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_R_NEGATIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::U && Position > 50 ) {
+
+        return JOYSTICK_AXIS_U_POSITIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::U && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_U_NEGATIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::V && Position > 50 ) {
+
+        return JOYSTICK_AXIS_V_POSITIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::V && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_V_NEGATIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::PovX && Position > 50 ) {
+
+        return JOYSTICK_AXIS_POVX_POSITIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::PovX && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_POVX_NEGATIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::PovY && Position > 50 ) {
+
+        return JOYSTICK_AXIS_POVY_POSITIVE; }
+
+    if ( Axis ==  sf::Joystick::Axis::PovY && Position < ( - 50 ) ) {
+
+        return JOYSTICK_AXIS_POVY_NEGATIVE; }
+
+    return -1; }
+
+std::vector <int> PlayerControllerSettings::getKeysFromJoysickAxis ( sf::Joystick::Axis Axis ) {
+
+    std::vector <int> Result;
+
+    if ( Axis == sf::Joystick::Axis::X ) {
+
+        Result.push_back( JOYSTICK_AXIS_X_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_X_NEGATIVE ); }
+
+    else if ( Axis == sf::Joystick::Axis::Y ) {
+
+        Result.push_back( JOYSTICK_AXIS_Y_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_Y_NEGATIVE ); }
+
+    else if ( Axis == sf::Joystick::Axis::Z ) {
+
+        Result.push_back( JOYSTICK_AXIS_Z_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_Z_NEGATIVE ); }
+
+    else if ( Axis == sf::Joystick::Axis::R ) {
+
+        Result.push_back( JOYSTICK_AXIS_R_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_R_NEGATIVE ); }
+
+    else if ( Axis == sf::Joystick::Axis::U ) {
+
+        Result.push_back( JOYSTICK_AXIS_U_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_U_NEGATIVE ); }
+
+    else if ( Axis == sf::Joystick::Axis::V ) {
+
+        Result.push_back( JOYSTICK_AXIS_V_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_V_NEGATIVE ); }
+
+    else if ( Axis == sf::Joystick::Axis::PovX ) {
+
+        Result.push_back( JOYSTICK_AXIS_POVX_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_POVX_NEGATIVE ); }
+
+    else if ( Axis == sf::Joystick::Axis::PovY ) {
+
+        Result.push_back( JOYSTICK_AXIS_POVY_POSITIVE );
+        Result.push_back( JOYSTICK_AXIS_POVY_NEGATIVE ); }
+
+    return Result; }
+
 std::string PlayerControllerSettings::encodeKey ( int Key ) {
 
     auto Data = Encoder.find( Key );
@@ -208,11 +330,11 @@ int PlayerControllerSettings::scanJoystick ( int JoystickIdentifier ) {
 
     if ( JoystickIdentifier < 0 ) {
 
-        return -1; }
+        return -2; }
 
     if ( !sf::Joystick::isConnected( (unsigned int) JoystickIdentifier ) ) {
 
-        return -2; }
+        return -3; }
 
     for ( unsigned int i = 0; i < sf::Joystick::getButtonCount( (unsigned int) JoystickIdentifier ); i++ ) {
 

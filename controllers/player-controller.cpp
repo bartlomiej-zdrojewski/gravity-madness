@@ -1,3 +1,4 @@
+#include <iostream>
 #include "player-controller.hpp"
 
 void PlayerController::update ( sf::Event &Event ) {
@@ -74,9 +75,179 @@ void PlayerController::update ( sf::Event &Event ) {
 
                 ForceMissileShot = false; } } }
 
-    // TODO Joystick
-    // isButtonPressed
-    // != KEY_NONE
+    else if ( Event.type == sf::Event::JoystickButtonPressed ) {
+
+        if ( Keys->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+            if ( Keys->getJoystickIdentifier() == Event.joystickButton.joystickId ) {
+
+                int Key = PlayerControllerSettings::normalizeJoystickKey( Event.joystickButton.button );
+
+                if ( Key == Keys->getForwardKey() ) {
+
+                    ThrustForward = true;
+                    ThrustBackward = false;
+                    ForceThrust = false; }
+
+                else if ( Key == Keys->getBackwardKey() ) {
+
+                    ThrustForward = false;
+                    ThrustBackward = true;
+                    ForceThrust = false; }
+
+                else if ( Key == Keys->getLeftKey() ) {
+
+                    ThrustLeft = true;
+                    ThrustRight = false; }
+
+                else if ( Key == Keys->getRightKey() ) {
+
+                    ThrustLeft = false;
+                    ThrustRight = true; }
+
+                else if ( Key == Keys->getRayShotKey() ) {
+
+                    ForceRayShot = true; }
+
+                else if ( Key == Keys->getMissileShotKey() ) {
+
+                    ForceMissileShot = true; } } } }
+
+    else if ( Event.type == sf::Event::JoystickButtonReleased ) {
+
+        if ( Keys->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+            if ( Keys->getJoystickIdentifier() == Event.joystickButton.joystickId ) {
+
+                int Key = PlayerControllerSettings::normalizeJoystickKey( Event.joystickButton.button );
+
+                if ( Key == Keys->getForwardKey() ) {
+
+                    ThrustForward = false; }
+
+                else if ( Key == Keys->getBackwardKey() ) {
+
+                    ThrustBackward = false; }
+
+                else if ( Key == Keys->getLeftKey() ) {
+
+                    ThrustLeft = false;
+
+                    if ( ForceThrust ) {
+
+                        ForceThrust = false;
+                        ThrustForward = false; } }
+
+                else if ( Key == Keys->getRightKey() ) {
+
+                    ThrustRight = false;
+
+                    if ( ForceThrust ) {
+
+                        ForceThrust = false;
+                        ThrustForward = false; } }
+
+                else if ( Key == Keys->getRayShotKey() ) {
+
+                    ForceRayShot = false; }
+
+                else if ( Key == Keys->getMissileShotKey() ) {
+
+                    ForceMissileShot = false; } } } }
+
+    else if ( Event.type == sf::Event::JoystickMoved ) {
+
+        if ( Keys->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+
+            if ( Keys->getJoystickIdentifier() == Event.joystickMove.joystickId ) {
+
+                int Key = PlayerControllerSettings::normalizeJoystickAxis( Event.joystickMove.axis, Event.joystickMove.position );
+                bool State = true;
+
+                if ( Key == -1 ) {
+
+                    std::vector <int> PossibleKeys = PlayerControllerSettings::getKeysFromJoysickAxis( Event.joystickMove.axis );
+
+                    for ( auto &PossibleKey : PossibleKeys ) {
+
+                        if ( JoystickAxisState[ PossibleKey - 200 ] ) {
+
+                            Key = PossibleKey;
+                            State = false;
+
+                            break; } } }
+
+                if ( JoystickAxisState[ Key - 200 ] != State ) { // Joystick axis state changed
+
+                    JoystickAxisState[ Key - 200 ] = !JoystickAxisState[ Key - 200 ];
+
+                    if ( State ) { // Key pressed
+
+                        if ( Key == Keys->getForwardKey() ) {
+
+                            ThrustForward = true;
+                            ThrustBackward = false;
+                            ForceThrust = false; }
+
+                        else if ( Key == Keys->getBackwardKey() ) {
+
+                            ThrustForward = false;
+                            ThrustBackward = true;
+                            ForceThrust = false; }
+
+                        else if ( Key == Keys->getLeftKey() ) {
+
+                            ThrustLeft = true;
+                            ThrustRight = false; }
+
+                        else if ( Key == Keys->getRightKey() ) {
+
+                            ThrustLeft = false;
+                            ThrustRight = true; }
+
+                        else if ( Key == Keys->getRayShotKey() ) {
+
+                            ForceRayShot = true; }
+
+                        else if ( Key == Keys->getMissileShotKey() ) {
+
+                            ForceMissileShot = true; } }
+
+                    else { // Key released
+
+                        if ( Key == Keys->getForwardKey() ) {
+
+                            ThrustForward = false; }
+
+                        else if ( Key == Keys->getBackwardKey() ) {
+
+                            ThrustBackward = false; }
+
+                        else if ( Key == Keys->getLeftKey() ) {
+
+                            ThrustLeft = false;
+
+                            if ( ForceThrust ) {
+
+                                ForceThrust = false;
+                                ThrustForward = false; } }
+
+                        else if ( Key == Keys->getRightKey() ) {
+
+                            ThrustRight = false;
+
+                            if ( ForceThrust ) {
+
+                                ForceThrust = false;
+                                ThrustForward = false; } }
+
+                        else if ( Key == Keys->getRayShotKey() ) {
+
+                            ForceRayShot = false; }
+
+                        else if ( Key == Keys->getMissileShotKey() ) {
+
+                            ForceMissileShot = false; } } } } } }
 
     if ( !ThrustForward && !ThrustBackward && ( ThrustLeft || ThrustRight ) ) {
 
