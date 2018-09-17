@@ -58,7 +58,7 @@ set(OTHER_SOURCE_FILES logger.cpp logger-manager.cpp script.cpp spaceship.cpp pl
 
 set(PUGIXML_HEADER_FILES pugixml/pugiconfig.hpp pugixml/pugixml.hpp)
 set(MODULE_HEADER_FILES gravity-madness.hpp world-module.hpp graphics-module.hpp game-module.hpp debug-module.hpp)
-set(CONTROLLER_HEADER_FILES controllers/spaceship-controller.hpp controllers/player-controller.hpp controllers/ai-controller.hpp controllers/aggressive-ai-controller.hpp controllers/reasonable-ai-controller.hpp controllers/passive-ai-controller.hpp controllers/player-controller-settings.hpp)
+set(CONTROLLER_HEADER_FILES controllers/spaceship-controller.hpp controllers/player-controller.hpp controllers/ai-controller.hpp controllers/aggressive-ai-controller.hpp controllers/reasonable-ai-controller.hpp controllers/passive-ai-controller.hpp controllers/player-controller-settings.hpp controllers/visualization-controller.hpp controllers/visualization-controller.cpp)
 set(POWER_UP_HEADER_FILES power-ups/power-up.hpp power-ups/low-health-power-up.hpp power-ups/high-health-power-up.hpp power-ups/low-energy-power-up.hpp power-ups/high-energy-power-up.hpp power-ups/missile-power-up.hpp power-ups/no-asteroids-power-up.hpp power-ups/more-asteroids-power-up.hpp power-ups/low-gravity-power-up.hpp power-ups/high-gravity-power-up.hpp power-ups/random-gravity-power-up.hpp)
 set(OTHER_HEADER_FILES script.hpp logger.hpp logger-manager.hpp body.hpp planet.hpp spaceship.hpp player-interface.hpp constants.hpp ray.hpp particle-system.hpp asteroid.hpp missile.hpp body-collision.hpp gameplay-settings.hpp main-menu.hpp pause-menu.hpp score-board.hpp message.hpp score-board.cpp score-counter.hpp)
 

@@ -335,6 +335,37 @@ void Spaceship::render ( sf::RenderWindow &Window ) {
     Window.draw( Sprite );
     Window.draw( AccentSprite ); }
 
+void Spaceship::render ( sf::RenderTexture &Buffer ) {
+
+    sf::Sprite Sprite ( Texture );
+    sf::Sprite AccentSprite ( AccentTexture );
+    sf::Sprite ThrusterSprite ( ThrusterTexture );
+
+    Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
+    Sprite.setScale( ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().x, ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().y );
+    Sprite.setPosition( getPosition() );
+    Sprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
+
+    AccentSprite.setOrigin( (float) AccentTexture.getSize().x / 2, (float) AccentTexture.getSize().y / 2 );
+    AccentSprite.setScale( ( SQRT2_2ND * 2.f * getRadius() ) / AccentTexture.getSize().x, ( SQRT2_2ND * 2.f * getRadius() ) / AccentTexture.getSize().y );
+    AccentSprite.setPosition( getPosition() );
+    AccentSprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
+    AccentSprite.setColor( AccentColor );
+
+    float ThrusterModule = SQRT2_2ND * 0.5f * getRadius();
+    float ThrusterAngle = PI + getVelocityAngle();
+
+    ThrusterSprite.setOrigin( (float) ThrusterTexture.getSize().x / 2.f, (float) ThrusterTexture.getSize().y / 2.f );
+    ThrusterSprite.setScale( ( SQRT2_2ND * 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().x, ( SQRT2_2ND * 0.375f * 2.f * getRadius() ) / ThrusterTexture.getSize().y );
+    ThrusterSprite.setOrigin( ThrusterTexture.getSize().x / 2.f, ThrusterTexture.getSize().y / 3.f );
+    ThrusterSprite.setPosition( getPosition() + ThrusterModule * sf::Vector2f( cosf( ThrusterAngle ), sinf( ThrusterAngle ) ) );
+    ThrusterSprite.setRotation( RAD_TO_DEG * ( PI + ThrusterAngle + ThrusterAngleOffset ) + 90.f );
+
+    ThrusterExhaust.render( Buffer );
+    Buffer.draw( ThrusterSprite );
+    Buffer.draw( Sprite );
+    Buffer.draw( AccentSprite ); }
+
 bool Spaceship::onRayShot ( ) {
 
     if ( RayShot ) {

@@ -85,6 +85,7 @@ public:
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
+    void render ( sf::RenderTexture &Buffer );
 
     bool onRayShot ( );
     bool onMissileShot ( );

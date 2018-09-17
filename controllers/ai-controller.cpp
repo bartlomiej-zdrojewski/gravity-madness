@@ -67,13 +67,13 @@ void AIController::update ( sf::Time ElapsedTime ) {
 
         return; }
 
+    ShotPanicTime -= ElapsedTime;
+    LimitPanicTime -= ElapsedTime;
+
     ThrustForward = false;
     ThrustBackward = false;
     ThrustLeft = false;
     ThrustRight = false;
-
-    ShotPanicTime -= ElapsedTime;
-    LimitPanicTime -= ElapsedTime;
 
     float Distance = ClosestBodyDistance;
     sf::Vector2f Acceleration = ClosestBodyAcceleration;

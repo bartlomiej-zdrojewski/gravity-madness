@@ -112,6 +112,32 @@ bool PlayerInterface::isFadedOut ( ) {
 
     return ( FadeOutTime >= ( FadeOutDuration + sf::seconds( 1.f ) ) ); }
 
+float PlayerInterface::getFadeInAlpha ( ) {
+
+    if ( FadeIn ) {
+
+        return FadeInTime.asSeconds() / FadeInDuration.asSeconds(); }
+
+    return 0.f; }
+
+float PlayerInterface::getFadeOutAlpha ( ) {
+
+    if ( FadeOut ) {
+
+        if ( FadeOutTime.asSeconds() < FadeOutDelay.asSeconds() ) {
+
+            return 0.f; }
+
+        if ( FadeOutTime < FadeOutDuration ) {
+
+            return ( FadeOutTime.asSeconds() - FadeOutDelay.asSeconds() ) / ( FadeOutDuration.asSeconds() - FadeOutDelay.asSeconds() ); }
+
+        else {
+
+            return 1.f; } }
+
+    return 0.f; }
+
 void PlayerInterface::update ( sf::Time ElapsedTime ) {
 
     if ( MySpaceship ) {
@@ -463,8 +489,8 @@ void PlayerInterface::renderScoreTab ( sf::RenderWindow &Window ) {
 
     #endif
 
-    ScoreText.setPosition( sf::Vector2f( Viewport.width - ScoreText.getLocalBounds().width - 15.f, 15.f ) );
-    ScoreMultiplierText.setPosition( sf::Vector2f( Viewport.width - ScoreMultiplierText.getLocalBounds().width - 15.f, ScoreText.getPosition().y + ScoreText.getLocalBounds().height + 15.f ) );
+    ScoreText.setPosition( sf::Vector2f( Viewport.left + Viewport.width - ScoreText.getLocalBounds().width - 15.f, Viewport.top + 15.f ) );
+    ScoreMultiplierText.setPosition( sf::Vector2f( Viewport.left + Viewport.width - ScoreMultiplierText.getLocalBounds().width - 15.f, ScoreText.getPosition().y + ScoreText.getLocalBounds().height + 15.f ) );
     ScoreText.move( ScoreText.getLocalBounds().width * SCORE_TAB_FONT_HORIZONTAL_OFFSET_FIX, ScoreText.getLocalBounds().height * SCORE_TAB_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
     ScoreMultiplierText.move( ScoreMultiplierText.getLocalBounds().width * SCORE_TAB_FONT_HORIZONTAL_OFFSET_FIX, ScoreMultiplierText.getLocalBounds().height * SCORE_TAB_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
 
@@ -514,7 +540,7 @@ void PlayerInterface::renderArrow ( sf::RenderWindow &Window ) {
         sf::Sprite Sprite ( ArrowTexture );
         Sprite.setOrigin( ArrowTexture.getSize().x / 2.f, ArrowTexture.getSize().y / 2.f );
         Sprite.setScale( ArrowSize / ArrowTexture.getSize().x, ArrowSize / ArrowTexture.getSize().y );
-        Sprite.setPosition( ( Viewport.width * 0.5f ) + ArrowModule * cosf( ArrowAngle ), ( Viewport.height * 0.5f ) + ArrowModule * sinf( ArrowAngle ) );
+        Sprite.setPosition( Viewport.left + ( Viewport.width * 0.5f ) + ArrowModule * cosf( ArrowAngle ), Viewport.top + ( Viewport.height * 0.5f ) + ArrowModule * sinf( ArrowAngle ) );
         Sprite.setRotation( RAD_TO_DEG * ArrowAngle + 90.f );
 
         Window.draw( Sprite ); } }
@@ -526,7 +552,7 @@ void PlayerInterface::renderNotification ( sf::RenderWindow &Window ) {
     Text.setString( Notification );
     Text.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     Text.setCharacterSize( NotificationFontSize );
-    Text.setPosition( ( Viewport.width - Text.getLocalBounds().width ) / 2.f, 0.25f * Viewport.height );
+    Text.setPosition( Viewport.left + ( Viewport.width - Text.getLocalBounds().width ) / 2.f, Viewport.top + 0.25f * Viewport.height );
     Text.setFillColor( sf::Color( 255, 255, 255, (sf::Uint8) ( 255 * NotificationOpacity ) ) );
 
     Window.draw( Text ); }

@@ -154,6 +154,20 @@ void ParticleSystem::render ( sf::RenderWindow &Window ) {
 
     Window.draw( &Vertices[0], Vertices.size(), sf::Points ); }
 
+void ParticleSystem::render ( sf::RenderTexture &Buffer ) {
+
+    unsigned int Index = 0;
+    Vertices.resize( Particles.size() );
+
+    for ( auto ActiveParticle : Particles ) {
+
+        Vertices[Index].position = ActiveParticle.Position;
+        Vertices[Index].color = ActiveParticle.Color;
+
+        Index++; }
+
+    Buffer.draw( &Vertices[0], Vertices.size(), sf::Points ); }
+
 float ParticleSystem::getRandomFloat ( ) {
 
     return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }

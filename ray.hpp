@@ -22,6 +22,7 @@ public:
 
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
+    void render ( sf::RenderTexture &Buffer );
 
 private:
 

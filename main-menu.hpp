@@ -4,8 +4,12 @@
 #include <cmath>
 #include <list>
 #include "constants.hpp"
+#include "controllers/visualization-controller.hpp"
 #include "gameplay-settings.hpp"
 #include "graphics-module.hpp"
+#include "missile.hpp"
+#include "ray.hpp"
+#include "spaceship.hpp"
 
 #define CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
 #define CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX (-0.4f)
@@ -20,6 +24,7 @@ public:
 
         MenuMode,
         GameplayMode,
+        SpaceshipsMode,
         SettingsMode,
         ControllersMode
 
@@ -42,6 +47,46 @@ public:
 
 private:
 
+    struct SpaceshipCard {
+
+        ~ SpaceshipCard ( ) {
+
+            if ( VisualizationSpaceship ) {
+
+                if ( VisualizationSpaceship->getController() ) {
+
+                    delete VisualizationSpaceship->getController();
+
+                    VisualizationSpaceship->setController( nullptr ); } }
+
+            delete VisualizationSpaceship;
+            delete VisualizationArea;
+
+            for ( auto i = VisualizationRayShots.begin(); i != VisualizationRayShots.end(); ) {
+
+                delete (*i);
+                i = VisualizationRayShots.erase( i ); }
+
+            for ( auto i = VisualizationMissiles.begin(); i != VisualizationMissiles.end(); ) {
+
+                delete (*i);
+                i = VisualizationMissiles.erase( i );} }
+
+        unsigned int Index = 0;
+        GameplaySettings::SpaceshipPrototype Prototype;
+
+        sf::Vector2f Size;
+        sf::Vector2f Position;
+        sf::VertexArray Outline;
+
+        Spaceship * VisualizationSpaceship = nullptr;
+        sf::RenderTexture * VisualizationArea = nullptr;
+        sf::Vector2f VisualizationWind; // TODO
+        std::list <Ray*> VisualizationRayShots;
+        std::list <Missile*> VisualizationMissiles;
+
+        };
+
     static float getRandomFloat ( );
     static std::string getTimeText ( sf::Time Time );
     static std::string blankUnderscore ( std::string Text );
@@ -55,6 +100,11 @@ private:
     void updateGameplaySection_BindLeft ( );
     void updateGameplaySection_BindRight ( );
     void renderGameplaySection ( sf::RenderWindow &Window );
+
+    void loadSpaceshipCards ( );
+    void updateSpaceshipsSection ( sf::Time ElapsedTime );
+    void updateSpaceshipsSection ( sf::Event &Event );
+    void renderSpaceshipsSection ( sf::RenderWindow &Window );
 
     void updateSettingsSection ( sf::Time ElapsedTime );
     void updateSettingsSection ( sf::Event &Event );
@@ -103,6 +153,12 @@ private:
     std::string GameplayOptionText [2][9];
     unsigned int GameplayOptionFontSize;
     sf::Vector2f GameplayOptionPosition [2][9];
+
+    unsigned int SpaceshipIndex;
+    unsigned int SpaceshipOption;
+    std::list <SpaceshipCard> SpaceshipCards;
+    float SpaceshipCardsOffset;
+    float SpaceshipCardsOffsetDirection;
 
     unsigned int SettingsOption;
     unsigned int SettingsOptionCount;

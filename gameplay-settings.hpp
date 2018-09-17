@@ -88,13 +88,14 @@ public:
     ~ GameplaySettings ( );
 
     void loadSpaceshipPrototypes ( Script * Config );
-    void assignSpaceships ( std::vector <int> SpaceshipAssignment );
     std::vector <SpaceshipPrototype> getSpaceshipPrototypes ( );
     SpaceshipPrototype getSpaceshipPrototype ( unsigned int Index );
 
     void loadPlayerControllerSettingsRegister ( std::string Config );
     PlayerControllerSettings ** getPlayerControllerSettingsRegister ( );
     PlayerControllerSettings * getPlayerControllerSettings ( unsigned int Index );
+
+    void assignSpaceships ( std::vector <int> SpaceshipAssignment ); // TODO REFACTOR
 
     float getAreaSize ( );
     std::string getAreaSizeText ( );

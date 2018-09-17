@@ -38,12 +38,6 @@ MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
     SettingsOptionText[3] = "Epilepsy protection";
     SettingsOptionText[4] = "Check out controllers!";
 
-    ControllersTablePointer = { 1, 1 };
-    ControllersModificationMode = false;
-    ControllersModificationState = 0;
-    PreviousDevice = PlayerControllerSettings::Devices::Keyboard;
-    PreviousIdentifier = -1;
-
     BackgroundPauseDuration = sf::seconds( 2.f );
     BackgroundPauseTime = BackgroundPauseDuration;
 
@@ -62,7 +56,11 @@ MainMenu::Modes MainMenu::getMode ( ) {
 
 void MainMenu::setMode ( Modes Mode ) {
 
-    this->Mode = Mode; }
+    this->Mode = Mode;
+
+    if ( Mode == Modes::SpaceshipsMode ) {
+
+        loadSpaceshipCards(); } }
 
 void MainMenu::update ( ) {
 
@@ -84,6 +82,14 @@ void MainMenu::update ( ) {
 
                 updateMenu( ElapsedTime );
                 updateGameplaySection( ElapsedTime );
+
+                break; }
+
+            case SpaceshipsMode: {
+
+                updateMenu( ElapsedTime );
+                updateGameplaySection( ElapsedTime );
+                updateSpaceshipsSection( ElapsedTime );
 
                 break; }
 
@@ -128,6 +134,12 @@ void MainMenu::update ( sf::Event &Event ) {
 
             break; }
 
+        case Modes::SpaceshipsMode: {
+
+            updateSpaceshipsSection( Event );
+
+            break; }
+
         case Modes::SettingsMode: {
 
             updateSettingsSection( Event );
@@ -163,6 +175,14 @@ void MainMenu::render ( sf::RenderWindow &Window ) {
 
             break; }
 
+        case Modes::SpaceshipsMode: {
+
+            renderMenu( Window );
+            renderGameplaySection( Window );
+            renderSpaceshipsSection( Window );
+
+            break; }
+
         case Modes::SettingsMode: {
 
             renderMenu( Window );
@@ -193,7 +213,17 @@ void MainMenu::reset ( ) {
     MenuOption = 0;
     GameplayPage = 0;
     GameplayOption = 0;
+    SpaceshipIndex = 0;
+    SpaceshipOption = 0;
+    SpaceshipCardsOffset = 0.f;
+    SpaceshipCardsOffsetDirection = 0.f;
     SettingsOption = 0;
+
+    ControllersTablePointer = { 1, 1 };
+    ControllersModificationMode = false;
+    ControllersModificationState = 0;
+    PreviousDevice = PlayerControllerSettings::Devices::Keyboard;
+    PreviousIdentifier = -1;
 
     MenuOptionPointerPosition.y = -25.f;
 
@@ -223,6 +253,7 @@ void MainMenu::reset ( ) {
 
     updateMenu( sf::seconds( 0.01f ) );
     updateGameplaySection( sf::seconds( 0.01f ) );
+    updateSpaceshipsSection( sf::seconds( 0.01f ) );
     updateSettingsSection( sf::seconds( 0.01f ) );
     updateControllersSection( sf::seconds( 0.01f ) );
     updateBackground( sf::seconds( 0.01f ) ); }
@@ -821,34 +852,27 @@ void MainMenu::updateGameplaySection ( sf::Event &Event ) {
 
             case sf::Keyboard::Return: {
 
-                if ( GameplayOption == 4 ) {
+                if ( GameplayPage == 0 && GameplayOption == 4 ) {
 
-                    if ( GameplayPage == 0 ) {
+                    GameplayPage++;
+                    GameplayOption = 0; }
 
-                        GameplayPage++;
-                        GameplayOption = 0; }
+                else if ( GameplayPage == 1 && GameplayOption == 3 ) {
 
-                    else if ( GameplayPage == 1 ) {
-
-                        // TODO SPACESHIP SECTION
-
-                        } }
+                    setMode( Modes::SpaceshipsMode ); }
 
                 break; }
 
             case sf::Keyboard::Space: {
 
-                if ( GameplayOption == 4 ) {
+                if ( GameplayPage == 0 && GameplayOption == 4 ) {
 
-                    if ( GameplayPage == 0 ) {
+                    GameplayPage++;
+                    GameplayOption = 0; }
 
-                        GameplayPage++; }
+                else if ( GameplayPage == 1 && GameplayOption == 3 ) {
 
-                    else if ( GameplayPage == 1 ) {
-
-                        // TODO SPACESHIP SECTION
-
-                        } }
+                    setMode( Modes::SpaceshipsMode ); }
 
                 break; }
 
@@ -1127,6 +1151,323 @@ void MainMenu::renderGameplaySection ( sf::RenderWindow &Window ) {
         #endif
 
         Window.draw( Text ); } }
+
+void MainMenu::loadSpaceshipCards ( ) {
+
+    SpaceshipCards.clear();
+
+    sf::Vector2f SectionSize = sf::Vector2f( Graphics->getWindowWidth(), 0.75f * Graphics->getWindowHeight() );
+    sf::Vector2f CardSize = sf::Vector2f( 0.75f * SectionSize.y, 0.75f * SectionSize.y );
+    sf::Vector2f CardMargin = sf::Vector2f( 0.05f * SectionSize.y ,0.2f * SectionSize.y );
+    
+    auto SpaceshipPrototypes = Gameplay->getSpaceshipPrototypes();
+    
+    for ( unsigned int i = 0; i < SpaceshipPrototypes.size(); i++ ) {
+
+        SpaceshipCards.emplace_back( SpaceshipCard ( ) );
+
+        SpaceshipCards.back().Index = i;
+        SpaceshipCards.back().Prototype = SpaceshipPrototypes[i];
+        SpaceshipCards.back().VisualizationSpaceship = new Spaceship ( SpaceshipCards.back().Prototype.Mass, SpaceshipCards.back().Prototype.Radius * 2.f );
+        SpaceshipCards.back().VisualizationArea = new sf::RenderTexture ( );
+        SpaceshipCards.back().VisualizationArea->setSmooth( true );
+
+        // TODO
+        SpaceshipCards.back().VisualizationWind = sf::Vector2f( -120.f, 12.f );
+
+        Spaceship * MySpaceship = SpaceshipCards.back().VisualizationSpaceship;
+        GameplaySettings::SpaceshipPrototype * MyPrototype = &SpaceshipCards.back().Prototype;
+        MySpaceship->setHealthLimit( MyPrototype->HealthLimit );
+        MySpaceship->setHealth( MyPrototype->HealthLimit );
+        MySpaceship->setHealthRestoration( MyPrototype->HealthRestoration );
+        MySpaceship->setEnergyLimit( MyPrototype->EnergyLimit );
+        MySpaceship->setEnergy( MyPrototype->EnergyLimit );
+        MySpaceship->setEnergyRestoration( MyPrototype->EnergyRestoration );
+        MySpaceship->setThrust( MyPrototype->Thrust );
+        MySpaceship->setBrakingFactor( MyPrototype->BrakingFactor );
+        MySpaceship->setRayPower( MyPrototype->RayPower );
+        MySpaceship->setRayColor( MyPrototype->RayColor );
+        MySpaceship->setMissileLimit( MyPrototype->MissileLimit );
+        MySpaceship->setMissileCount( MyPrototype->MissileCount );
+        MySpaceship->setTexture( Graphics->getTexture( MyPrototype->Texture ) );
+        MySpaceship->setAccentTexture( Graphics->getTexture( MyPrototype->AccentTexture ), sf::Color::Red ); // TODO CHANGE COLORS
+        MySpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), MyPrototype->FuelColor );
+        MySpaceship->setPosition( sf::Vector2f( CardSize.x / 2.f, ( 0.3f * CardSize.y ) / 2.f ) );
+        MySpaceship->setVelocity( sf::Vector2f( 25.f, 0.f ) );
+        MySpaceship->setController( new VisualizationController ( ) );
+        ( (VisualizationController*) MySpaceship->getController() )->setDesiredPosition( sf::Vector2f( 500.f, 150.f ) );
+        ( (VisualizationController*) MySpaceship->getController() )->setResetDistance( 250.f );
+
+        #if ( SFML_VERSION_MINOR >= 5 )
+
+            sf::ContextSettings Context;
+            Context.antialiasingLevel = Graphics->getAntialiasingLevel();
+
+            SpaceshipCards.back().VisualizationArea->create( 1000, 300, Context );
+
+        #else
+
+            SpaceshipCards.back().VisualizationArea->create( (unsigned int) CardSize.x, (unsigned int) ( 0.3f * CardSize.y ) );
+        
+        #endif
+
+        }
+
+    SpaceshipOption = (unsigned int) ( SpaceshipPrototypes.size() / 2 );
+    SpaceshipCardsOffset = SectionSize.x / 2.f - ( CardSize.x + CardMargin.x ) * SpaceshipOption;
+    SpaceshipCardsOffsetDirection = 0.f; }
+
+void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
+
+    sf::Vector2f SectionPosition = sf::Vector2f( 0.f, 0.125f * Graphics->getWindowHeight() );
+    sf::Vector2f SectionSize = sf::Vector2f( Graphics->getWindowWidth(), 0.75f * Graphics->getWindowHeight() );
+
+    sf::Vector2f CardSize = sf::Vector2f( 0.75f * SectionSize.y, 0.75f * SectionSize.y );
+    sf::Vector2f CardMargin = sf::Vector2f( 0.05f * SectionSize.y ,0.2f * SectionSize.y );
+    sf::Color CardColor = sf::Color( 13, 71, 161 ); // #0D47A1
+    float CardOutlineThickness = 1.5f;
+    float NeutralPosition = SectionPosition.x + SectionSize.x / 2.f;
+
+    for ( auto &Card : SpaceshipCards ) {
+
+        Card.Size = CardSize;
+        Card.Position.x = SectionPosition.x + ( CardSize.x + CardMargin.x ) * Card.Index + SpaceshipCardsOffset;
+        Card.Position.y = SectionPosition.y + CardSize.y / 2.f + CardMargin.y;
+
+        Card.Outline.clear();
+        Card.Outline.setPrimitiveType( sf::PrimitiveType::Quads );
+        Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x + Card.Size.x / 2.f + CardMargin.x / 2.f, Card.Position.y - Card.Size.y / 2.f ), CardColor ) );
+        Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x + Card.Size.x / 2.f + CardMargin.x / 2.f, Card.Position.y + Card.Size.y / 2.f ), CardColor ) );
+        Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x + Card.Size.x / 2.f + CardMargin.x / 2.f + CardOutlineThickness, Card.Position.y + Card.Size.y / 2.f ), CardColor ) );
+        Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x + Card.Size.x / 2.f + CardMargin.x / 2.f + CardOutlineThickness, Card.Position.y - Card.Size.y / 2.f ), CardColor ) );
+
+        if ( Card.Index == 0 ) {
+
+            Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x - Card.Size.x / 2.f - CardMargin.x / 2.f, Card.Position.y - Card.Size.y / 2.f ), CardColor ) );
+            Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x - Card.Size.x / 2.f - CardMargin.x / 2.f, Card.Position.y + Card.Size.y / 2.f ), CardColor ) );
+            Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x - Card.Size.x / 2.f - CardMargin.x / 2.f + CardOutlineThickness, Card.Position.y + Card.Size.y / 2.f ), CardColor ) );
+            Card.Outline.append( sf::Vertex( sf::Vector2f( Card.Position.x - Card.Size.x / 2.f - CardMargin.x / 2.f + CardOutlineThickness, Card.Position.y - Card.Size.y / 2.f ), CardColor ) ); }
+        
+        if ( Card.VisualizationSpaceship ) {
+
+            Card.VisualizationSpaceship->setHealth( Card.VisualizationSpaceship->getHealthLimit() );
+            Card.VisualizationSpaceship->setEnergy( Card.VisualizationSpaceship->getEnergyLimit() );
+            Card.VisualizationSpaceship->setMissileCount( Card.VisualizationSpaceship->getMissileLimit() );
+            Card.VisualizationSpaceship->updateHealth( 0.f );
+            Card.VisualizationSpaceship->updateEnergy( 0.f );
+            Card.VisualizationSpaceship->setPosition( Card.VisualizationSpaceship->getPosition() + Card.VisualizationWind * ElapsedTime.asSeconds() );
+            Card.VisualizationSpaceship->update( ElapsedTime );
+
+            if ( Card.VisualizationSpaceship->onRayShot() ) {
+
+                auto RayShot = new Ray ( Card.VisualizationSpaceship->getPosition(), Card.VisualizationSpaceship->getVelocityAngle() );
+
+                RayShot->setColor( Card.VisualizationSpaceship->getRayColor() );
+                RayShot->enableRendering();
+
+                Card.VisualizationRayShots.push_back( RayShot ); }
+
+            if ( Card.VisualizationSpaceship->onMissileShot() ) {
+
+                auto * NewMissile = new Missile ( );
+                NewMissile->setRadius( NewMissile->getRadius() * 2.f );
+
+                sf::Vector2f MissilePosition = Card.VisualizationSpaceship->getPosition();
+                MissilePosition.x += ( Card.VisualizationSpaceship->getRadius() + NewMissile->getRadius() + 5.f ) * cosf( Card.VisualizationSpaceship->getVelocityAngle() );
+                MissilePosition.y += ( Card.VisualizationSpaceship->getRadius() + NewMissile->getRadius() + 5.f ) * sinf( Card.VisualizationSpaceship->getVelocityAngle() );
+
+                NewMissile->setPosition( MissilePosition );
+                NewMissile->setVelocity( Card.VisualizationSpaceship->getVelocity() );
+                NewMissile->setTexture( Graphics->getTexture( "Missile" ) );
+                NewMissile->setThrusterTexture( Graphics->getTexture( "Thruster" ) );
+
+                Card.VisualizationMissiles.push_back( NewMissile ); } }
+
+        for ( auto ActiveRayShot : Card.VisualizationRayShots ) {
+
+            ActiveRayShot->update( ElapsedTime ); }
+
+        for ( auto ActiveMissile : Card.VisualizationMissiles ) {
+
+            ActiveMissile->update( ElapsedTime ); }
+
+        for ( auto i = Card.VisualizationRayShots.begin(); i != Card.VisualizationRayShots.end(); ) {
+
+            if ( !(*i)->isRenderingEnabled() ) {
+
+                delete (*i);
+                i = Card.VisualizationRayShots.erase( i ); }
+
+            else {
+
+                ++i; } }
+
+        for ( auto i = Card.VisualizationMissiles.begin(); i != Card.VisualizationMissiles.end(); ) {
+
+            if ( (*i)->isDestructed() ) {
+
+                delete (*i);
+                i = Card.VisualizationMissiles.erase( i ); }
+
+            else {
+
+                ++i; } } }
+
+    for ( auto &Card : SpaceshipCards ) {
+
+        if ( Card.Index == SpaceshipOption ) {
+
+            if ( Card.Position.x != NeutralPosition && SpaceshipCardsOffsetDirection * ( Card.Position.x - NeutralPosition ) >= 0.f ) {
+
+                SpaceshipCardsOffsetDirection = Card.Position.x - NeutralPosition;
+
+                if ( Card.Position.x < NeutralPosition ) {
+
+                    SpaceshipCardsOffset += SectionSize.x * ElapsedTime.asSeconds(); }
+
+                else {
+
+                    SpaceshipCardsOffset -= SectionSize.x * ElapsedTime.asSeconds(); } }
+
+            else {
+
+                SpaceshipCardsOffset = SectionSize.x / 2.f - ( CardSize.x + CardMargin.x ) * SpaceshipOption;
+                SpaceshipCardsOffsetDirection = 0.f; }
+
+            break; } }
+
+    // TODO TITLE TEXT
+
+    }
+
+void MainMenu::updateSpaceshipsSection ( sf::Event &Event ) {
+
+    if ( Event.type == sf::Event::KeyPressed ) {
+
+        switch ( Event.key.code ) {
+
+            case sf::Keyboard::Left: {
+
+                if ( SpaceshipOption != 0 ) {
+
+                    SpaceshipOption--;
+                    SpaceshipCardsOffsetDirection = 0.f; }
+
+                break; }
+
+            case sf::Keyboard::Right: {
+
+                if ( SpaceshipOption != ( SpaceshipCards.size() - 1 ) && !SpaceshipCards.empty() ) {
+
+                    SpaceshipOption++;
+                    SpaceshipCardsOffsetDirection = 0.f; }
+
+                break; }
+
+            case sf::Keyboard::A: {
+
+                if ( SpaceshipOption != 0 ) {
+
+                    SpaceshipOption--;
+                    SpaceshipCardsOffsetDirection = 0.f; }
+
+                break; }
+
+            case sf::Keyboard::D: {
+
+                if ( SpaceshipOption != ( SpaceshipCards.size() - 1 ) && !SpaceshipCards.empty() ) {
+
+                    SpaceshipOption++;
+                    SpaceshipCardsOffsetDirection = 0.f; }
+
+                break; }
+
+            case sf::Keyboard::Return: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::Space: {
+
+                // ...
+
+                break; }
+
+            case sf::Keyboard::BackSpace: {
+
+                if ( SpaceshipIndex == 0 ) {
+
+                    SpaceshipOption = 0;
+
+                    setMode( Modes::GameplayMode ); }
+
+                else {
+
+                    // TODO SpaceshipOption = SMTH
+
+                    SpaceshipIndex--; }
+
+                break; }
+
+            case sf::Keyboard::Escape: {
+
+                SpaceshipIndex = 0;
+                SpaceshipOption = 0;
+
+                setMode( Modes::GameplayMode );
+
+                break; }
+
+            default: {
+
+                break; } } } }
+
+void MainMenu::renderSpaceshipsSection ( sf::RenderWindow &Window ) {
+
+    renderSectionBackground( Window, 2 );
+
+    for ( auto &Card : SpaceshipCards ) {
+
+        Card.VisualizationArea->clear();
+
+        for ( auto ActiveRayShot : Card.VisualizationRayShots ) {
+
+            ActiveRayShot->render( *Card.VisualizationArea ); }
+
+        for ( auto ActiveMissile : Card.VisualizationMissiles ) {
+
+            ActiveMissile->render( *Card.VisualizationArea ); }
+
+        Card.VisualizationSpaceship->render( *Card.VisualizationArea );
+        Card.VisualizationArea->display();
+
+        sf::Sprite Visualization;
+        Visualization.setPosition( Card.Position - Card.Size / 2.f );
+        Visualization.setScale( Card.Size.x / Card.VisualizationArea->getSize().x, ( 0.3f * Card.Size.y ) / Card.VisualizationArea->getSize().y );
+        Visualization.setTexture( Card.VisualizationArea->getTexture() );
+
+        Window.draw ( Visualization ); }
+
+    for ( auto &Card : SpaceshipCards ) {
+
+        // TODO THE REST
+
+        }
+
+    for ( auto &Card : SpaceshipCards ) {
+
+        // TODO TEMP
+        sf::Text Text;
+        Text.setString( std::to_string( Card.Index ) );
+        Text.setPosition( Card.Position );
+        Text.setFillColor( sf::Color::White );
+        Text.setFont(  Graphics->getFont( "RobotoCondensedLight" ) );
+        Text.setCharacterSize( 25 );
+        Window.draw( Text );
+        // TODO TEMP
+
+        Window.draw( Card.Outline ); } }
 
 void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
@@ -1675,7 +2016,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                 if ( Key < -1 ) { // Joystick is not connected
 
-                    ManualText = "Joystick is not connected. Choose one with brighter color.";
+                    ManualText = "Joystick is not connected. Choose the one with a brighter color.";
 
                     if ( PlayerControllerSettings::scanKeyboard() == -1 ) {
 
@@ -1923,11 +2264,11 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
         TextPrototype.setCharacterSize( --TableContentFontSize ); }
 
-    TextPrototype.setString( "Use ANY KEY to select a key and then repeat it to confirm." );
+    TextPrototype.setString( "Joystick is not connected. Choose the one with a brighter color." );
     TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     TextPrototype.setCharacterSize( TableManualFontSize );
 
-    while ( TextPrototype.getLocalBounds().width > ( 0.8f * SectionSize.x * ( TableRight - TableLeft ) ) ) {
+    while ( TextPrototype.getLocalBounds().width > ( 0.9f * SectionSize.x * ( TableRight - TableLeft ) ) ) {
 
         TextPrototype.setCharacterSize( --TableManualFontSize ); }
 
@@ -2085,7 +2426,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             } }
 
-    ControllersTableManual.setString( "Use ARROWS to select device and ENTER to confirm." );
+    ControllersTableManual.setString( "Joystick is not connected. Choose the one with a brighter color." );
     ControllersTableManual.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     ControllersTableManual.setCharacterSize( TableManualFontSize );
 
@@ -2098,7 +2439,21 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
     Position.x += ControllersTableManual.getLocalBounds().width * CONTROLLERS_MANUAL_FONT_HORIZONTAL_OFFSET_FIX; // Offset fix
     Position.y += ControllersTableManual.getLocalBounds().height * CONTROLLERS_MANUAL_FONT_VERTICAL_OFFSET_FIX; // Offset fix
 
-    ControllersTableManual.setPosition( Position ); }
+    ControllersTableManual.setPosition( Position );
+
+    #if ( SFML_VERSION_MINOR >= 4 )
+
+        ControllersTableManual.setOutlineThickness( 1.f );
+        ControllersTableManual.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
+        ControllersTableManual.setFillColor( sf::Color( 189, 189, 189 ) ); // #BDBDBD
+
+    #else
+
+        ControllersTableManual.setColor( sf::Color( 189, 189, 189 ) ); // #BDBDBD
+
+    #endif
+
+    }
 
 void MainMenu::updateControllersSection ( sf::Event &Event ) {
 

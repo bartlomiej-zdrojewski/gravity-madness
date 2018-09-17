@@ -27,6 +27,8 @@ public:
     void beginFadeOut ( );
     void endFadeOut ( );
     bool isFadedOut ( );
+    float getFadeInAlpha ( );
+    float getFadeOutAlpha ( );
 
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );

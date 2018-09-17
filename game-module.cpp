@@ -1322,8 +1322,8 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
             Spaceship * Target = getAngularTarget( ActiveSpaceship, 2.f * PI / 3.f, TargetDistance, TargetAngle );
 
             sf::Vector2f MissilePosition = ActiveSpaceship->getPosition();
-            MissilePosition.x += ( ActiveSpaceship->getRadius() + NewMissile->getRadius() + 20.f ) * cosf( ActiveSpaceship->getVelocityAngle() );
-            MissilePosition.y += ( ActiveSpaceship->getRadius() + NewMissile->getRadius() + 20.f ) * sinf( ActiveSpaceship->getVelocityAngle() );
+            MissilePosition.x += ( ActiveSpaceship->getRadius() + NewMissile->getRadius() + 5.f ) * cosf( ActiveSpaceship->getVelocityAngle() );
+            MissilePosition.y += ( ActiveSpaceship->getRadius() + NewMissile->getRadius() + 5.f ) * sinf( ActiveSpaceship->getVelocityAngle() );
 
             NewMissile->setPosition( MissilePosition );
             NewMissile->setVelocity( ActiveSpaceship->getVelocity() );
@@ -1752,12 +1752,31 @@ void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
 
             ++i; } } }
 
-void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
+void GameModule::updateViews ( ) {
 
     ViewsOutline.clear();
 
     float ViewWidth = ( 900.f / Graphics->getWindowHeight() ) * Graphics->getWindowWidth();
     float ViewHeight = 900.f;
+
+    float ViewOutlineThickness = 1.5f;
+    sf::Color ViewOutlineColor = sf::Color( 13, 71, 161 ); // #0D47A1
+
+    if ( PlayerCount > 1 ) {
+
+        if ( Interface[0]->getFadeInAlpha() != 0.f ) {
+
+            ViewOutlineColor.a = (sf::Uint8) ( 255 * ( 1.f - Interface[0]->getFadeInAlpha() ) ); }
+
+        else if ( EndingCondition ) {
+
+            float Alpha = 1.f;
+
+            for ( unsigned int i = 0; i < PlayerCount; i++ ) {
+
+                Alpha = fminf( Alpha, Interface[i]->getFadeOutAlpha() ); }
+
+            ViewOutlineColor.a = (sf::Uint8) ( 255 * ( 1.f - Alpha ) ); } }
 
     if ( PlayerCount == 1 ) {
 
@@ -1773,8 +1792,10 @@ void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
             Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 0.5f, 1.f ) );
             Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 1.f ) );
 
-            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.f ), sf::Color( 255, 255, 255 ) ) );
-            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, Graphics->getWindowHeight() ), sf::Color( 255, 255, 255 ) ) ); }
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.f ), ViewOutlineColor ) );
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, Graphics->getWindowHeight() ), ViewOutlineColor ) );
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f + ViewOutlineThickness, Graphics->getWindowHeight() ), ViewOutlineColor ) );
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f + ViewOutlineThickness, 0.f ), ViewOutlineColor ) ); }
 
         else {
 
@@ -1783,8 +1804,10 @@ void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
             Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 1.f, 0.5f ) );
             Views[1].setViewport( sf::FloatRect( 0.f, 0.5f, 1.f, 0.5f ) );
 
-            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, Graphics->getWindowHeight() / 2.f ), sf::Color( 255, 255, 255 ) ) );
-            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() / 2.f ), sf::Color( 255, 255, 255 ) ) ); } }
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, Graphics->getWindowHeight() / 2.f ), ViewOutlineColor ) );
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() / 2.f ), ViewOutlineColor ) );
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() / 2.f + ViewOutlineThickness ), ViewOutlineColor ) );
+            ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, Graphics->getWindowHeight() / 2.f + ViewOutlineThickness ), ViewOutlineColor ) ); } }
 
     else if ( PlayerCount == 3 ) {
 
@@ -1795,12 +1818,14 @@ void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
         Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 0.6f ) );
         Views[2].setViewport( sf::FloatRect( 0.f, 0.6f, 1.f, 0.4f ) );
 
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, 0.6f * Graphics->getWindowHeight() ), sf::Color( 255, 255, 255 ) ) );
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), 0.6f * Graphics->getWindowHeight() ), sf::Color( 255, 255, 255 ) ) );
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.f ), sf::Color( 255, 255, 255 ) ) );
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.6f * Graphics->getWindowHeight() ), sf::Color( 255, 255, 255 ) ) );
-
-        }
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, 0.6f * Graphics->getWindowHeight() ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), 0.6f * Graphics->getWindowHeight() ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), 0.6f * Graphics->getWindowHeight() + ViewOutlineThickness ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, 0.6f * Graphics->getWindowHeight() + ViewOutlineThickness ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.f ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.6f * Graphics->getWindowHeight() ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f + ViewOutlineThickness, 0.6f * Graphics->getWindowHeight() ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f + ViewOutlineThickness, 0.f ), ViewOutlineColor ) ); }
 
     else if ( PlayerCount == 4 ) {
 
@@ -1813,17 +1838,19 @@ void GameModule::updateViews ( ) { // TODO UPDATE VIEWS OUTLINE
         Views[2].setViewport( sf::FloatRect( 0.f, 0.5f, 0.5f, 0.5f ) );
         Views[3].setViewport( sf::FloatRect( 0.5f, 0.5f, 0.5f, 0.5f ) );
 
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, Graphics->getWindowHeight() / 2.f ), sf::Color( 255, 255, 255 ) ) );
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() / 2.f ), sf::Color( 255, 255, 255 ) ) );
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.f ), sf::Color( 255, 255, 255 ) ) );
-        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, Graphics->getWindowHeight() ), sf::Color( 255, 255, 255 ) ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, Graphics->getWindowHeight() / 2.f ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() / 2.f ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() / 2.f + ViewOutlineThickness ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( 0.f, Graphics->getWindowHeight() / 2.f + ViewOutlineThickness ), ViewOutlineColor ) );
 
-
-    } }
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, 0.f ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f, Graphics->getWindowHeight() ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f + ViewOutlineThickness, Graphics->getWindowHeight() ), ViewOutlineColor ) );
+        ViewsOutline.emplace_back( sf::Vertex( sf::Vector2f( Graphics->getWindowWidth() / 2.f + ViewOutlineThickness, 0.f ), ViewOutlineColor ) ); } }
 
 void GameModule::renderViewsOutline ( sf::RenderWindow &Window ) {
 
-    Window.draw( &ViewsOutline[0], ViewsOutline.size(), sf::Lines ); }
+    Window.draw( &ViewsOutline[0], ViewsOutline.size(), sf::Quads ); }
 
 void GameModule::initAreaLimit ( ) {
 

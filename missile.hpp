@@ -57,6 +57,7 @@ public:
 
     void update ( sf::Time ElapsedTime );
     void render ( sf::RenderWindow &Window );
+    void render ( sf::RenderTexture &Buffer );
 
     void onShot ( );
     ParticleSystem * onCollision ( Planet * Other );
