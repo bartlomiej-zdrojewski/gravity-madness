@@ -23,7 +23,6 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
     reset();
 
     this->Gameplay = Gameplay;
-    EndingCondition = false;
     AreaRadius = Gameplay->getAreaSize();
     PlayerCount = Gameplay->getPlayerCount();
     GameplayTime = ( Gameplay->getEndingCondition() == GameplaySettings::EndingConditions::Time ) ? Gameplay->getTimeLimit() : sf::seconds( 0.f );

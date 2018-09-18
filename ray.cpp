@@ -14,29 +14,28 @@ Ray::Ray ( sf::Vector2f Position, float Angle ) {
 
         Angle += 0.01f; }
 
-    x1 = 1000000.f;
+    xe = 1000000.f;
 
     if ( Angle > ( PI / 2.f ) ) {
 
         Angle -= PI;
-        x1 *= - 1.f; }
+        xe *= - 1.f; }
 
     else if ( Angle < ( - PI / 2.f ) ) {
 
         Angle += PI;
-        x1 *= - 1.f; }
+        xe *= - 1.f; }
 
     a = tanf( Angle );
     b = Position.y - a * Position.x;
-    x0 = Position.x;
+    xs = Position.x;
 
     Color = sf::Color ( 255, 255, 255 );
-
     RenderingTime = sf::seconds( 0.f );
     RenderingDuration = sf::seconds( 1.f );
 
-    RayBegin = sf::Vector2f ( x0, a * x0 + b );
-    RayEnd = sf::Vector2f ( x1, a * x1 + b );
+    RayBegin = sf::Vector2f ( xs, a * xs + b );
+    RayEnd = sf::Vector2f ( xe, a * xe + b );
     RayOpacity = 1.f; }
 
 void Ray::enableRendering ( ) {
@@ -64,19 +63,15 @@ void Ray::setColor ( sf::Color Color ) {
 
 bool Ray::getIntersection ( sf::Vector2f Center, float Radius, sf::Vector2f &Intersection, float &Distance ) {
 
-    const float m = Center.x;
-    const float n = Center.y;
-    const float r = Radius;
+    const float l = 1 + a * a;
+    const float m = 2 * ( a * ( b - Center.y ) - Center.x );
+    const float n = b * b + Center.x * Center.x + Center.y * Center.y - Radius * Radius - 2 * b * Center.y;
 
-    const float i = 1 + a * a;
-    const float j = 2 * a * ( b - n ) - 2 * m;
-    const float k = b * b + m * m + n * n - r * r - 2 * b * n;
-
-    float Delta = j * j - 4 * i * k;
+    float Delta = m * m - 4 * l * n;
 
     if ( Delta < 0.f ) {
 
-        Intersection.x = x1;
+        Intersection.x = xe;
         Intersection.y = a * Intersection.x + b;
         Distance = 1000000.f;
 
@@ -84,10 +79,10 @@ bool Ray::getIntersection ( sf::Vector2f Center, float Radius, sf::Vector2f &Int
 
     else if ( Delta > 0.f ) {
 
-        float IntersectionA = ( - j - sqrtf( Delta ) ) / ( 2 * i );
-        float IntersectionB = ( - j + sqrtf( Delta ) ) / ( 2 * i );
+        float IntersectionA = ( - m - sqrtf( Delta ) ) / ( 2 * l );
+        float IntersectionB = ( - m + sqrtf( Delta ) ) / ( 2 * l );
 
-        if ( fabsf( x0 - IntersectionA ) < fabsf( x0 - IntersectionB ) ) { // because |x1| >> |x0|
+        if ( fabsf( xs - IntersectionA ) < fabsf( xs - IntersectionB ) ) { // because |xe| >> |xs|
 
             Intersection.x = IntersectionA; }
 
@@ -97,11 +92,11 @@ bool Ray::getIntersection ( sf::Vector2f Center, float Radius, sf::Vector2f &Int
 
     else {
 
-        Intersection.x = ( - j ) / ( 2 * i ); }
+        Intersection.x = ( - m ) / ( 2 * l ); }
 
-    if ( ( x1 >= x0 && ( Intersection.x < x0 || Intersection.x > x1 ) ) || ( x1 < x0 && ( Intersection.x > x0 || Intersection.x < x1 ) ) ) {
+    if ( ( xe >= xs && ( Intersection.x < xs || Intersection.x > xe ) ) || ( xe < xs && ( Intersection.x > xs || Intersection.x < xe ) ) ) {
 
-        Intersection.x = x1;
+        Intersection.x = xe;
         Intersection.y = a * Intersection.x + b;
         Distance = 1000000.f;
 
@@ -109,8 +104,8 @@ bool Ray::getIntersection ( sf::Vector2f Center, float Radius, sf::Vector2f &Int
 
     Intersection.y = a * Intersection.x + b;
 
-    const float DistanceX = x0 - Intersection.x;
-    const float DistanceY = ( a * x0 + b ) - Intersection.y;
+    const float DistanceX = xs - Intersection.x;
+    const float DistanceY = ( a * xs + b ) - Intersection.y;
 
     Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY );
 

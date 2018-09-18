@@ -1,6 +1,7 @@
 ﻿site_name: Gravity Madness
 pages:
     - Wstęp: index.md
+    - Teoria: theory.md
     - Moduły: modules.md
     - Klasy: classes.md
     - Rozgrywka: gameplay.md

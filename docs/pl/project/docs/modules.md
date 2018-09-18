@@ -10,7 +10,7 @@ urządzeń.
 Moduł świata odopowiada za inicjalizację pozostałych modułów,
 komunikację z główną pętlą gry oraz obsługę krytycznych błędów.
 W zależności od tego, w którym trybie się znajduje, wywołuje
-funkcje aktualizujące i renderujące nadrzędnych klas.
+funkcje aktualizujące i renderujące poszczególnych klas.
 
 ### Inicjalizajca
 
@@ -112,26 +112,32 @@ bardzo prosta i odbywa się relatywnie szybko. Gdy szczegóły rozgrywki
 zostaną już określone i przekazane do modułu gry, wykonuje on szereg
 czynności:
 
-* Określa rozmiar obszaru gry
+* Określa rozmiar obszaru gry, czas gry, liczbę graczy, mnożnik wyniku
+graczy oraz maksymalną ilość asteroid i bonusów
 * Generuje [obiekty bazowe](gameplay/#obiekty-bazowe), czyli planety i
 statki
+* Tworzy
+[interfejsy](classes/#playerinterface)
+i
+[liczniki punktów](classes/#scorecounter)
+dla wszystkich graczy
 * Podłącza pod statki graczy
 [kontrolery graczy](controllers/#kontrolery-graczy)
-* Podłącza pod statki AI losowe
-[kontrolery AI](controllers/#kontrolery-ai)
+* Podłącza pod statki AI adekwatny do ich osobowości
+[kontroler AI](controllers/#kontrolery-ai)
 
 Następnie uruchamiana jest symulacja, podczas której powstają również
 [obiekty generowane](gameplay/#obiekty-generowane), czyli asteroidy,
-pociski i bonusy.
+pociski, bonusy i promienie.
 
-### Wyróżnione obiekty
+### Wyróżnione obiekty [TODO FIX]
 
 Poniżej znajduje się lista ważniejszych obiektów, którymi zarządza moduł
 gry. Koordynuje ich działanie oraz udostępnia im informacje o rozgrywce,
-bez których nie mogłyby podejmować znaczących decyzji.
+bez których nie mogłyby podejmować kluczowych decyzji.
 
 Jeżeli stosowany jest termin *ciało fizyczne*, oznacza to, że klasa,
-do której należy obiekt, dziedziczy po klasie [Body]().
+do której należy obiekt, dziedziczy po klasie [Body](classes/#body).
 
 Natomiast, jeżeli stosowany jest termin *wchodzić w kolizję*, oznacza
 to, że obiekt zmienia swój stan pod wpływem kolizji. Jako zmianę stanu
@@ -211,28 +217,6 @@ Są one zoptymalizowane w taki sposób, aby być w stanie zasymulować
 kilkadziesiąt tysięcy cząstek w czasie rzeczywistym. Wykorzystują w tym
 celu tablice wierzchołków, które są bezpośrednio wykorzystywane przez
 OpenGL'a i przesyłane do procesora graficznego.
-
-### Fizyka
-
-TODO
-
-#### Grawitacja
-
-$$F = G {M_{1} \cdot M_{2} \over r^2}$$
-$$F = M_{1} \cdot a_{1} = M_{2} \cdot a_{2}$$
-$$M_{S} \cdot a_{S} = G {M_{S} \cdot M_{P} \over r^2}$$
-$$a_{S} = G {M_{P} \over r^2}$$
-$$\Delta x = X_{P} - X_{S} \quad \Delta y = Y_{P} - Y_{S}$$
-$$\cos\alpha = {\Delta x \over r} \quad \sin\alpha = {\Delta y
-\over r}$$
-$$a_{x_{S}} = a_{S} \cdot \cos\alpha = G {M_{P} \over r^2} \cdot
-{X_{S} - X_{P} \over r} = G {M_{P} \cdot (X_{P} - X_{S}) \over r^3}$$
-$$a_{y_{S}} = a_{S} \cdot \sin\alpha = G {M_{P} \over r^2} \cdot
-{Y_{S} - Y_{P} \over r} = G {M_{P} \cdot (Y_{P} - Y_{S}) \over r^3}$$
-
-#### Kolizje
-
-TODO
 
 ### Optmalizacje
 

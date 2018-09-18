@@ -21,3 +21,7 @@ TODO
 ### Agresywny kontroler AI
 
 TODO
+
+## Kontrolery wizualizacji
+
+TODO

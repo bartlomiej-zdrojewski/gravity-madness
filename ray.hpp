@@ -28,8 +28,8 @@ private:
 
     float a;
     float b;
-    float x0;
-    float x1;
+    float xs;
+    float xe;
 
     sf::Color Color;
     sf::Time RenderingTime;

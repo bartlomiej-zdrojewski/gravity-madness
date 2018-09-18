@@ -35,19 +35,9 @@ TODO
 Poniżej znajduje się lista udoskonaleń, które powinny zostać wprowadzone
 w ostatecznej wersji projektu.
 
-* Możliwość wyboru statku w menu głównym (aktualnie wybierany
-jest losowy statek)
-* Kontrolery dla graczy 2-4
-* Wyświetlanie ilości przeciwników i pozostałych pociski w interejsie
-gracza
-* Tutorial
-* Mechanizm liczenia punktów
-* Tablica wyników
-* Muzyka i efekty dźwiękowe
-* Zwiększenie różnorodności grafik
-* Obracanie się asteroid
-* Zwiększenie dokładności detekcji kolizji poprzez zastosowanie
-"szkieletów" i algorytmów graficznych
+* Dodanie nowych statków
+* Dodanie nowych bonusów
+* Możliwość przeprowadzenia rozgrywki w sieci lokalnej (lan multiplier)
 
 W kodzie źródłowym wszelkie propozycje udoskonaleń zostały opatrzone
 komentarzem `TODO`.
@@ -78,7 +68,7 @@ Homepage: [https://pugixml.org/](https://pugixml.org/)
 
 ## Licencja
 
-Copyright 2018 Bartłomiej Zdrojewski
+Copyright (c) 2018 Bartłomiej Zdrojewski
 
 Kod źródłowy pod licencją Apache License, Version 2.0.
 Szczegóły licencji można odnaleźć w pliku `LICENSE`.

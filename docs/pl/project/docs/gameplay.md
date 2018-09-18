@@ -31,6 +31,14 @@ TODO
 
 TODO
 
+### Promienie
+
+TODO
+
+### Systemy cząstek
+
+TODO
+
 ## Obszar gry
 
 TODO
