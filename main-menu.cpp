@@ -231,11 +231,11 @@ void MainMenu::reset ( ) {
 
         MenuOptionPointerVelocity = 30.f; }
 
-    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+    else if ( Graphics->getWindowHeight() >= 600.f && Graphics->getWindowHeight() <= 800.f ) {
 
         MenuOptionPointerVelocity = 50.f; }
 
-    else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+    else if ( Graphics->getWindowHeight() > 800.f && Graphics->getWindowHeight() <= 1000.f ) {
 
         MenuOptionPointerVelocity = 70.f; }
 
@@ -246,6 +246,10 @@ void MainMenu::reset ( ) {
     else {
 
         MenuOptionPointerVelocity = 80.f; }
+
+    for ( unsigned int i = 0; i < 6; i++ ) {
+
+        SpaceshipMaximumValues[i] = 0.f; }
 
     Background.clear();
     ParticleIndexes.clear();
@@ -343,12 +347,12 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
         SectionMargin = sf::Vector2f ( 12.f, 20.f );
         OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
 
-    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+    else if ( Graphics->getWindowHeight() >= 600.f && Graphics->getWindowHeight() <= 800.f ) {
 
         SectionMargin = sf::Vector2f ( 20.f, 30.f );
         OptionMargin = sf::Vector2f ( 10.f, 15.f ); }
 
-    else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+    else if ( Graphics->getWindowHeight() > 800.f && Graphics->getWindowHeight() <= 1000.f ) {
 
         SectionMargin = sf::Vector2f ( 60.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
@@ -440,11 +444,11 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
             Factor = 480.f; }
 
-        else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+        else if ( Graphics->getWindowHeight() >= 600.f && Graphics->getWindowHeight() <= 800.f ) {
 
             Factor = 600.f; }
 
-        else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+        else if ( Graphics->getWindowHeight() > 800.f && Graphics->getWindowHeight() <= 1000.f ) {
 
             Factor = 1200.f; }
 
@@ -457,14 +461,14 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
             Factor = 1800.f; }
 
         if ( std::fabs( SignedDistance ) > MaximumDistance ) {
-
-            if ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f || SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) {
+            // TODO sqn(A) != sgn(B) <=> ( A * B ) < 0
+            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) {
 
                 Factor *= 2.5; } }
 
         if ( std::fabs( MenuOptionPointerPosition.y ) > ( 1.25 * Graphics->getWindowHeight() ) ) {
 
-            if ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f || SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) {
+            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) {
 
                 MenuOptionPointerVelocity = 0.f; } }
 
@@ -608,12 +612,12 @@ void MainMenu::renderMenu ( sf::RenderWindow &Window ) {
         Circle.setRadius( 8.f );
         Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
 
-    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+    else if ( Graphics->getWindowHeight() >= 600.f && Graphics->getWindowHeight() <= 800.f ) {
 
         Circle.setRadius( 10.f );
         Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
 
-    else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+    else if ( Graphics->getWindowHeight() > 800.f && Graphics->getWindowHeight() <= 1000.f ) {
 
         Circle.setRadius( 15.f );
         Circle.setOrigin( Circle.getRadius(), Circle.getRadius() ); }
@@ -713,12 +717,12 @@ void MainMenu::updateGameplaySection ( sf::Time ElapsedTime ) {
         SectionMargin = sf::Vector2f ( 12.f, 20.f );
         OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
 
-    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+    else if ( Graphics->getWindowHeight() >= 600.f && Graphics->getWindowHeight() <= 800.f ) {
 
         SectionMargin = sf::Vector2f ( 20.f, 30.f );
         OptionMargin = sf::Vector2f ( 0.f, 15.f ); }
 
-    else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+    else if ( Graphics->getWindowHeight() > 800.f && Graphics->getWindowHeight() <= 1000.f ) {
 
         SectionMargin = sf::Vector2f ( 60.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
@@ -1161,7 +1165,11 @@ void MainMenu::loadSpaceshipCards ( ) {
     sf::Vector2f CardMargin = sf::Vector2f( 0.05f * SectionSize.y ,0.2f * SectionSize.y );
     
     auto SpaceshipPrototypes = Gameplay->getSpaceshipPrototypes();
-    
+
+    for ( unsigned int i = 0; i < 6; i++ ) {
+
+        SpaceshipMaximumValues[i] = 0.f; }
+
     for ( unsigned int i = 0; i < SpaceshipPrototypes.size(); i++ ) {
 
         SpaceshipCards.emplace_back( SpaceshipCard ( ) );
@@ -1171,9 +1179,7 @@ void MainMenu::loadSpaceshipCards ( ) {
         SpaceshipCards.back().VisualizationSpaceship = new Spaceship ( SpaceshipCards.back().Prototype.Mass, SpaceshipCards.back().Prototype.Radius * 2.f );
         SpaceshipCards.back().VisualizationArea = new sf::RenderTexture ( );
         SpaceshipCards.back().VisualizationArea->setSmooth( true );
-
-        // TODO
-        SpaceshipCards.back().VisualizationWind = sf::Vector2f( -120.f, 12.f );
+        SpaceshipCards.back().VisualizationWind = sf::Vector2f( 1.f / ( 5.f + 5.f * getRandomFloat() ), 1.f / ( 5.f + 5.f * getRandomFloat() ) );
 
         Spaceship * MySpaceship = SpaceshipCards.back().VisualizationSpaceship;
         GameplaySettings::SpaceshipPrototype * MyPrototype = &SpaceshipCards.back().Prototype;
@@ -1190,9 +1196,9 @@ void MainMenu::loadSpaceshipCards ( ) {
         MySpaceship->setMissileLimit( MyPrototype->MissileLimit );
         MySpaceship->setMissileCount( MyPrototype->MissileCount );
         MySpaceship->setTexture( Graphics->getTexture( MyPrototype->Texture ) );
-        MySpaceship->setAccentTexture( Graphics->getTexture( MyPrototype->AccentTexture ), sf::Color::Red ); // TODO CHANGE COLORS
+        MySpaceship->setAccentTexture( Graphics->getTexture( MyPrototype->AccentTexture ), Gameplay->getPlayerColor( 0 ) );
         MySpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), MyPrototype->FuelColor );
-        MySpaceship->setPosition( sf::Vector2f( CardSize.x / 2.f, ( 0.3f * CardSize.y ) / 2.f ) );
+        MySpaceship->setPosition( sf::Vector2f( 500.f, 150.f ) );
         MySpaceship->setVelocity( sf::Vector2f( 25.f, 0.f ) );
         MySpaceship->setController( new VisualizationController ( ) );
         ( (VisualizationController*) MySpaceship->getController() )->setDesiredPosition( sf::Vector2f( 500.f, 150.f ) );
@@ -1207,15 +1213,21 @@ void MainMenu::loadSpaceshipCards ( ) {
 
         #else
 
-            SpaceshipCards.back().VisualizationArea->create( (unsigned int) CardSize.x, (unsigned int) ( 0.3f * CardSize.y ) );
+            SpaceshipCards.back().VisualizationArea->create( 1000, 300, Context );
         
         #endif
 
-        }
+        SpaceshipMaximumValues[0] = fmaxf( SpaceshipMaximumValues[0], MyPrototype->HealthLimit );
+        SpaceshipMaximumValues[1] = fmaxf( SpaceshipMaximumValues[1], MyPrototype->HealthRestoration );
+        SpaceshipMaximumValues[2] = fmaxf( SpaceshipMaximumValues[2], MyPrototype->EnergyLimit );
+        SpaceshipMaximumValues[3] = fmaxf( SpaceshipMaximumValues[3], MyPrototype->EnergyRestoration );
+        SpaceshipMaximumValues[4] = fmaxf( SpaceshipMaximumValues[4], MyPrototype->Thrust );
+        SpaceshipMaximumValues[5] = fmaxf( SpaceshipMaximumValues[5], MyPrototype->RayPower ); }
 
     SpaceshipOption = (unsigned int) ( SpaceshipPrototypes.size() / 2 );
     SpaceshipCardsOffset = SectionSize.x / 2.f - ( CardSize.x + CardMargin.x ) * SpaceshipOption;
-    SpaceshipCardsOffsetDirection = 0.f; }
+    SpaceshipCardsOffsetDirection = 0.f;
+    SpaceshipCardsTime = 0.f; }
 
 void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
 
@@ -1227,6 +1239,8 @@ void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
     sf::Color CardColor = sf::Color( 13, 71, 161 ); // #0D47A1
     float CardOutlineThickness = 1.5f;
     float NeutralPosition = SectionPosition.x + SectionSize.x / 2.f;
+
+    SpaceshipCardsTime += ElapsedTime.asSeconds();
 
     for ( auto &Card : SpaceshipCards ) {
 
@@ -1250,12 +1264,15 @@ void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
         
         if ( Card.VisualizationSpaceship ) {
 
+            sf::Vector2f Wind = Card.VisualizationSpaceship->getThrust() * ( sf::Vector2f( 0.75f, 0.f ) + sf::Vector2f( 0.25f * ( 1.f + sinf( Card.VisualizationWind.x * SpaceshipCardsTime ) ), 0.25f * sinf( Card.VisualizationWind.y * SpaceshipCardsTime ) ) );
+
+            Card.VisualizationSpaceship->setAccentTextureColor( Gameplay->getPlayerColor( SpaceshipIndex ) );
             Card.VisualizationSpaceship->setHealth( Card.VisualizationSpaceship->getHealthLimit() );
             Card.VisualizationSpaceship->setEnergy( Card.VisualizationSpaceship->getEnergyLimit() );
             Card.VisualizationSpaceship->setMissileCount( Card.VisualizationSpaceship->getMissileLimit() );
             Card.VisualizationSpaceship->updateHealth( 0.f );
             Card.VisualizationSpaceship->updateEnergy( 0.f );
-            Card.VisualizationSpaceship->setPosition( Card.VisualizationSpaceship->getPosition() + Card.VisualizationWind * ElapsedTime.asSeconds() );
+            Card.VisualizationSpaceship->setPosition( Card.VisualizationSpaceship->getPosition() - Wind * ElapsedTime.asSeconds() );
             Card.VisualizationSpaceship->update( ElapsedTime );
 
             if ( Card.VisualizationSpaceship->onRayShot() ) {
@@ -1323,11 +1340,11 @@ void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
 
                 if ( Card.Position.x < NeutralPosition ) {
 
-                    SpaceshipCardsOffset += SectionSize.x * ElapsedTime.asSeconds(); }
+                    SpaceshipCardsOffset += ( 1.f / 0.5f ) * Card.Size.x * ElapsedTime.asSeconds(); }
 
                 else {
 
-                    SpaceshipCardsOffset -= SectionSize.x * ElapsedTime.asSeconds(); } }
+                    SpaceshipCardsOffset -= ( 1.f / 0.5f ) * Card.Size.x * ElapsedTime.asSeconds(); } }
 
             else {
 
@@ -1336,9 +1353,53 @@ void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
 
             break; } }
 
-    // TODO TITLE TEXT
+    SpaceshipCardsTitleText[0] = Gameplay->getPlayerName( SpaceshipIndex );
+    SpaceshipCardsTitleText[1] = ", choose your spaceship!";
+    SpaceshipCardsTitleFontSize = 100;
+    SpaceshipCardsTitleColor = Gameplay->getPlayerColor( SpaceshipIndex );
+    SpaceshipCardsContentFontSize[0] = 100;
+    SpaceshipCardsContentFontSize[1] = 100;
 
-    }
+    sf::Text TextPrototype;
+    TextPrototype.setString( Gameplay->getTheLongestPlayerName() + ", choose your spaceship!" );
+    TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
+    TextPrototype.setCharacterSize( SpaceshipCardsTitleFontSize );
+
+    while ( TextPrototype.getLocalBounds().height > ( 0.06f * SectionSize.y ) ) {
+
+        TextPrototype.setCharacterSize( --SpaceshipCardsTitleFontSize ); }
+
+    TextPrototype.setString( SpaceshipCardsTitleText[0] + SpaceshipCardsTitleText[1] );
+    SpaceshipCardsTitlePosition[0] = SectionPosition + sf::Vector2f( ( SectionSize.x - TextPrototype.getLocalBounds().width ) / 2.f, 0.07f * SectionSize.y );
+    SpaceshipCardsTitlePosition[0].x += TextPrototype.getLocalBounds().width * CONTROLLERS_SPACESHIP_CARDS_FONT_HORIZONTAL_OFFSET_FIX; // Offset fix
+    SpaceshipCardsTitlePosition[0].y += TextPrototype.getLocalBounds().height * CONTROLLERS_SPACESHIP_CARDS_FONT_VERTICAL_OFFSET_FIX; // Offset fix
+    TextPrototype.setString( SpaceshipCardsTitleText[0] );
+    SpaceshipCardsTitlePosition[1] = SpaceshipCardsTitlePosition[0];
+    SpaceshipCardsTitlePosition[1].x += TextPrototype.getLocalBounds().width;
+    SpaceshipCardsTitlePosition[1].x += 2.f;
+    SpaceshipCardsTitlePosition[0].x -= 2.f;
+
+    TextPrototype.setString( Gameplay->getTheLongestSpaceshipPrototypeName().replace( 1, 1, "y" ) );
+    TextPrototype.setCharacterSize( SpaceshipCardsContentFontSize[0] );
+
+    while ( TextPrototype.getLocalBounds().height > ( ( 0.7f * CardSize.y ) / 7.f - 0.03f * CardSize.y ) ) {
+
+        TextPrototype.setCharacterSize( --SpaceshipCardsContentFontSize[0] ); }
+
+    while ( TextPrototype.getLocalBounds().width > CardSize.x ) {
+
+        TextPrototype.setCharacterSize( --SpaceshipCardsContentFontSize[0] ); }
+
+    TextPrototype.setString( "Energy restoration" );
+    TextPrototype.setCharacterSize( SpaceshipCardsContentFontSize[1] );
+
+    while ( TextPrototype.getLocalBounds().height > ( ( 0.7f * CardSize.y ) / 7.f - 0.03f * CardSize.y ) ) {
+
+        TextPrototype.setCharacterSize( --SpaceshipCardsContentFontSize[1] ); }
+
+    while ( TextPrototype.getLocalBounds().width > ( CardSize.y / 2.f - 0.03f * CardSize.y ) ) {
+
+        TextPrototype.setCharacterSize( --SpaceshipCardsContentFontSize[1] ); } }
 
 void MainMenu::updateSpaceshipsSection ( sf::Event &Event ) {
 
@@ -1384,17 +1445,45 @@ void MainMenu::updateSpaceshipsSection ( sf::Event &Event ) {
 
             case sf::Keyboard::Return: {
 
-                // ...
+                Gameplay->assignSpaceship( SpaceshipIndex, SpaceshipOption );
+
+                if ( SpaceshipIndex == ( Gameplay->getPlayerCount() - 1 ) ) {
+
+                    SpaceshipIndex = 0;
+                    SpaceshipOption = 0;
+                    SpaceshipCardsOffsetDirection = 0.f;
+
+                    Launch = true; }
+
+                else {
+
+                    SpaceshipIndex++;
+                    SpaceshipCardsOffsetDirection = 0.f; }
 
                 break; }
 
             case sf::Keyboard::Space: {
 
-                // ...
+                Gameplay->assignSpaceship( SpaceshipIndex, SpaceshipOption );
+
+                if ( SpaceshipIndex == ( Gameplay->getPlayerCount() - 1 ) ) {
+
+                    SpaceshipIndex = 0;
+                    SpaceshipOption = 0;
+                    SpaceshipCardsOffsetDirection = 0.f;
+
+                    Launch = true; }
+
+                else {
+
+                    SpaceshipIndex++;
+                    SpaceshipCardsOffsetDirection = 0.f; }
 
                 break; }
 
             case sf::Keyboard::BackSpace: {
+
+                Gameplay->assignSpaceship( SpaceshipIndex, -1 );
 
                 if ( SpaceshipIndex == 0 ) {
 
@@ -1404,13 +1493,17 @@ void MainMenu::updateSpaceshipsSection ( sf::Event &Event ) {
 
                 else {
 
-                    // TODO SpaceshipOption = SMTH
-
-                    SpaceshipIndex--; }
+                    SpaceshipIndex--;
+                    SpaceshipOption = (unsigned int) Gameplay->getSpaceshipAssignment( SpaceshipIndex );
+                    SpaceshipCardsOffsetDirection = 0.f; }
 
                 break; }
 
             case sf::Keyboard::Escape: {
+
+                for ( unsigned int i = 0; i < Gameplay->getPlayerCount(); i++ ) {
+
+                    Gameplay->assignSpaceship( i, -1 ); }
 
                 SpaceshipIndex = 0;
                 SpaceshipOption = 0;
@@ -1427,9 +1520,44 @@ void MainMenu::renderSpaceshipsSection ( sf::RenderWindow &Window ) {
 
     renderSectionBackground( Window, 2 );
 
+    sf::Text SpaceshipCardsTitle;
+    SpaceshipCardsTitle.setString( SpaceshipCardsTitleText[0] );
+    SpaceshipCardsTitle.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
+    SpaceshipCardsTitle.setCharacterSize( SpaceshipCardsTitleFontSize );
+    SpaceshipCardsTitle.setPosition( SpaceshipCardsTitlePosition[0] );
+
+    #if ( SFML_VERSION_MINOR >= 4 )
+
+        SpaceshipCardsTitle.setOutlineThickness( 1.f );
+        SpaceshipCardsTitle.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
+        SpaceshipCardsTitle.setFillColor( SpaceshipCardsTitleColor );
+
+    #else
+
+        SpaceshipCardsTitle.setColor( SpaceshipCardsTitleColor );
+
+    #endif
+
+    Window.draw( SpaceshipCardsTitle );
+
+    SpaceshipCardsTitle.setString( SpaceshipCardsTitleText[1] );
+    SpaceshipCardsTitle.setPosition( SpaceshipCardsTitlePosition[1] );
+
+    #if ( SFML_VERSION_MINOR >= 4 )
+
+        SpaceshipCardsTitle.setFillColor( sf::Color( 250, 250, 250 ) ); // #FAFAFA
+
+    #else
+
+        SpaceshipCardsTitle.setColor( sf::Color( 250, 250, 250 ) ); // #FAFAFA
+
+    #endif
+
+    Window.draw( SpaceshipCardsTitle );
+
     for ( auto &Card : SpaceshipCards ) {
 
-        Card.VisualizationArea->clear();
+        Card.VisualizationArea->clear( sf::Color( 22, 22, 22 ) ); // #161616
 
         for ( auto ActiveRayShot : Card.VisualizationRayShots ) {
 
@@ -1451,7 +1579,77 @@ void MainMenu::renderSpaceshipsSection ( sf::RenderWindow &Window ) {
 
     for ( auto &Card : SpaceshipCards ) {
 
-        // TODO THE REST
+        float Margin = 0.03f * Card.Size.y;
+        float Offset = ( 0.7f * Card.Size.y ) / 7.f;
+        sf::Vector2f Position = Card.Position - sf::Vector2f( Card.Size.x / 2.f, Card.Size.y / 2.f );
+        Position.y += 0.3f * Card.Size.y + 0.67f * Margin;
+
+        sf::Text Text;
+        Text.setString( Card.Prototype.Name );
+        Text.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
+        Text.setCharacterSize( SpaceshipCardsContentFontSize[0] );
+        Text.setPosition( Position );
+        Text.move( ( Card.Size.x - Text.getLocalBounds().width ) / 2.f, 0.f );
+        Text.move( Text.getLocalBounds().width * CONTROLLERS_SPACESHIP_CARDS_FONT_HORIZONTAL_OFFSET_FIX, Text.getLocalBounds().height * CONTROLLERS_SPACESHIP_CARDS_FONT_VERTICAL_OFFSET_FIX ); // Offset fix
+
+        #if ( SFML_VERSION_MINOR >= 4 )
+
+            Text.setOutlineThickness( 1.f );
+            Text.setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
+            Text.setFillColor( sf::Color( 250, 250, 250 ) ); // #FAFAFA
+
+        #else
+
+            Text.setColor( sf::Color( 250, 250, 250 ) ); // #FAFAFA
+
+        #endif
+
+        Window.draw( Text );
+
+        #if ( SFML_VERSION_MINOR >= 4 )
+
+            Text.setFillColor( sf::Color( 189, 189, 189 ) ); // #BDBDBD
+
+        #else
+
+            Text.setColor( sf::Color( 189, 189, 189 ) );  // #BDBDBD
+
+        #endif
+
+        Text.setCharacterSize( SpaceshipCardsContentFontSize[1] );
+
+        for ( unsigned int i = 0; i < 6; i++ ) {
+
+            Position.y += Offset;
+            Text.setPosition( Position );
+            Text.move( Text.getLocalBounds().width * CONTROLLERS_SPACESHIP_CARDS_FONT_HORIZONTAL_OFFSET_FIX, Text.getLocalBounds().height * CONTROLLERS_SPACESHIP_CARDS_FONT_VERTICAL_OFFSET_FIX );
+
+            switch ( i ) {
+
+                case 0: Text.setString( "Health limit" );  break;
+                case 1: Text.setString( "Health restoration" ); break;
+                case 2: Text.setString( "Energy limit" ); break;
+                case 3: Text.setString( "Energy restoration" ); break;
+                case 4: Text.setString( "Thrust" ); break;
+                case 5: Text.setString( "Ray power" ); break;
+
+                default: break; }
+
+            sf::Vector2f BarPosition = Position + Card.Size.x * sf::Vector2f( 0.5f, 0.f ) + sf::Vector2f( Margin, 0.f );
+            sf::Vector2f BarSize = sf::Vector2f( 0.5f * Card.Size.x - Margin, Offset - Margin );
+
+            switch ( i ) {
+
+                case 0: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 255, 23, 68 ), Card.Prototype.HealthLimit / SpaceshipMaximumValues[i] );  break; // #FF1744
+                case 1: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 255, 23, 68 ), Card.Prototype.HealthRestoration / SpaceshipMaximumValues[i] ); break; // #FF1744
+                case 2: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 61, 90, 254 ), Card.Prototype.EnergyLimit / SpaceshipMaximumValues[i] ); break; // #3D5AFE
+                case 3: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 61, 90, 254 ), Card.Prototype.EnergyRestoration / SpaceshipMaximumValues[i] ); break; // #3D5AFE
+                case 4: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 213, 0, 249 ), Card.Prototype.Thrust / SpaceshipMaximumValues[i] ); break;
+                case 5: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 213, 0, 249 ), Card.Prototype.RayPower / SpaceshipMaximumValues[i] ); break;
+
+                default: break; }
+
+            Window.draw( Text ); }
 
         }
 
@@ -1464,10 +1662,38 @@ void MainMenu::renderSpaceshipsSection ( sf::RenderWindow &Window ) {
         Text.setFillColor( sf::Color::White );
         Text.setFont(  Graphics->getFont( "RobotoCondensedLight" ) );
         Text.setCharacterSize( 25 );
-        Window.draw( Text );
+        //Window.draw( Text );
         // TODO TEMP
 
         Window.draw( Card.Outline ); } }
+
+void MainMenu::renderSpaceshipsSectionBar ( sf::RenderWindow &Window, sf::Vector2f Position, sf::Vector2f Size, sf::Color Color, float Value ) {
+
+    Value = fminf( Value, 1.f );
+
+    auto ElementsCount = (unsigned int) ( Size.x / ( 0.65f * Size.y ) );
+    sf::Vector2f ElementSize = sf::Vector2f( 0.75f * ( Size.x / ElementsCount ),Size.y );
+    float ElementMargin = ( Size.x - ElementSize.x * ElementsCount ) / ( ElementsCount - 1 );
+    sf::Vector2f ElementPosition = Position;
+
+    for ( unsigned int i = 0; i < ElementsCount; i++ ) {
+
+        sf::RectangleShape Element;
+        bool ElementActivated = ( Value >= ( (float) ( i + 1 ) / (float) ElementsCount ) );
+
+        if ( i == 0 ) {
+
+            ElementActivated = true; }
+
+        Element.setSize( ElementSize );
+        Element.setPosition( ElementPosition );
+        Element.setOutlineThickness( 1.f );
+        Element.setFillColor( sf::Color( Color.r, Color.g, Color.b, (sf::Uint8) ( ( ElementActivated ? 0.87f : 0.34f ) * 255.f ) ) );
+        Element.setOutlineColor( sf::Color( Color.r, Color.g, Color.b, 127 ) );
+
+        Window.draw( Element );
+
+        ElementPosition.x += ElementSize.x + ElementMargin; } }
 
 void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
 
@@ -1499,12 +1725,12 @@ void MainMenu::updateSettingsSection ( sf::Time ElapsedTime ) {
         SectionMargin = sf::Vector2f ( 12.f, 20.f );
         OptionMargin = sf::Vector2f ( 6.f, 10.f ); }
 
-    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800.f ) {
 
         SectionMargin = sf::Vector2f ( 20.f, 30.f );
         OptionMargin = sf::Vector2f ( 0.f, 15.f ); }
 
-    else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+    else if ( Graphics->getWindowHeight() > 800.f && Graphics->getWindowHeight() <= 1000.f ) {
 
         SectionMargin = sf::Vector2f ( 60.f, 60.f );
         OptionMargin = sf::Vector2f ( 0.f, 30.f ); }
@@ -1998,7 +2224,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
             ManualText = "Use ANY KEY to select a key and then repeat it to confirm.";
 
             int Key = -1;
-            PlayerControllerSettings::Devices Device = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getDevice();
+            PlayerControllerSettings::Devices Device = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getDevice();
 
             if ( Device == PlayerControllerSettings::Devices::Keyboard ) {
 
@@ -2006,7 +2232,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             else if ( Device == PlayerControllerSettings::Devices::Joystick ) {
 
-                Key = PlayerControllerSettings::scanJoystick( Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier() ); }
+                Key = PlayerControllerSettings::scanJoystick( Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier() ); }
 
             if ( ControllersModificationState == 0 ) {
 
@@ -2028,12 +2254,12 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                     switch ( ControllersTablePointer.y ) {
 
-                        case 2: Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setForwardKey( Key ); break;
-                        case 3: Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setBackwardKey( Key ); break;
-                        case 4: Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setLeftKey( Key ); break;
-                        case 5: Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRightKey( Key ); break;
-                        case 6: Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRayShotKey( Key ); break;
-                        case 7: Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setMissileShotKey( Key ); break;
+                        case 2: Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setForwardKey( Key ); break;
+                        case 3: Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setBackwardKey( Key ); break;
+                        case 4: Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setLeftKey( Key ); break;
+                        case 5: Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRightKey( Key ); break;
+                        case 6: Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRayShotKey( Key ); break;
+                        case 7: Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setMissileShotKey( Key ); break;
 
                         default: break; }
 
@@ -2051,12 +2277,12 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                 switch ( ControllersTablePointer.y ) {
 
-                    case 2: LastKey = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getForwardKey(); break;
-                    case 3: LastKey = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getBackwardKey(); break;
-                    case 4: LastKey = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getLeftKey(); break;
-                    case 5: LastKey = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getRightKey(); break;
-                    case 6: LastKey = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getRayShotKey(); break;
-                    case 7: LastKey = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getMissileShotKey(); break;
+                    case 2: LastKey = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getForwardKey(); break;
+                    case 3: LastKey = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getBackwardKey(); break;
+                    case 4: LastKey = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getLeftKey(); break;
+                    case 5: LastKey = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getRightKey(); break;
+                    case 6: LastKey = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getRayShotKey(); break;
+                    case 7: LastKey = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getMissileShotKey(); break;
 
                     default: LastKey = -1; break; }
 
@@ -2081,7 +2307,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
             ManualText = "Use ARROWS to select device and ENTER to confirm.";
 
             int Key = PlayerControllerSettings::scanKeyboard();
-            PlayerControllerSettings::Devices Device = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getDevice();
+            PlayerControllerSettings::Devices Device = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getDevice();
 
             if ( ControllersModificationState == 0 ) {
 
@@ -2095,20 +2321,20 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                     if ( Device == PlayerControllerSettings::Devices::Keyboard ) {
 
-                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Joystick );
-                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( 7 ); }
+                        Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Joystick );
+                        Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( 7 ); }
 
                     else if ( Device == PlayerControllerSettings::Devices::Joystick ) {
 
-                        int JoystickIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
+                        int JoystickIdentifier = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
 
                         if ( JoystickIdentifier == 0 ) {
 
-                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
+                            Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
 
                         else {
 
-                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( --JoystickIdentifier ); } }
+                            Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( --JoystickIdentifier ); } }
 
                     ControllersModificationState = 0; }
 
@@ -2116,20 +2342,20 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                     if ( Device == PlayerControllerSettings::Devices::Keyboard ) {
 
-                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Joystick );
-                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( 0 ); }
+                        Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Joystick );
+                        Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( 0 ); }
 
                     else if ( Device == PlayerControllerSettings::Devices::Joystick ) {
 
-                        int JoystickIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
+                        int JoystickIdentifier = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
 
                         if ( JoystickIdentifier == 7 ) {
 
-                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
+                            Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
 
                         else {
 
-                            Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( ++JoystickIdentifier ); } }
+                            Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( ++JoystickIdentifier ); } }
 
 
                     ControllersModificationState = 0; }
@@ -2144,26 +2370,26 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             else if ( ControllersModificationState == 2 ) {
 
-                int JoystickIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
+                int JoystickIdentifier = Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->getJoystickIdentifier();
 
                 if ( ( Device != PreviousDevice ) || ( Device == PlayerControllerSettings::Devices::Joystick && JoystickIdentifier != PreviousIdentifier) ) {
 
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setForwardKey( KEY_NONE );
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setBackwardKey( KEY_NONE );
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setLeftKey( KEY_NONE );
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRightKey( KEY_NONE );
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRayShotKey( KEY_NONE );
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setMissileShotKey( KEY_NONE ); }
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setForwardKey( KEY_NONE );
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setBackwardKey( KEY_NONE );
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setLeftKey( KEY_NONE );
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRightKey( KEY_NONE );
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setRayShotKey( KEY_NONE );
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setMissileShotKey( KEY_NONE ); }
 
                 ControllersModificationState = 4; }
 
             else if ( ControllersModificationState == 3 ) {
 
-                Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PreviousDevice );
+                Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PreviousDevice );
 
                 if ( PreviousDevice == PlayerControllerSettings::Devices::Joystick ) {
 
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( PreviousIdentifier ); }
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( PreviousIdentifier ); }
 
                 ControllersModificationState = 4; }
 
@@ -2305,9 +2531,9 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
         std::string Text;
         Text = "KEYBOARD";
 
-        if ( Gameplay->getPlayerControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+        if ( Gameplay->getControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
-            Text = "JOYSTICK " + std::to_string( Gameplay->getPlayerControllerSettings( c - 1 )->getJoystickIdentifier() ); }
+            Text = "JOYSTICK " + std::to_string( Gameplay->getControllerSettings( c - 1 )->getJoystickIdentifier() ); }
 
         ControllersTableContent[ c - 1 ].setString( Text );
         ControllersTableContent[ c - 1 ].setPosition( Position );
@@ -2323,9 +2549,9 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             else {
 
-                if ( Gameplay->getPlayerControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+                if ( Gameplay->getControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
-                    if ( sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( c - 1 )->getJoystickIdentifier() ) ) {
+                    if ( sf::Joystick::isConnected( (unsigned int) Gameplay->getControllerSettings( c - 1 )->getJoystickIdentifier() ) ) {
 
                         FillColor = sf::Color( 239, 83, 80 ); // #EF5350
                         OutlineColor = sf::Color( 0, 0, 0 ); } // #000000
@@ -2340,9 +2566,9 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
                     FillColor = sf::Color( 239, 83, 80 ); // #EF5350
                     OutlineColor = sf::Color( 0, 0, 0 ); } } } // #000000
 
-        else if ( Gameplay->getPlayerControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+        else if ( Gameplay->getControllerSettings( c - 1 )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
-            if ( !sf::Joystick::isConnected( (unsigned int) Gameplay->getPlayerControllerSettings( c - 1 )->getJoystickIdentifier() ) ) {
+            if ( !sf::Joystick::isConnected( (unsigned int) Gameplay->getControllerSettings( c - 1 )->getJoystickIdentifier() ) ) {
 
                 FillColor = sf::Color( 117, 117, 117 ); } } // #757575
 
@@ -2382,12 +2608,12 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             switch ( r ) {
 
-                case 2: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getForwardKey(); break;
-                case 3: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getBackwardKey(); break;
-                case 4: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getLeftKey(); break;
-                case 5: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getRightKey(); break;
-                case 6: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getRayShotKey(); break;
-                case 7: Key = Gameplay->getPlayerControllerSettings( c - 1 )->getMissileShotKey(); break;
+                case 2: Key = Gameplay->getControllerSettings( c - 1 )->getForwardKey(); break;
+                case 3: Key = Gameplay->getControllerSettings( c - 1 )->getBackwardKey(); break;
+                case 4: Key = Gameplay->getControllerSettings( c - 1 )->getLeftKey(); break;
+                case 5: Key = Gameplay->getControllerSettings( c - 1 )->getRightKey(); break;
+                case 6: Key = Gameplay->getControllerSettings( c - 1 )->getRayShotKey(); break;
+                case 7: Key = Gameplay->getControllerSettings( c - 1 )->getMissileShotKey(); break;
 
                 default: Key = -1; break; }
 
@@ -2566,8 +2792,8 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
                     if ( ControllersTablePointer.y == 1 ) {
 
-                        PreviousDevice = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getDevice();
-                        PreviousIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getJoystickIdentifier(); }
+                        PreviousDevice = Gameplay->getControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getDevice();
+                        PreviousIdentifier = Gameplay->getControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getJoystickIdentifier(); }
 
                     SettingsChanged = true; }
 
@@ -2582,8 +2808,8 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
                     if ( ControllersTablePointer.y == 1 ) {
 
-                        PreviousDevice = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getDevice();
-                        PreviousIdentifier = Gameplay->getPlayerControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getJoystickIdentifier(); }
+                        PreviousDevice = Gameplay->getControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getDevice();
+                        PreviousIdentifier = Gameplay->getControllerSettings( (unsigned int) ControllersTablePointer.x - 1 )->getJoystickIdentifier(); }
 
                     SettingsChanged = true; }
 
@@ -2604,11 +2830,11 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
 
                 if ( ControllersModificationMode && ControllersTablePointer.y == 1 ) {
 
-                    Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PreviousDevice );
+                    Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setDevice( PreviousDevice );
 
                     if ( PreviousDevice == PlayerControllerSettings::Devices::Joystick ) {
 
-                        Gameplay->getPlayerControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( PreviousIdentifier ); } }
+                        Gameplay->getControllerSettings( (unsigned int) ( ControllersTablePointer.x - 1 ) )->setJoystickIdentifier( PreviousIdentifier ); } }
 
                 ControllersTablePointer = { 1, 1 };
                 ControllersModificationMode = false;
@@ -2656,11 +2882,11 @@ void MainMenu::updateBackground ( sf::Time ElapsedTime ) {
 
         ParticlesCount = 5; }
 
-    else if ( Graphics->getWindowHeight() >= 600 && Graphics->getWindowHeight() <= 800 ) {
+    else if ( Graphics->getWindowHeight() >= 600.f && Graphics->getWindowHeight() <= 800.f ) {
 
         ParticlesCount = 10; }
 
-    else if ( Graphics->getWindowHeight() > 800 && Graphics->getWindowHeight() <= 1000 ) {
+    else if ( Graphics->getWindowHeight() > 800.f && Graphics->getWindowHeight() <= 1000.f ) {
 
         ParticlesCount = 15; }
 

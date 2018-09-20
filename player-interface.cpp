@@ -422,7 +422,7 @@ void PlayerInterface::renderHealthBar ( sf::RenderWindow &Window ) {
         ElementSize = sf::Vector2f ( 40.f, 15.f );
         ElementMargin = sf::Vector2f ( 20.f, 6.f ); }
 
-    renderBar( Window, HealthBarOpacity, sf::Color( 255, 23, 68 ), sf::Vector2f( 15.f, 15.f ), ElementSize, ElementMargin ); }
+    renderBar( Window, HealthBarOpacity, sf::Color( 255, 23, 68 ), sf::Vector2f( 15.f, 15.f ), ElementSize, ElementMargin ); } // #FF1744
 
 void PlayerInterface::renderEnergyBar ( sf::RenderWindow &Window ) {
 
@@ -439,7 +439,7 @@ void PlayerInterface::renderEnergyBar ( sf::RenderWindow &Window ) {
         ElementSize = sf::Vector2f ( 40.f, 15.f );
         ElementMargin = sf::Vector2f ( 20.f, 6.f ); }
 
-    renderBar( Window, EnergyBarOpacity, sf::Color( 61, 90, 254 ), sf::Vector2f( ElementSize.x + ElementMargin.y + 15.f, 15.f ), ElementSize, ElementMargin ); }
+    renderBar( Window, EnergyBarOpacity, sf::Color( 61, 90, 254 ), sf::Vector2f( ElementSize.x + ElementMargin.y + 15.f, 15.f ), ElementSize, ElementMargin ); } // #3D5AFE
 
 void PlayerInterface::renderMissileTab ( sf::RenderWindow &Window ) {
 

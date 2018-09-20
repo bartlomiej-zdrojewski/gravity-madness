@@ -4,7 +4,43 @@ GameplaySettings::~GameplaySettings ( ) {
 
     for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
-        delete PlayerControllerSettingsRegister[i]; } }
+        delete ControllersSettingsRegister[i]; } }
+
+std::string * GameplaySettings::getPlayerNames ( ) {
+
+    return PlayerNames; }
+
+std::string GameplaySettings::getPlayerName ( unsigned int Index ) {
+
+    if ( Index >= MAXIMUM_PLAYER_COUNT ) {
+
+        return ""; }
+
+    return PlayerNames[ Index ]; }
+
+std::string GameplaySettings::getTheLongestPlayerName ( ) {
+
+    std::string Result;
+
+    for ( const auto &PlayerName : PlayerNames ) {
+
+        if ( Result.size() < PlayerNames->size() ) {
+
+            Result = PlayerName; } }
+
+    return Result; }
+
+sf::Color * GameplaySettings::getPlayerColors ( ) {
+
+    return PlayerColors; }
+
+sf::Color GameplaySettings::getPlayerColor ( unsigned int Index ) {
+
+    if ( Index >= MAXIMUM_PLAYER_COUNT ) {
+
+        return { 255, 255, 255 }; }
+
+    return PlayerColors[ Index ]; }
 
 void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
 
@@ -97,7 +133,7 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     Prototype.MissileLimit = (unsigned int) Script::getIntegerValue( MissileLimitNode[0] );
                     Prototype.ScoreMultiplier = Script::getRealValue( ScoreMultiplierNode[0] );
 
-                    SpaceshipPrototypes.insert( SpaceshipPrototypes.begin(), Prototype ); } }
+                    SpaceshipPrototypes.push_back( Prototype ); } }
 
             else {
 
@@ -111,9 +147,29 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
 
         logWarning( "Failed to load spaceships config script!" ); } }
 
-void GameplaySettings::assignSpaceships ( std::vector <int> SpaceshipAssignment ) {
+int * GameplaySettings::getSpaceshipAssignments ( ) {
 
-    this->SpaceshipAssignment = std::move( SpaceshipAssignment ); }
+    return SpaceshipAssignments; }
+
+int GameplaySettings::getSpaceshipAssignment ( unsigned int Index ) {
+
+    if ( Index >= MAXIMUM_PLAYER_COUNT ) {
+
+        return -1; }
+
+    return SpaceshipAssignments[ Index ]; }
+
+void GameplaySettings::assignSpaceship ( unsigned int PlayerIndex, int SpaceshipIndex ) {
+
+    if ( PlayerIndex >= MAXIMUM_PLAYER_COUNT ) {
+
+        return; }
+
+    if ( SpaceshipIndex >= SpaceshipPrototypes.size() ) {
+
+        SpaceshipIndex = -1; }
+
+    SpaceshipAssignments[ PlayerIndex ] = SpaceshipIndex; }
 
 std::vector <GameplaySettings::SpaceshipPrototype> GameplaySettings::getSpaceshipPrototypes ( ) {
 
@@ -121,41 +177,40 @@ std::vector <GameplaySettings::SpaceshipPrototype> GameplaySettings::getSpaceshi
 
 GameplaySettings::SpaceshipPrototype GameplaySettings::getSpaceshipPrototype ( unsigned int Index ) {
 
-    unsigned int PrototypeIndex = 0;
+    int Assignment = -1;
+    unsigned int PrototypeIndex;
 
-    if ( Index < MAXIMUM_PLAYER_COUNT ) {
+    if ( Index < PlayerCount ) {
 
-        if ( Index < SpaceshipAssignment.size() ) {
+        Assignment = SpaceshipAssignments[ Index ]; }
 
-            return SpaceshipPrototypes[ SpaceshipAssignment[Index] ]; }
+    if ( Assignment != -1 ) {
 
-        else {
+        PrototypeIndex = (unsigned int) Assignment; }
 
-            PrototypeIndex = (unsigned int) ( rand() % SpaceshipPrototypes.size() );
+    else {
 
-            return SpaceshipPrototypes[ PrototypeIndex ]; } }
-
-    Index -= MAXIMUM_PLAYER_COUNT;
-
-    while ( PrototypeIndex < SpaceshipPrototypes.size() && PrototypeIndex < SpaceshipAssignment.size() ) {
-
-        if ( Index < SpaceshipAssignment[ PrototypeIndex ] ) {
-
-            return SpaceshipPrototypes[ PrototypeIndex ]; }
-
-        Index -= SpaceshipAssignment[ PrototypeIndex ];
-
-        PrototypeIndex++; }
-
-    PrototypeIndex = (unsigned int) ( rand() % SpaceshipPrototypes.size() );
+        PrototypeIndex = (unsigned int) ( rand() % SpaceshipPrototypes.size() ); }
 
     return SpaceshipPrototypes[ PrototypeIndex ]; }
 
-void GameplaySettings::loadPlayerControllerSettingsRegister ( std::string Config ) {
+std::string GameplaySettings::getTheLongestSpaceshipPrototypeName ( ) {
+
+    std::string Result;
+
+    for ( const auto &Prototype : SpaceshipPrototypes ) {
+
+        if ( Result.size() < Prototype.Name.size() ) {
+
+            Result = Prototype.Name; } }
+
+    return Result; }
+
+void GameplaySettings::loadControllersSettingsRegister ( std::string Config ) {
 
     for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
-        PlayerControllerSettingsRegister[i] = new PlayerControllerSettings ( ); }
+        ControllersSettingsRegister[i] = new PlayerControllerSettings ( ); }
 
     unsigned int IndexA = 0;
     std::istringstream DataA ( Config );
@@ -183,55 +238,55 @@ void GameplaySettings::loadPlayerControllerSettingsRegister ( std::string Config
 
                     if ( ResultB.substr( 0, 9 ) == "JOYSTICK_" ) {
 
-                        PlayerControllerSettingsRegister[IndexA]->setDevice( PlayerControllerSettings::Devices::Joystick );
+                        ControllersSettingsRegister[IndexA]->setDevice( PlayerControllerSettings::Devices::Joystick );
 
                         try {
 
-                            PlayerControllerSettingsRegister[IndexA]->setJoystickIdentifier( std::stoi( ResultB.substr( 9, 1 ) ) ); }
+                            ControllersSettingsRegister[IndexA]->setJoystickIdentifier( std::stoi( ResultB.substr( 9, 1 ) ) ); }
 
                         catch ( ... ) {
 
-                            PlayerControllerSettingsRegister[IndexA]->setJoystickIdentifier( 0 ); } }
+                            ControllersSettingsRegister[IndexA]->setJoystickIdentifier( 0 ); } }
 
                     else {
 
-                        PlayerControllerSettingsRegister[IndexA]->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
+                        ControllersSettingsRegister[IndexA]->setDevice( PlayerControllerSettings::Devices::Keyboard ); }
 
                     break; }
 
                 case 1: {
 
-                    PlayerControllerSettingsRegister[IndexA]->setForwardKey( PlayerControllerSettings::decodeKey( ResultB ) );
+                    ControllersSettingsRegister[IndexA]->setForwardKey( PlayerControllerSettings::decodeKey( ResultB ) );
 
                     break; }
 
                 case 2: {
 
-                    PlayerControllerSettingsRegister[IndexA]->setBackwardKey( PlayerControllerSettings::decodeKey( ResultB ) );
+                    ControllersSettingsRegister[IndexA]->setBackwardKey( PlayerControllerSettings::decodeKey( ResultB ) );
 
                     break; }
 
                 case 3: {
 
-                    PlayerControllerSettingsRegister[IndexA]->setLeftKey( PlayerControllerSettings::decodeKey( ResultB ) );
+                    ControllersSettingsRegister[IndexA]->setLeftKey( PlayerControllerSettings::decodeKey( ResultB ) );
 
                     break; }
 
                 case 4: {
 
-                    PlayerControllerSettingsRegister[IndexA]->setRightKey( PlayerControllerSettings::decodeKey( ResultB ) );
+                    ControllersSettingsRegister[IndexA]->setRightKey( PlayerControllerSettings::decodeKey( ResultB ) );
 
                     break; }
 
                 case 5: {
 
-                    PlayerControllerSettingsRegister[IndexA]->setRayShotKey( PlayerControllerSettings::decodeKey( ResultB ) );
+                    ControllersSettingsRegister[IndexA]->setRayShotKey( PlayerControllerSettings::decodeKey( ResultB ) );
 
                     break; }
 
                 case 6: {
 
-                    PlayerControllerSettingsRegister[IndexA]->setMissileShotKey( PlayerControllerSettings::decodeKey( ResultB ) );
+                    ControllersSettingsRegister[IndexA]->setMissileShotKey( PlayerControllerSettings::decodeKey( ResultB ) );
 
                     break; }
 
@@ -243,17 +298,17 @@ void GameplaySettings::loadPlayerControllerSettingsRegister ( std::string Config
 
         IndexA++; } }
 
-PlayerControllerSettings ** GameplaySettings::getPlayerControllerSettingsRegister ( ) {
+PlayerControllerSettings ** GameplaySettings::getControllersSettingsRegister ( ) {
 
-    return PlayerControllerSettingsRegister; }
+    return ControllersSettingsRegister; }
 
-PlayerControllerSettings * GameplaySettings::getPlayerControllerSettings ( unsigned int Index ) {
+PlayerControllerSettings * GameplaySettings::getControllerSettings ( unsigned int PlayerIndex ) {
 
-    if ( Index >= MAXIMUM_PLAYER_COUNT ) {
+    if ( PlayerIndex >= MAXIMUM_PLAYER_COUNT ) {
 
         return nullptr; }
 
-    return PlayerControllerSettingsRegister[ Index ]; }
+    return ControllersSettingsRegister[ PlayerIndex ]; }
 
 float GameplaySettings::getAreaSize ( ) {
 
@@ -703,7 +758,7 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
 
     SpaceshipPrototype Prototype;
 
-    Prototype.Name = "Hercules the Unbroken";
+    Prototype.Name = "Theseus the Unbroken";
     Prototype.Texture = "Spaceship";
     Prototype.AccentTexture = "SpaceshipAccent";
     Prototype.Mass = 350.f;
@@ -714,9 +769,9 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
     Prototype.EnergyRestoration = 20.f;
     Prototype.Thrust = 75.f;
     Prototype.BrakingFactor = 0.6f;
-    Prototype.FuelColor = sf::Color( 255, 82, 82 );
+    Prototype.FuelColor = sf::Color( 255, 64, 129 ); // #FF4081
     Prototype.RayPower = 20.f;
-    Prototype.RayColor = sf::Color( 255, 23, 68 );
+    Prototype.RayColor = sf::Color( 245, 0, 87 ); // #F50057
     Prototype.MissileCount = 3;
     Prototype.MissileLimit = 3;
     Prototype.ScoreMultiplier = 2.0f;

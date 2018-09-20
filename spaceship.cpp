@@ -185,6 +185,10 @@ void Spaceship::setAccentTexture ( sf::Texture &AccentTexture, sf::Color AccentC
     this->AccentTexture = AccentTexture;
     this->AccentColor = AccentColor; }
 
+void Spaceship::setAccentTextureColor ( sf::Color AccentColor ) {
+
+    this->AccentColor = AccentColor; }
+
 void Spaceship::setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color ThrusterFuelColor ) {
 
     this->ThrusterTexture = ThrusterTexture;

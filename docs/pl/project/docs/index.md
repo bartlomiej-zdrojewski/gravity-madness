@@ -37,7 +37,10 @@ w ostatecznej wersji projektu.
 
 * Dodanie nowych statków
 * Dodanie nowych bonusów
-* Możliwość przeprowadzenia rozgrywki w sieci lokalnej (lan multiplier)
+* Zaprojektowanie nowych rodzajów pocisków (zdobywanych przez bonusy)
+* Umożliwienie przeprowadzenia rozgrywki w sieci lokalnej (lan
+multiplier)
+* Przetłumaczenie dokumentacji na język angielski
 
 W kodzie źródłowym wszelkie propozycje udoskonaleń zostały opatrzone
 komentarzem `TODO`.

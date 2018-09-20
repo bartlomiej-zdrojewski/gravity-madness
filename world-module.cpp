@@ -536,7 +536,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
 
             Log->manage( Gameplay->getLogger() );
             Gameplay->loadSpaceshipPrototypes( SpaceshipsConfig );
-            Gameplay->loadPlayerControllerSettingsRegister( ControllersConfig );
+            Gameplay->loadControllersSettingsRegister( ControllersConfig );
             Log->update();
 
             if ( Log->wasWarningLogged() ) {
@@ -625,27 +625,27 @@ void WorldModule::saveSettings ( ) {
 
             for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
-                if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+                if ( Gameplay->getControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
                     Data += "JOYSTICK_";
-                    Data += std::to_string( Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ); }
+                    Data += std::to_string( Gameplay->getControllerSettings( i )->getJoystickIdentifier() ); }
 
                 else {
 
                     Data += "KEYBOARD"; }
 
                 Data += ",";
-                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getForwardKey() );
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getForwardKey() );
                 Data += ",";
-                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getBackwardKey() );
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getBackwardKey() );
                 Data += ",";
-                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getLeftKey() );
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getLeftKey() );
                 Data += ",";
-                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRightKey() );
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getRightKey() );
                 Data += ",";
-                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRayShotKey() );
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getRayShotKey() );
                 Data += ",";
-                Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getMissileShotKey() );
+                Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getMissileShotKey() );
 
                 if ( i != ( MAXIMUM_PLAYER_COUNT - 1 ) ) {
 
@@ -692,27 +692,27 @@ void WorldModule::saveSettings ( ) {
 
         for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
 
-            if ( Gameplay->getPlayerControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
+            if ( Gameplay->getControllerSettings( i )->getDevice() == PlayerControllerSettings::Devices::Joystick ) {
 
                 Data += "JOYSTICK_";
-                Data += std::to_string( Gameplay->getPlayerControllerSettings( i )->getJoystickIdentifier() ); }
+                Data += std::to_string( Gameplay->getControllerSettings( i )->getJoystickIdentifier() ); }
 
             else {
 
                 Data += "KEYBOARD"; }
 
             Data += ",";
-            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getForwardKey() );
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getForwardKey() );
             Data += ",";
-            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getBackwardKey() );
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getBackwardKey() );
             Data += ",";
-            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getLeftKey() );
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getLeftKey() );
             Data += ",";
-            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRightKey() );
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getRightKey() );
             Data += ",";
-            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getRayShotKey() );
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getRayShotKey() );
             Data += ",";
-            Data += PlayerControllerSettings::encodeKey( Gameplay->getPlayerControllerSettings( i )->getMissileShotKey() );
+            Data += PlayerControllerSettings::encodeKey( Gameplay->getControllerSettings( i )->getMissileShotKey() );
 
             if ( i != ( MAXIMUM_PLAYER_COUNT - 1 ) ) {
 

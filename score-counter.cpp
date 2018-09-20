@@ -1,3 +1,4 @@
+#include <iostream>
 #include "score-counter.hpp"
 
 ScoreCounter::ScoreCounter ( ) {
@@ -59,6 +60,14 @@ void ScoreCounter::update ( Event ActiveEvent, float Data ) {
             Score += Multiplier * 15000.f;
 
             addMultiplier( 3.f, 15.f );
+
+            break; }
+
+        case Collision: {
+
+            Score += Multiplier * ( Data / 1.5f ) * 10000.f;
+
+            addMultiplier( 1.f + ( Data / 1.5f ), 15.f );
 
             break; }
 

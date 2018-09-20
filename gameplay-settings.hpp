@@ -83,19 +83,42 @@ public:
         TimeLimit = sf::seconds( 5.f * 60.f );
         Winner = 0;
 
+        for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
+
+            SpaceshipAssignments[i] = -1; }
+
+        PlayerNames[0] = "Faraday"; // Michael Faraday (physics)
+        PlayerNames[1] = "Mendel"; // Gregor Mendel (biology)
+        PlayerNames[2] = "Lavoisier"; // Marie-Anne Paulze Lavoisier (chemistry)
+        PlayerNames[3] = "Euclid"; // Euclid (math)
+        PlayerColors[0] = sf::Color( 0, 176, 255 ); // #00B0FF
+        PlayerColors[1] = sf::Color( 0, 230, 118 ); // #00E676
+        PlayerColors[2] = sf::Color( 255, 145, 0 ); // #FF9100
+        PlayerColors[3] = sf::Color( 255, 234, 0 ); // #FFEA00
+
         loadDefaultSpaceshipPrototypes(); }
 
     ~ GameplaySettings ( );
 
+    std::string * getPlayerNames ( );
+    std::string getPlayerName ( unsigned int Index );
+    std::string getTheLongestPlayerName ( );
+
+    sf::Color * getPlayerColors ( );
+    sf::Color getPlayerColor ( unsigned int Index );
+
     void loadSpaceshipPrototypes ( Script * Config );
     std::vector <SpaceshipPrototype> getSpaceshipPrototypes ( );
-    SpaceshipPrototype getSpaceshipPrototype ( unsigned int Index );
+    SpaceshipPrototype getSpaceshipPrototype ( unsigned int PlayerIndex );
+    std::string getTheLongestSpaceshipPrototypeName ( );
 
-    void loadPlayerControllerSettingsRegister ( std::string Config );
-    PlayerControllerSettings ** getPlayerControllerSettingsRegister ( );
-    PlayerControllerSettings * getPlayerControllerSettings ( unsigned int Index );
+    void loadControllersSettingsRegister ( std::string Config );
+    PlayerControllerSettings ** getControllersSettingsRegister ( );
+    PlayerControllerSettings * getControllerSettings ( unsigned int Index );
 
-    void assignSpaceships ( std::vector <int> SpaceshipAssignment ); // TODO REFACTOR
+    int * getSpaceshipAssignments ( );
+    int getSpaceshipAssignment ( unsigned int Index );
+    void assignSpaceship ( unsigned int PlayerIndex, int SpaceshipIndex );
 
     float getAreaSize ( );
     std::string getAreaSizeText ( );
@@ -152,9 +175,11 @@ private:
     ScoreCounter Scores [ MAXIMUM_PLAYER_COUNT ];
     unsigned char Winner;
 
+    std::string PlayerNames [ MAXIMUM_PLAYER_COUNT ];
+    sf::Color PlayerColors [ MAXIMUM_PLAYER_COUNT ];
     std::vector <SpaceshipPrototype> SpaceshipPrototypes;
-    std::vector <int> SpaceshipAssignment;
-    PlayerControllerSettings * PlayerControllerSettingsRegister [ MAXIMUM_PLAYER_COUNT ];
+    int SpaceshipAssignments [ MAXIMUM_PLAYER_COUNT ];
+    PlayerControllerSettings * ControllersSettingsRegister [ MAXIMUM_PLAYER_COUNT ];
 
     };
 

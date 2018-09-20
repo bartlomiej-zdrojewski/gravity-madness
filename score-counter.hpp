@@ -14,7 +14,8 @@ public:
         ShotHit,
         ShotDestruction,
         MissileHit,
-        MissileDestruction
+        MissileDestruction,
+        Collision
 
         };
 

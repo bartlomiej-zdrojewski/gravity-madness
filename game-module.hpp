@@ -85,6 +85,8 @@ private:
     void updatePowerUps ( sf::Time ElapsedTime );
     void updateRayShots ( sf::Time ElapsedTime );
     void updateParticleSystems ( sf::Time ElapsedTime );
+    void updateIntentionalCollisions ( sf::Time ElapsedTime );
+    void updateIntentionalCollisions ( Spaceship * DestructedSpaceship );
 
     void updateViews ( );
     void renderViewsOutline ( sf::RenderWindow &Window );
@@ -93,6 +95,14 @@ private:
     void renderAreaLimit ( sf::RenderWindow &Window );
 
 private:
+
+    struct IntentionalCollision {
+
+        Spaceship * Target;
+        ScoreCounter * Score;
+        sf::Time Time;
+
+        };
 
     GraphicsModule * Graphics;
     GameplaySettings * Gameplay;
@@ -106,6 +116,7 @@ private:
     float AreaRadius;
     sf::Time GameplayTime;
     float ScoreMultiplier;
+    sf::Time IntentionalCollisionDuration;
     sf::Time SkipProtectionTime;
 
     unsigned int PlayerCount;
@@ -132,6 +143,7 @@ private:
     std::list <PowerUp*> PowerUps;
     std::list <Ray*> RayShots;
     std::list <ParticleSystem*> ParticleSystems;
+    std::list <IntentionalCollision*> IntentionalCollisions;
     std::vector <sf::Vertex> ViewsOutline;
     std::vector <sf::Vertex> AreaLimit;
 

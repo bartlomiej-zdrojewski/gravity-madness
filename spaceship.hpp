@@ -80,6 +80,7 @@ public:
 
     void setTexture ( sf::Texture &Texture );
     void setAccentTexture ( sf::Texture &AccentTexture, sf::Color AccentColor );
+    void setAccentTextureColor ( sf::Color AccentColor );
     void setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color ThrusterFuelColor );
 
     void update ( sf::Event &Event );

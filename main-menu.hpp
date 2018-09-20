@@ -11,6 +11,8 @@
 #include "ray.hpp"
 #include "spaceship.hpp"
 
+#define CONTROLLERS_SPACESHIP_CARDS_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
+#define CONTROLLERS_SPACESHIP_CARDS_FONT_VERTICAL_OFFSET_FIX (-0.2f)
 #define CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
 #define CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX (-0.4f)
 #define CONTROLLERS_MANUAL_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
@@ -76,12 +78,12 @@ private:
         GameplaySettings::SpaceshipPrototype Prototype;
 
         sf::Vector2f Size;
-        sf::Vector2f Position;
+        sf::Vector2f Position; // The center of the card
         sf::VertexArray Outline;
 
         Spaceship * VisualizationSpaceship = nullptr;
         sf::RenderTexture * VisualizationArea = nullptr;
-        sf::Vector2f VisualizationWind; // TODO
+        sf::Vector2f VisualizationWind;
         std::list <Ray*> VisualizationRayShots;
         std::list <Missile*> VisualizationMissiles;
 
@@ -105,6 +107,7 @@ private:
     void updateSpaceshipsSection ( sf::Time ElapsedTime );
     void updateSpaceshipsSection ( sf::Event &Event );
     void renderSpaceshipsSection ( sf::RenderWindow &Window );
+    void renderSpaceshipsSectionBar ( sf::RenderWindow &Window, sf::Vector2f Position, sf::Vector2f Size, sf::Color Color, float Value );
 
     void updateSettingsSection ( sf::Time ElapsedTime );
     void updateSettingsSection ( sf::Event &Event );
@@ -156,9 +159,16 @@ private:
 
     unsigned int SpaceshipIndex;
     unsigned int SpaceshipOption;
+    float SpaceshipMaximumValues [6];
+    std::string SpaceshipCardsTitleText [2];
+    unsigned int SpaceshipCardsTitleFontSize;
+    sf::Color SpaceshipCardsTitleColor;
+    sf::Vector2f SpaceshipCardsTitlePosition [2];
+    unsigned int SpaceshipCardsContentFontSize [2];
     std::list <SpaceshipCard> SpaceshipCards;
     float SpaceshipCardsOffset;
     float SpaceshipCardsOffsetDirection;
+    float SpaceshipCardsTime;
 
     unsigned int SettingsOption;
     unsigned int SettingsOptionCount;

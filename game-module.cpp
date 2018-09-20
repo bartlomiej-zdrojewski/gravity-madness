@@ -149,7 +149,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setMissileLimit( Prototype.MissileLimit );
         NewSpaceship->setMissileCount( Prototype.MissileCount );
         NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
-        NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color::Red ); // TODO MORE COLORS
+         // TODO MORE COLORS
         NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.FuelColor );
 
         float PositionAngle = ( (float) SpaceshipOrder[i] / (float) Gameplay->getSpaceshipCount() ) * ( 2.f * PI );
@@ -160,17 +160,21 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setPosition( sf::Vector2f( PositionModule * cosf( PositionAngle ), PositionModule * sinf( PositionAngle  ) ) );
         NewSpaceship->setVelocity( sf::Vector2f( VelocityModule * cosf( VelocityAngle ), VelocityModule * sinf( VelocityAngle  ) ) );
 
-        if ( i < PlayerCount ) {
+        if ( i < PlayerCount ) { // Palyer
+
+            NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), Gameplay->getPlayerColor( i ) );
 
             PlayerSpaceship[i] = NewSpaceship;
-            PlayerSpaceship[i]->setController( new PlayerController ( Gameplay->getPlayerControllerSettings( i ) ) );
+            PlayerSpaceship[i]->setController( new PlayerController ( Gameplay->getControllerSettings( i ) ) );
             PlayerScore[i]->addMultiplier( ScoreMultiplier );
             PlayerScore[i]->addMultiplier( Prototype.ScoreMultiplier );
             Interface[i] = new PlayerInterface ( Graphics );
             Interface[i]->setSpaceship( PlayerSpaceship[i] );
             Interface[i]->setScoreCounter( PlayerScore[i] ); }
 
-        else {
+        else { // Enemy
+
+            NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color( 255, 23, 68 ) ); // #FF1744
 
             switch ( Gameplay->getAIPersonality() ) {
 
@@ -273,6 +277,7 @@ void GameModule::update ( ) {
         updateMissiles( ElapsedTime );
         updatePowerUps( ElapsedTime );
         updateParticleSystems( ElapsedTime );
+        updateIntentionalCollisions( ElapsedTime );
         updateViews();
 
         for ( unsigned int i = 0; i < PlayerCount; i++ ) {
@@ -557,6 +562,7 @@ void GameModule::reset ( ) {
     DetectionDistance = 600.f;
     AreaRadius = 1500.f;
     ScoreMultiplier = 1.f;
+    IntentionalCollisionDuration = sf::seconds( 1.5f );
     SkipProtectionTime = sf::seconds( 0.5f );
     PlayerCount = 0;
 
@@ -1188,6 +1194,14 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                                     Interface[i]->onDamage();
 
+                                    auto * NewIntentionalCollision = new IntentionalCollision ( );
+
+                                    NewIntentionalCollision->Target = SecondSpaceship;
+                                    NewIntentionalCollision->Score = PlayerScore[i];
+                                    NewIntentionalCollision->Time = IntentionalCollisionDuration;
+
+                                    IntentionalCollisions.push_back( NewIntentionalCollision );
+
                                     break; } } }
 
                         if ( isPlayer( SecondSpaceship ) ) {
@@ -1197,6 +1211,14 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
                                 if ( PlayerSpaceship[i] == SecondSpaceship ) {
 
                                     Interface[i]->onDamage();
+
+                                    auto * NewIntentionalCollision = new IntentionalCollision ( );
+
+                                    NewIntentionalCollision->Target = FirstSpaceship;
+                                    NewIntentionalCollision->Score = PlayerScore[i];
+                                    NewIntentionalCollision->Time = IntentionalCollisionDuration;
+
+                                    IntentionalCollisions.push_back( NewIntentionalCollision );
 
                                     break; } } } } } } } }
 
@@ -1398,7 +1420,9 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                             displayNotification( AlivePlayersNotification ); } } } }
 
+            updateIntentionalCollisions( *i );
             destructBody( *i );
+
             i = Spaceships.erase( i ); }
 
         else {
@@ -1750,6 +1774,34 @@ void GameModule::updateParticleSystems ( sf::Time ElapsedTime ) {
         else {
 
             ++i; } } }
+
+void GameModule::updateIntentionalCollisions ( sf::Time ElapsedTime ) {
+
+    for ( auto &Collision : IntentionalCollisions ) {
+
+        Collision->Time -= ElapsedTime; }
+
+    for ( auto i = IntentionalCollisions.begin(); i != IntentionalCollisions.end(); ) {
+
+        if ( (*i)->Time.asSeconds() <= 0.f ) {
+
+            delete (*i);
+            i = IntentionalCollisions.erase( i ); }
+
+        else {
+
+            ++i; } } }
+
+void GameModule::updateIntentionalCollisions ( Spaceship * DestructedSpaceship ) {
+
+    for ( auto &Collision : IntentionalCollisions ) {
+
+        if ( Collision->Target == DestructedSpaceship ) {
+
+            Collision->Score->update( ScoreCounter::Event::Collision, Collision->Time.asSeconds() );
+            Collision->Time = sf::seconds( 0.f ); } }
+
+    updateIntentionalCollisions( sf::seconds( 0.01f ) ); }
 
 void GameModule::updateViews ( ) {
 
