@@ -10,21 +10,19 @@ public:
 
     explicit Planet ( GraphicsModule * Graphics, float Mass, float Radius ) : Body ( Mass, Radius ) {
 
-        // TODO OCEAN PALETTE
+        OceanPalette.emplace_back( sf::Color( 142, 36, 170 ) ); // #8E24AA
         OceanPalette.emplace_back( sf::Color( 94, 53, 177 ) ); // #5E35B1
         OceanPalette.emplace_back( sf::Color( 57, 73, 171 ) ); // #3949AB
         OceanPalette.emplace_back( sf::Color( 30, 136, 229 ) ); // #1E88E5
         OceanPalette.emplace_back( sf::Color( 3, 155, 229 ) ); // #039BE5
         OceanPalette.emplace_back( sf::Color( 0, 172, 193 ) ); // #00ACC1
-        OceanPalette.emplace_back( sf::Color( 0, 137, 123 ) ); // #00897B
 
-        // TODO SURFACE PALETTE
-        SurfacePalette.emplace_back( sf::Color( 255, 255, 255 ) ); // #FFFFFF
-        SurfacePalette.emplace_back( sf::Color( 255, 255, 255 ) ); // #FFFFFF
-        SurfacePalette.emplace_back( sf::Color( 255, 255, 255 ) ); // #FFFFFF
-        SurfacePalette.emplace_back( sf::Color( 255, 255, 255 ) ); // #FFFFFF
-        SurfacePalette.emplace_back( sf::Color( 255, 255, 255 ) ); // #FFFFFF
-        SurfacePalette.emplace_back( sf::Color( 255, 255, 255 ) ); // #FFFFFF
+        SurfacePalette.emplace_back( sf::Color( 198, 40, 40 ) ); // #C62828
+        SurfacePalette.emplace_back( sf::Color( 173, 20, 87 ) ); // #AD1457
+        SurfacePalette.emplace_back( sf::Color( 46, 125, 50 ) ); // #2E7D32
+        SurfacePalette.emplace_back( sf::Color( 85, 139, 47 ) ); // #558B2F
+        SurfacePalette.emplace_back( sf::Color( 78, 52, 46 ) ); // #4E342E
+        SurfacePalette.emplace_back( sf::Color( 66, 66, 66 ) ); // #424242
 
         #if ( SFML_VERSION_MINOR >= 5 )
 
@@ -32,10 +30,12 @@ public:
             Context.antialiasingLevel = Graphics->getAntialiasingLevel();
 
             Buffer.create( (unsigned int) ( 2.f * getRadius() ), (unsigned int) ( 2.f * getRadius() ), Context );
+            Surface.create( (unsigned int) ( 4.f * getRadius() ), (unsigned int) ( 2.f * getRadius() ), Context );
 
         #else
 
             Buffer.create( (unsigned int) ( 2.f * getRadius() ), (unsigned int) ( 2.f * getRadius() ) );
+            Surface.create( (unsigned int) ( 4.f * getRadius() ), (unsigned int) ( 2.f * getRadius() ) );
 
         #endif
 
@@ -63,12 +63,14 @@ private:
 
     void renderBuffer ( );
     void renderSurface ( );
+    void renderIsland ( sf::Vector2f Begin, sf::Vector2f End, float Thickness, bool FixOverflow = true );
     void renderClouds ( );
     void renderCloud ( Cloud &ActiveCloud );
 
 private:
 
     sf::RenderTexture Buffer;
+    sf::RenderTexture Surface;
 
     float RadialPhase;
     float RadialVelocity;
@@ -80,7 +82,6 @@ private:
 
     std::vector <sf::Color> OceanPalette;
     std::vector <sf::Color> SurfacePalette;
-    std::vector <sf::Color> CloudPalette;
 
     sf::Time CloudPauseTime;
     sf::Time CloudPauseDuration;
