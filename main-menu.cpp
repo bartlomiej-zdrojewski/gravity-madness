@@ -1,4 +1,3 @@
-#include <iostream>
 #include "main-menu.hpp"
 
 MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
@@ -461,14 +460,14 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
             Factor = 1800.f; }
 
         if ( std::fabs( SignedDistance ) > MaximumDistance ) {
-            // TODO sqn(A) != sgn(B) <=> ( A * B ) < 0
-            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) {
+
+            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) { // TODO sqn(A) != sgn(B) <=> ( A * B ) < 0
 
                 Factor *= 2.5; } }
 
         if ( std::fabs( MenuOptionPointerPosition.y ) > ( 1.25 * Graphics->getWindowHeight() ) ) {
 
-            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) {
+            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) { // TODO sqn(A) != sgn(B) <=> ( A * B ) < 0
 
                 MenuOptionPointerVelocity = 0.f; } }
 
@@ -1361,7 +1360,7 @@ void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
     SpaceshipCardsContentFontSize[1] = 100;
 
     sf::Text TextPrototype;
-    TextPrototype.setString( Gameplay->getTheLongestPlayerName() + ", choose your spaceship!" );
+    TextPrototype.setString( Gameplay->getTheLongestPlayerName().replace( 0, 2, "Xy" ) + ", choose your spaceship!" );
     TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     TextPrototype.setCharacterSize( SpaceshipCardsTitleFontSize );
 
@@ -1379,7 +1378,7 @@ void MainMenu::updateSpaceshipsSection ( sf::Time ElapsedTime ) {
     SpaceshipCardsTitlePosition[1].x += 2.f;
     SpaceshipCardsTitlePosition[0].x -= 2.f;
 
-    TextPrototype.setString( Gameplay->getTheLongestSpaceshipPrototypeName().replace( 1, 1, "y" ) );
+    TextPrototype.setString( Gameplay->getTheLongestSpaceshipPrototypeName().replace( 0, 2, "Xy" ) );
     TextPrototype.setCharacterSize( SpaceshipCardsContentFontSize[0] );
 
     while ( TextPrototype.getLocalBounds().height > ( ( 0.7f * CardSize.y ) / 7.f - 0.03f * CardSize.y ) ) {
@@ -1650,20 +1649,6 @@ void MainMenu::renderSpaceshipsSection ( sf::RenderWindow &Window ) {
                 default: break; }
 
             Window.draw( Text ); }
-
-        }
-
-    for ( auto &Card : SpaceshipCards ) {
-
-        // TODO TEMP
-        sf::Text Text;
-        Text.setString( std::to_string( Card.Index ) );
-        Text.setPosition( Card.Position );
-        Text.setFillColor( sf::Color::White );
-        Text.setFont(  Graphics->getFont( "RobotoCondensedLight" ) );
-        Text.setCharacterSize( 25 );
-        //Window.draw( Text );
-        // TODO TEMP
 
         Window.draw( Card.Outline ); } }
 
@@ -2298,9 +2283,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                 if ( Key == -1 ) {
 
-                    ControllersModificationState = 5; } }
-
-            }
+                    ControllersModificationState = 5; } } }
 
         else { // Devices
 
@@ -2466,32 +2449,41 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
     unsigned int TableManualFontSize = 100;
 
     sf::Text TextPrototype;
-    TextPrototype.setString( "" );
+    TextPrototype.setString( Gameplay->getTheLongestPlayerName().replace( 0, 2, "Xy" ) );
     TextPrototype.setFont( Graphics->getFont( "SairaCondensedLight" ) );
     TextPrototype.setCharacterSize( TableColumnHeaderFontSize );
 
-    // TODO COLUMN HEADER
+    while ( TextPrototype.getLocalBounds().width > ( SectionSize.x * 0.8f * TableCellWidth ) ) {
 
-    TextPrototype.setString( "" );
-    TextPrototype.setFont( Graphics->getFont( "SairaCondensedLight" ) );
+        TextPrototype.setCharacterSize( --TableColumnHeaderFontSize ); }
+
+    while ( TextPrototype.getLocalBounds().height > ( SectionSize.y * 1.0f * TableCellHeight ) ) {
+
+        TextPrototype.setCharacterSize( --TableColumnHeaderFontSize ); }
+
+    TextPrototype.setString( "Thrust backward" );
     TextPrototype.setCharacterSize( TableRowHeaderFontSize );
 
-    // TODO ROW HEADER
+    while ( TextPrototype.getLocalBounds().width > ( SectionSize.x * 1.4f * TableCellWidth ) ) {
+
+        TextPrototype.setCharacterSize( --TableRowHeaderFontSize ); }
+
+    while ( TextPrototype.getLocalBounds().height > ( SectionSize.y * 0.7f * TableCellHeight ) ) {
+
+        TextPrototype.setCharacterSize( --TableRowHeaderFontSize ); }
 
     TextPrototype.setString( "SHIFT RIGHT" );
-    TextPrototype.setFont( Graphics->getFont( "SairaCondensedLight" ) );
     TextPrototype.setCharacterSize( TableContentFontSize );
 
     while ( TextPrototype.getLocalBounds().width > ( SectionSize.x * 0.9f * TableCellWidth ) ) {
 
         TextPrototype.setCharacterSize( --TableContentFontSize ); }
 
-    while ( TextPrototype.getLocalBounds().height > ( SectionSize.y * 0.8f * TableCellHeight ) ) {
+    while ( TextPrototype.getLocalBounds().height > ( SectionSize.y * 0.7f * TableCellHeight ) ) {
 
         TextPrototype.setCharacterSize( --TableContentFontSize ); }
 
     TextPrototype.setString( "Joystick is not connected. Choose the one with a brighter color." );
-    TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     TextPrototype.setCharacterSize( TableManualFontSize );
 
     while ( TextPrototype.getLocalBounds().width > ( 0.9f * SectionSize.x * ( TableRight - TableLeft ) ) ) {
@@ -2502,15 +2494,94 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
         TextPrototype.setCharacterSize( --TableManualFontSize ); }
 
-    ControllersTableRowHeader.resize( RowCount - 1 );
-
-    // TODO COLUMN HEADER
-
     ControllersTableColumnHeader.resize( ColumnCount - 1 );
 
-    // TODO ROW HEADER
+    for ( unsigned int c = 1; c < ColumnCount; c++ ) {
 
-    ControllersTableContent.resize( RowCount * ( ColumnCount - 1 ) );
+        ControllersTableColumnHeader[ c - 1 ].setString( Gameplay->getTheLongestPlayerName().replace( 0, 2, "Xy" ) );
+        ControllersTableColumnHeader[ c - 1 ].setFont( Graphics->getFont( "SairaCondensedLight" ) );
+        ControllersTableColumnHeader[ c - 1 ].setCharacterSize( TableColumnHeaderFontSize );
+
+        sf::Vector2f Position;
+        Position.x = TableLeft + ( 1.5f + ( c - 1 ) ) * TableCellWidth;
+        Position.y = TableTop + 0.15f * TableCellHeight; // Offset fix
+        Position.x *= SectionSize.x;
+        Position.y *= SectionSize.y;
+        Position += SectionPosition;
+        Position.y += ( SectionSize.y * 1.5f * TableCellHeight - ControllersTableColumnHeader[ c - 1 ].getLocalBounds().height ) / 2.f;
+
+        ControllersTableColumnHeader[ c - 1 ].setString( Gameplay->getPlayerName( c - 1 ) );
+
+        Position.x += ( SectionSize.x * TableCellWidth - ControllersTableColumnHeader[ c - 1 ].getLocalBounds().width ) / 2.f;
+        Position.x += ControllersTableColumnHeader[ c - 1 ].getLocalBounds().width * CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX; // Offset fix
+        Position.y += ControllersTableColumnHeader[ c - 1 ].getLocalBounds().height * CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX; // Offset fix
+
+        ControllersTableColumnHeader[ c - 1 ].setPosition( Position );
+
+        #if ( SFML_VERSION_MINOR >= 4 )
+    
+            ControllersTableColumnHeader[ c - 1 ].setOutlineThickness( 1.f );
+            ControllersTableColumnHeader[ c - 1 ].setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
+            ControllersTableColumnHeader[ c - 1 ].setFillColor( Gameplay->getPlayerColor( c - 1 ) );
+    
+        #else
+    
+            ControllersTableColumnHeader[ c - 1 ].setColor( Gameplay->getPlayerColor( c - 1 ) );
+    
+        #endif
+    
+        }
+
+    ControllersTableRowHeader.resize( RowCount - 1 );
+
+    for ( unsigned int r = 1; r < RowCount; r++ ) {
+
+        ControllersTableRowHeader[ r - 1 ].setString( "Thrust backward" );
+        ControllersTableRowHeader[ r - 1 ].setFont( Graphics->getFont( "SairaCondensedLight" ) );
+        ControllersTableRowHeader[ r - 1 ].setCharacterSize( TableRowHeaderFontSize );
+
+        sf::Vector2f Position;
+        Position.x = TableLeft + 0.05f * TableCellWidth;
+        Position.y = TableTop + ( 1.5f + ( r - 1 ) ) * TableCellHeight;
+        Position.x *= SectionSize.x;
+        Position.y *= SectionSize.y;
+        Position += SectionPosition;
+        Position.y += ( SectionSize.y * TableCellHeight - ControllersTableRowHeader[ r - 1 ].getLocalBounds().height ) / 2.f;
+        Position.x += ControllersTableRowHeader[ r - 1 ].getLocalBounds().width * CONTROLLERS_TABLE_FONT_HORIZONTAL_OFFSET_FIX; // Offset fix
+        Position.y += ControllersTableRowHeader[ r - 1 ].getLocalBounds().height * CONTROLLERS_TABLE_FONT_VERTICAL_OFFSET_FIX; // Offset fix
+
+        std::string Text;
+
+        switch ( r ) {
+
+            case 1: Text = "Device"; break;
+            case 2: Text = "Thrust forward"; break;
+            case 3: Text = "Thrust backward"; break;
+            case 4: Text = "Turn left"; break;
+            case 5: Text = "Turn right"; break;
+            case 6: Text = "Ray shot"; break;
+            case 7: Text = "Missile shot"; break;
+
+            default: break; }
+
+        ControllersTableRowHeader[ r - 1 ].setString( Text );
+        ControllersTableRowHeader[ r - 1 ].setPosition( Position );
+
+        #if ( SFML_VERSION_MINOR >= 4 )
+
+            ControllersTableRowHeader[ r - 1 ].setOutlineThickness( 1.f );
+            ControllersTableRowHeader[ r - 1 ].setOutlineColor( sf::Color( 33, 33, 33 ) ); // #212121
+            ControllersTableRowHeader[ r - 1 ].setFillColor( sf::Color( 189, 189, 189 ) ); // #BDBDBD
+
+        #else
+
+            ControllersTableRowHeader[ r - 1 ].setColor( sf::Color( 189, 189, 189 ) ); // #BDBDBD
+
+        #endif
+
+        }
+
+    ControllersTableContent.resize( ( RowCount - 1 ) * ( ColumnCount - 1 ) );
 
     for ( unsigned int c = 1; c < ColumnCount; c++ ) {
 
@@ -2520,7 +2591,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
         sf::Vector2f Position;
         Position.x = TableLeft + ( 1.5f + 0.05f + ( c - 1 ) ) * TableCellWidth;
-        Position.y = TableTop + ( 1.5f + 0.05f ) * TableCellHeight;
+        Position.y = TableTop + ( 1.5f ) * TableCellHeight;
         Position.x *= SectionSize.x;
         Position.y *= SectionSize.y;
         Position += SectionPosition;
@@ -2596,7 +2667,7 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
             sf::Vector2f Position;
             Position.x = TableLeft + ( 1.5f + 0.05f + ( c - 1 ) ) * TableCellWidth;
-            Position.y = TableTop + ( 1.5f + 0.05f + ( r - 1 ) ) * TableCellHeight;
+            Position.y = TableTop + ( 1.5f + ( r - 1 ) ) * TableCellHeight;
             Position.x *= SectionSize.x;
             Position.y *= SectionSize.y;
             Position += SectionPosition;
@@ -2848,13 +2919,6 @@ void MainMenu::updateControllersSection ( sf::Event &Event ) {
                 break; } } } }
 
 void MainMenu::renderControllersSection ( sf::RenderWindow &Window ) {
-
-    // TODO TEMP
-    //sf::RectangleShape Rect;
-    //Rect.setPosition( ControllersTableContent[i].getPosition() );
-    //Rect.setSize( sf::Vector2f( ControllersTableContent[i].getLocalBounds().width, ControllersTableContent[i].getLocalBounds().height ) );
-    //Rect.setFillColor( sf::Color::Green );
-    //Window.draw( Rect );
 
     renderSectionBackground( Window, 2 );
 

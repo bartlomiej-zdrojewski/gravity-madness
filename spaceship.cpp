@@ -18,11 +18,24 @@ void Spaceship::setController ( SpaceshipController * Controller ) {
 
         Controller->setSpaceship( this ); } }
 
-float Spaceship::getInfluenceRadius ( ) { // TODO
+sf::FloatRect Spaceship::getInfluenceArea ( ) {
 
-    return getRadius();
+    sf::FloatRect InfluenceArea ( getPosition().x - getRadius(), getPosition().y - getRadius(), 2.f * getRadius(), 2.f * getRadius() );
 
-    }
+    if ( ThrusterExhaust.getInfluenceArea().left < InfluenceArea.left ) {
+
+        InfluenceArea.width += InfluenceArea.left - ThrusterExhaust.getInfluenceArea().left;
+        InfluenceArea.left = ThrusterExhaust.getInfluenceArea().left; }
+
+    if ( ThrusterExhaust.getInfluenceArea().top < InfluenceArea.top ) {
+
+        InfluenceArea.height += InfluenceArea.top - ThrusterExhaust.getInfluenceArea().top;
+        InfluenceArea.top = ThrusterExhaust.getInfluenceArea().top; }
+
+    InfluenceArea.width = fmaxf( InfluenceArea.width, ThrusterExhaust.getInfluenceArea().width );
+    InfluenceArea.height = fmaxf( InfluenceArea.height, ThrusterExhaust.getInfluenceArea().height );
+
+    return InfluenceArea; }
 
 float Spaceship::getHealth ( ) {
 
@@ -213,6 +226,12 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
     updateHealth( HealthRestoration * ElapsedTime.asSeconds() );
     updateEnergy( EnergyRestoration * ElapsedTime.asSeconds() );
 
+    sf::Vector2f ThrusterPosition = getPosition();
+    ThrusterPosition += ( SQRT2_2ND * 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
+    ThrusterPosition += ( SQRT2_2ND * 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
+
+    ThrusterExhaust.setOriginPosition( ThrusterPosition );
+
     if ( Controller ) {
 
         Controller->update( ElapsedTime );
@@ -242,11 +261,6 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
             updateEnergy( Acceleration, ElapsedTime );
             updateVelocity( Acceleration, ElapsedTime );
 
-            sf::Vector2f ThrusterPosition = getPosition();
-            ThrusterPosition += ( SQRT2_2ND * 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
-            ThrusterPosition += ( SQRT2_2ND * 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
-
-            ThrusterExhaust.setOriginPosition( ThrusterPosition );
             ThrusterExhaust.setOriginVelocity( getVelocity() );
             ThrusterExhaust.setAngleRange( PI + getVelocityAngle() + ThrusterAngleOffset, 0.05f * PI );
             ThrusterExhaust.setVelocityRange( 250.f, 500.f );
@@ -301,14 +315,14 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
 void Spaceship::render ( sf::RenderWindow &Window ) {
 
-    // TODO TEMP ->
+    // TODO TEMP
     sf::CircleShape Circle;
     Circle.setRadius( getRadius() );
     Circle.setOrigin( getRadius(), getRadius() );
     Circle.setFillColor( sf::Color::Blue );
     Circle.setPosition( getPosition() );
     //Window.draw( Circle );
-    // -> TEMP
+    // TODO TEMP
 
     sf::Sprite Sprite ( Texture );
     sf::Sprite AccentSprite ( AccentTexture );

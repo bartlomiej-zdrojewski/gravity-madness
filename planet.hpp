@@ -10,6 +10,7 @@ public:
 
     explicit Planet ( GraphicsModule * Graphics, float Mass, float Radius ) : Body ( Mass, Radius ) {
 
+        // TODO OCEAN PALETTE
         OceanPalette.emplace_back( sf::Color( 94, 53, 177 ) ); // #5E35B1
         OceanPalette.emplace_back( sf::Color( 57, 73, 171 ) ); // #3949AB
         OceanPalette.emplace_back( sf::Color( 30, 136, 229 ) ); // #1E88E5

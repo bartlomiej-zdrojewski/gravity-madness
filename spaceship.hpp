@@ -42,7 +42,7 @@ public:
     SpaceshipController * getController ( );
     void setController ( SpaceshipController * Controller );
 
-    float getInfluenceRadius ( );
+    sf::FloatRect getInfluenceArea ( );
 
     float getHealth ( );
     void setHealth ( float Health );

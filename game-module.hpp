@@ -64,8 +64,8 @@ private:
     static float getRandomFloat ( );
 
     bool isPlayer ( Spaceship * MySpaceship );
-    bool isOnScreen ( sf::Vector2f Center, float Radius );
-    bool isOnScreen ( sf::FloatRect Area );
+    bool isOnScreen ( sf::View &View, sf::FloatRect Area );
+    bool isOnScreen ( sf::View &View, sf::Vector2f Center, float Radius );
 
     unsigned int getAlivePlayerCount ( );
     int getLastAlivePlayer ( );
@@ -98,8 +98,8 @@ private:
 
     struct IntentionalCollision {
 
-        Spaceship * Target;
-        ScoreCounter * Score;
+        Spaceship * Target = nullptr;
+        ScoreCounter * Score = nullptr;
         sf::Time Time;
 
         };

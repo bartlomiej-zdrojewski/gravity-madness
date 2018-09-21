@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
 
-class ParticleSystem { // TODO ERROR CHECK
+class ParticleSystem {
 
 public:
 

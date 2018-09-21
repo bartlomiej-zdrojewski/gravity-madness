@@ -8,12 +8,24 @@ void Missile::setScoreCounter ( ScoreCounter * MyScore ) {
 
     this->MyScore = MyScore; }
 
-float Missile::getInfluenceRadius ( ) {
+sf::FloatRect Missile::getInfluenceArea ( ) {
 
-    // TODO
-    return getRadius();
+    sf::FloatRect InfluenceArea ( getPosition().x - getRadius(), getPosition().y - getRadius(), 2.f * getRadius(), 2.f * getRadius() );
 
-    }
+    if ( ThrusterExhaust.getInfluenceArea().left < InfluenceArea.left ) {
+
+        InfluenceArea.width += InfluenceArea.left - ThrusterExhaust.getInfluenceArea().left;
+        InfluenceArea.left = ThrusterExhaust.getInfluenceArea().left; }
+
+    if ( ThrusterExhaust.getInfluenceArea().top < InfluenceArea.top ) {
+
+        InfluenceArea.height += InfluenceArea.top - ThrusterExhaust.getInfluenceArea().top;
+        InfluenceArea.top = ThrusterExhaust.getInfluenceArea().top; }
+
+    InfluenceArea.width = fmaxf( InfluenceArea.width, ThrusterExhaust.getInfluenceArea().width );
+    InfluenceArea.height = fmaxf( InfluenceArea.height, ThrusterExhaust.getInfluenceArea().height );
+
+    return InfluenceArea; }
 
 float Missile::getExplosionPower ( ) {
 
@@ -97,7 +109,12 @@ void Missile::update ( sf::Time ElapsedTime ) {
 
                 ThrusterAngleOffset = 0.f; } }
 
+        sf::Vector2f ThrusterPosition = getPosition();
+        ThrusterPosition += ( SQRT2_2ND * 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
+        ThrusterPosition += ( SQRT2_2ND * 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
+
         Thrust -= ThrustReduction * ElapsedTime.asSeconds();
+        ThrusterExhaust.setOriginPosition( ThrusterPosition );
 
         if ( Thrust > 0.f ) {
 
@@ -107,11 +124,6 @@ void Missile::update ( sf::Time ElapsedTime ) {
 
             updateVelocity( Acceleration, ElapsedTime );
 
-            sf::Vector2f ThrusterPosition = getPosition();
-            ThrusterPosition += ( SQRT2_2ND * 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
-            ThrusterPosition += ( SQRT2_2ND * 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
-
-            ThrusterExhaust.setOriginPosition( ThrusterPosition );
             ThrusterExhaust.setOriginVelocity( getVelocity() );
             ThrusterExhaust.setAngleRange( PI + getVelocityAngle() + ThrusterAngleOffset, 0.05f * PI );
             ThrusterExhaust.setVelocityRange( 250.f, 500.f );
@@ -122,16 +134,16 @@ void Missile::update ( sf::Time ElapsedTime ) {
         updatePosition( ElapsedTime );
         ThrusterExhaust.update( ElapsedTime ); } }
 
-void Missile::render ( sf::RenderWindow &Window ) { // TODO
+void Missile::render ( sf::RenderWindow &Window ) {
 
+    // TODO TEMP
     sf::CircleShape Circle;
     Circle.setRadius( getRadius() );
     Circle.setOrigin( getRadius(), getRadius() );
     Circle.setPosition( getPosition() );
     Circle.setFillColor( sf::Color( 0, 0, 255 ) );
     //Window.draw( Circle );
-
-    // -------------------------------
+    // TODO TEMP
 
     sf::Sprite Sprite ( Texture );
     sf::Sprite ThrusterSprite ( ThrusterTexture );

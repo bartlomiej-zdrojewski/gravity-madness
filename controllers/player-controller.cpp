@@ -1,4 +1,3 @@
-#include <iostream>
 #include "player-controller.hpp"
 
 void PlayerController::update ( sf::Event &Event ) {

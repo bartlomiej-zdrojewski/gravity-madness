@@ -35,7 +35,7 @@ public:
     void setSpaceship ( Spaceship * MySpaceship );
     void setScoreCounter ( ScoreCounter * MyScore );
 
-    float getInfluenceRadius ( );
+    sf::FloatRect getInfluenceArea ( );
 
     float getExplosionPower ( );
     void setExplosionPower ( float ExplosionPower );

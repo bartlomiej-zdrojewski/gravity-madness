@@ -149,7 +149,6 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setMissileLimit( Prototype.MissileLimit );
         NewSpaceship->setMissileCount( Prototype.MissileCount );
         NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
-         // TODO MORE COLORS
         NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.FuelColor );
 
         float PositionAngle = ( (float) SpaceshipOrder[i] / (float) Gameplay->getSpaceshipCount() ) * ( 2.f * PI );
@@ -452,7 +451,7 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
                 for ( auto ActiveParticleSystem : ParticleSystems ) {
 
-                    if ( isOnScreen( ActiveParticleSystem->getInfluenceArea() ) ) {
+                    if ( isOnScreen( Views[i], ActiveParticleSystem->getInfluenceArea() ) ) {
 
                         ActiveParticleSystem->render( Window ); } }
 
@@ -462,31 +461,31 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
                 for ( auto ActivePowerUp : PowerUps ) {
 
-                    if ( isOnScreen( ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
+                    if ( isOnScreen( Views[i], ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
 
                         ActivePowerUp->render( Window ); } }
 
                 for ( auto ActivePlanet : Planets ) {
 
-                    if ( isOnScreen( ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
+                    if ( isOnScreen( Views[i], ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
 
                         ActivePlanet->render( Window ); } }
 
                 for ( auto ActiveAsteroid : Asteroids ) {
 
-                    if ( isOnScreen( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
+                    if ( isOnScreen( Views[i], ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
 
                         ActiveAsteroid->render( Window ); } }
 
                 for ( auto ActiveSpaceship : Spaceships ) {
 
-                    if ( isOnScreen( ActiveSpaceship->getPosition(), ActiveSpaceship->getInfluenceRadius() ) ) {
+                    if ( isOnScreen( Views[i], ActiveSpaceship->getInfluenceArea() ) ) {
 
                         ActiveSpaceship->render( Window ); } }
 
                 for ( auto ActiveMissile : Missiles ) {
 
-                    if ( isOnScreen( ActiveMissile->getPosition(), ActiveMissile->getInfluenceRadius() ) ) {
+                    if ( isOnScreen( Views[i], ActiveMissile->getInfluenceArea() ) ) {
 
                         ActiveMissile->render( Window ); } } }
 
@@ -511,7 +510,7 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
         for ( auto ActiveParticleSystem : ParticleSystems ) {
 
-            if ( isOnScreen( ActiveParticleSystem->getInfluenceArea() ) ) {
+            if ( isOnScreen( NoPlayerView, ActiveParticleSystem->getInfluenceArea() ) ) {
 
                 ActiveParticleSystem->render( Window ); } }
 
@@ -521,31 +520,31 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
         for ( auto ActivePowerUp : PowerUps ) {
 
-            if ( isOnScreen( ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
+            if ( isOnScreen( NoPlayerView, ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
 
                 ActivePowerUp->render( Window ); } }
 
         for ( auto ActivePlanet : Planets ) {
 
-            if ( isOnScreen( ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
+            if ( isOnScreen( NoPlayerView, ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
 
                 ActivePlanet->render( Window ); } }
 
         for ( auto ActiveAsteroid : Asteroids ) {
 
-            if ( isOnScreen( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
+            if ( isOnScreen( NoPlayerView, ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
 
                 ActiveAsteroid->render( Window ); } }
 
         for ( auto ActiveSpaceship : Spaceships ) {
 
-            if ( isOnScreen( ActiveSpaceship->getPosition(), ActiveSpaceship->getInfluenceRadius() ) ) {
+            if ( isOnScreen( NoPlayerView, ActiveSpaceship->getInfluenceArea() ) ) {
 
                 ActiveSpaceship->render( Window ); } }
 
         for ( auto ActiveMissile : Missiles ) {
 
-            if ( isOnScreen( ActiveMissile->getPosition(), ActiveMissile->getInfluenceRadius() ) ) {
+            if ( isOnScreen( NoPlayerView, ActiveMissile->getInfluenceArea() ) ) {
 
                 ActiveMissile->render( Window ); } }
 
@@ -684,17 +683,17 @@ bool GameModule::isPlayer ( Spaceship * MySpaceship ) {
 
     return false; }
 
-bool GameModule::isOnScreen ( sf::Vector2f Center, float Radius ) { // TODO
+bool GameModule::isOnScreen ( sf::View &View, sf::FloatRect Area ) {
 
-    return true;
+    sf::FloatRect Screen = sf::FloatRect( View.getCenter().x - 0.5f * View.getSize().x, View.getCenter().y - 0.5f * View.getSize().y, View.getSize().x, View.getSize().y );
 
-    }
+    return Area.intersects( Screen ); }
 
-bool GameModule::isOnScreen ( sf::FloatRect Area ) { // TODO
+bool GameModule::isOnScreen ( sf::View &View, sf::Vector2f Center, float Radius ) {
 
-    return true;
+    Radius += 0.01f * fmaxf( View.getSize().x, View.getSize().y ); // Safety margin
 
-    }
+    return isOnScreen( View, sf::FloatRect( Center.x - Radius, Center.y - Radius, 2.f * Radius, 2.f * Radius ) ); }
 
 unsigned int GameModule::getAlivePlayerCount ( ) {
 

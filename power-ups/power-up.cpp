@@ -45,7 +45,7 @@ float PowerUp::getRadius ( ) {
 
 float PowerUp::getInfluenceRadius ( ) {
 
-    return ( 1.5f * Radius ); }
+    return ( 2.f * Radius ); }
 
 void PowerUp::update ( sf::Time ElapsedTime ) {
 

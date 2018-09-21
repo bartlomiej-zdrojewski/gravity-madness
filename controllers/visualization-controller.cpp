@@ -1,4 +1,3 @@
-#include <iostream>
 #include "visualization-controller.hpp"
 
 sf::Vector2f VisualizationController::getDesiredPosition ( ) {
