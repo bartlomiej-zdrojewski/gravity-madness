@@ -73,6 +73,7 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     auto AccentTextureNode = Config->getChildren( SpaceshipNode, "AccentTexture" );
                     auto MassNode = Config->getChildren( SpaceshipNode, "Mass" );
                     auto RadiusNode = Config->getChildren( SpaceshipNode, "Radius" );
+                    auto ShapeNode = Config->getChildren( SpaceshipNode, "Shape" );
                     auto HealthLimitNode = Config->getChildren( SpaceshipNode, "HealthLimit" );
                     auto HealthRestorationNode = Config->getChildren( SpaceshipNode, "HealthRestoration" );
                     auto EnergyLimitNode = Config->getChildren( SpaceshipNode, "EnergyLimit" );
@@ -86,16 +87,16 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     auto MissileLimitNode = Config->getChildren( SpaceshipNode, "MissileLimit" );
                     auto ScoreMultiplierNode = Config->getChildren( SpaceshipNode, "ScoreMultiplier" );
 
-                    const unsigned int NodesCount = 17;
+                    const unsigned int NodesCount = 18;
 
                     std::vector <pugi::xml_node> * Nodes [NodesCount] = { &NameNode, &TextureNode, &AccentTextureNode,
-                        &MassNode, &RadiusNode, &HealthLimitNode, &HealthRestorationNode, &EnergyLimitNode, &EnergyRestorationNode,
-                        &ThrustNode, &BrakingFactorNode, &FuelColorNode, &RayPowerNode, &RayColorNode, &MissileCountNode,
-                        &MissileLimitNode, &ScoreMultiplierNode };
+                        &MassNode, &RadiusNode, &ShapeNode, &HealthLimitNode, &HealthRestorationNode, &EnergyLimitNode,
+                        &EnergyRestorationNode, &ThrustNode, &BrakingFactorNode, &FuelColorNode, &RayPowerNode, &RayColorNode,
+                        &MissileCountNode, &MissileLimitNode, &ScoreMultiplierNode };
 
-                    std::string NodeNames [NodesCount] = { "Name", "Texture", "AccentTexture", "Mass", "Radius", "HealthLimit",
-                        "HealthRestoration", "EnergyLimit", "EnergyRestoration", "Thrust", "BrakingFactor", "FuelColor",
-                        "RayPower", "RayColor", "MissileCount", "MissileLimit", "ScoreMultiplier" };
+                    std::string NodeNames [NodesCount] = { "Name", "Texture", "AccentTexture", "Mass", "Radius", "Shape",
+                        "HealthLimit", "HealthRestoration", "EnergyLimit", "EnergyRestoration", "Thrust", "BrakingFactor",
+                        "FuelColor", "RayPower", "RayColor", "MissileCount", "MissileLimit", "ScoreMultiplier" };
 
                     bool Skip = false;
 
@@ -120,6 +121,7 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     Prototype.AccentTexture = Script::getTextValue( AccentTextureNode[0] );
                     Prototype.Mass = Script::getRealValue( MassNode[0] );
                     Prototype.Radius = Script::getRealValue( RadiusNode[0] );
+                    Prototype.Shape = Script::getTextValue( ShapeNode[0] );
                     Prototype.HealthLimit = Script::getRealValue( HealthLimitNode[0] );
                     Prototype.HealthRestoration = Script::getRealValue( HealthRestorationNode[0] );
                     Prototype.EnergyLimit = Script::getRealValue( EnergyLimitNode[0] );
@@ -763,6 +765,7 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
     Prototype.AccentTexture = "SpaceshipAccent";
     Prototype.Mass = 350.f;
     Prototype.Radius = 35.f;
+    Prototype.Shape = ""; // TODO
     Prototype.HealthLimit = 200.f;
     Prototype.HealthRestoration = 2.f;
     Prototype.EnergyLimit = 2500.f;

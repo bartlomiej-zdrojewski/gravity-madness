@@ -9,6 +9,7 @@
         <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
         <Mass>400.00</Mass>
         <Radius>40.00</Radius>
+        <Shape>(0.80,0.00),(0.80,120.00),(0.80,-120.00)</Shape>
         <HealthLimit>300.00</HealthLimit>
         <HealthRestoration>6.00</HealthRestoration>
         <EnergyLimit>4000.00</EnergyLimit>
@@ -31,6 +32,7 @@
         <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
         <Mass>400.00</Mass>
         <Radius>40.00</Radius>
+        <Shape>(0.80,0.00),(0.80,120.00),(0.80,-120.00)</Shape>
         <HealthLimit>250.00</HealthLimit>
         <HealthRestoration>2.00</HealthRestoration>
         <EnergyLimit>5000.00</EnergyLimit>
@@ -53,6 +55,7 @@
         <AccentTexture>SpaceshipAccentGogmagog</AccentTexture>
         <Mass>1000.00</Mass>
         <Radius>50.00</Radius>
+        <Shape>(0.71,0.00),(0.50,45.00),(0.64,124.00),(0.88,127.00),(0.88,143.00),(0.77,153.00),(0.44,169.00),(0.44,-169.00),(0.77,-153.00),(0.88,-143.00),(0.88,-127.00),(0.64,-124.00),(0.50,-45.00)</Shape>
         <HealthLimit>500.00</HealthLimit>
         <HealthRestoration>5.00</HealthRestoration>
         <EnergyLimit>8000.00</EnergyLimit>
@@ -75,6 +78,7 @@
         <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
         <Mass>800.00</Mass>
         <Radius>45.00</Radius>
+        <Shape>(0.71,0.00),(1.00,135.00),(0.37,154.00),(0.44,180.00),(0.35,-154.00),(1.00,-135.00)</Shape>
         <HealthLimit>400.00</HealthLimit>
         <HealthRestoration>3.00</HealthRestoration>
         <EnergyLimit>10000.00</EnergyLimit>

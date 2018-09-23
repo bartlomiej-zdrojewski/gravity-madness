@@ -136,6 +136,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         auto Prototype = Gameplay->getSpaceshipPrototype( i );
         auto * NewSpaceship = new Spaceship ( Prototype.Mass, Prototype.Radius );
 
+        NewSpaceship->getShape()->loadOutline( Prototype.Shape, Prototype.Radius );
         NewSpaceship->setHealthLimit( Prototype.HealthLimit );
         NewSpaceship->setHealth( Prototype.HealthLimit );
         NewSpaceship->setHealthRestoration( Prototype.HealthRestoration );
@@ -221,7 +222,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
         Spaceships.push_back( NewSpaceship ); }
 
-    delete SpaceshipOrder; }
+    delete [] SpaceshipOrder; }
 
 GameplaySettings * GameModule::getGameplay ( ) {
 
@@ -770,9 +771,11 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
 
             if ( Distance < TargetDistance ) {
 
-                Target = ActiveSpaceship;
-                TargetDistance = Distance;
-                TargetIntersection = Intersection; } } }
+                if ( RayShot.getIntersection( ActiveSpaceship->getShape(), Intersection, Distance ) ) {
+
+                    Target = ActiveSpaceship;
+                    TargetDistance = Distance;
+                    TargetIntersection = Intersection; } } } }
 
     for ( auto ActiveMissile : Missiles ) {
 
@@ -780,17 +783,19 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
 
             if ( Distance < TargetDistance ) {
 
-                Target = nullptr;
-                TargetDistance = Distance;
-                TargetIntersection = Intersection;
+                if ( RayShot.getIntersection( ActiveMissile->getShape(), Intersection, Distance ) ) {
 
-                if ( AffectMissiles ) {
+                    Target = nullptr;
+                    TargetDistance = Distance;
+                    TargetIntersection = Intersection;
 
-                    ActiveMissile->onShot();
+                    if ( AffectMissiles ) {
 
-                    // TODO PARTICLE EFFECT ON HIT
+                        ActiveMissile->onShot();
 
-                    } } } }
+                        // TODO PARTICLE EFFECT ON HIT
+
+                        } } } } }
 
     for ( auto ActivePlanet : Planets ) {
 
@@ -980,13 +985,11 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveAsteroid->getRadius() + ActivePlanet->getRadius() ) ) {
 
-                if ( true ) { // TODO ACCURATE CHECK
+                ParticleSystem * Explosion = ActiveAsteroid->onCollision( ActivePlanet );
 
-                    ParticleSystem * Explosion = ActiveAsteroid->onCollision( ActivePlanet );
+                if ( Explosion ) {
 
-                    if ( Explosion ) {
-
-                        ParticleSystems.push_back( Explosion ); } } } }
+                    ParticleSystems.push_back( Explosion ); } } }
 
         for ( auto ActiveSpaceship : Spaceships ) {
 
@@ -1024,13 +1027,11 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( FirstAsteroid->getRadius() + SecondAsteroid->getRadius() ) ) {
 
-                if ( true ) { // TODO ACCURATE CHECK
+                ParticleSystem * Explosion = FirstAsteroid->onCollision( SecondAsteroid );
 
-                    ParticleSystem * Explosion = FirstAsteroid->onCollision( SecondAsteroid );
+                if ( Explosion ) {
 
-                    if ( Explosion ) {
-
-                        ParticleSystems.push_back( Explosion ); } }} } }
+                    ParticleSystems.push_back( Explosion ); } } } }
 
     // Update asteroids' state
 
@@ -1079,7 +1080,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveSpaceship->getRadius() + ActivePlanet->getRadius() ) ) {
 
-                if ( true ) { // TODO ACCURATE CHECK
+                if ( ActiveSpaceship->getShape()->isIntersecting( ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
 
                     ParticleSystem * Explosion = ActiveSpaceship->onCollision( ActivePlanet );
 
@@ -1104,7 +1105,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveSpaceship->getRadius() + ActiveAsteroid->getRadius() ) ) {
 
-                if ( true ) { // TODO ACCURATE CHECK
+                if ( ActiveSpaceship->getShape()->isIntersecting( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
 
                     ParticleSystem * Explosion = ActiveSpaceship->onCollision( ActiveAsteroid );
 
@@ -1177,7 +1178,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                 if ( getDistance( FirstSpaceship->getPosition(), SecondSpaceship->getPosition() ) <= MinimumDistance ) {
 
-                    if ( true ) { // TODO ACCURATE CHECK
+                    if ( FirstSpaceship->getShape()->isIntersecting( SecondSpaceship->getShape() ) ) {
 
                         ParticleSystem * Explosion = FirstSpaceship->onCollision( SecondSpaceship );
 
@@ -1446,7 +1447,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveMissile->getRadius() + ActivePlanet->getRadius() ) ) {
 
-                if ( true ) { // TODO ACCURATE CHECK
+                if ( ActiveMissile->getShape()->isIntersecting( ActivePlanet->getPosition(), ActivePlanet->getRadius() ) ) {
 
                     ParticleSystem * Explosion = ActiveMissile->onCollision( ActivePlanet );
 
@@ -1466,7 +1467,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveMissile->getRadius() + ActiveAsteroid->getRadius() ) ) {
 
-                if ( true ) { // TODO ACCURATE CHECK
+                if ( ActiveMissile->getShape()->isIntersecting( ActiveAsteroid->getPosition(), ActiveAsteroid->getRadius() ) ) {
 
                     ParticleSystem * Explosion = ActiveMissile->onCollision( ActiveAsteroid );
 
@@ -1486,7 +1487,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
             if ( Distance <= ( ActiveMissile->getRadius() + ActiveSpaceship->getRadius() ) ) {
 
-                if ( true ) { // TODO ACCURATE CHECK
+                if ( ActiveMissile->getShape()->isIntersecting( ActiveSpaceship->getShape() ) ) {
 
                     ParticleSystem * Explosion = ActiveMissile->onCollision( ActiveSpaceship );
 
@@ -1522,7 +1523,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
                 if ( getDistance( FirstMissile->getPosition(), SecondMissile->getPosition() ) <= MinimumDistance ) {
 
-                    if ( true ) { // TODO ACCURATE CHECK
+                    if ( FirstMissile->getShape()->isIntersecting( SecondMissile->getShape() ) ) {
 
                         ParticleSystem * FirstExplosion = FirstMissile->onCollision( SecondMissile );
                         ParticleSystem * SecondExplosion = SecondMissile->onCollision( FirstMissile );

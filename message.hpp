@@ -12,7 +12,9 @@ public:
         None,
         InitTimeWarning,
         InitTimeError,
-        RunTimeError
+        RunTimeError,
+        LowPerformanceError,
+        WelcomeMessage
 
         };
 
@@ -33,7 +35,7 @@ private:
     bool Close;
     Types Type;
 
-    std::string Text [4];
+    std::string Text [6];
     unsigned int FontSize;
     float FontFix;
     float LineHeight;

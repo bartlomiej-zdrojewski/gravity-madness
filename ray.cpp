@@ -12,9 +12,9 @@ Ray::Ray ( sf::Vector2f Position, float Angle ) {
 
     if ( Angle == ( PI / 2.f ) && Angle == ( - PI / 2.f ) ) {
 
-        Angle += 0.01f; }
+        Angle += ALMOST_ZERO; }
 
-    xe = 1000000.f;
+    xe = ALMOST_INFINITY;
 
     if ( Angle > ( PI / 2.f ) ) {
 
@@ -38,6 +38,10 @@ Ray::Ray ( sf::Vector2f Position, float Angle ) {
     RayEnd = sf::Vector2f ( xe, a * xe + b );
     RayOpacity = 1.f; }
 
+bool Ray::isRenderingEnabled ( ) {
+
+    return RenderingTime.asSeconds() > 0.f; }
+
 void Ray::enableRendering ( ) {
 
     RenderingTime = RenderingDuration;
@@ -49,10 +53,6 @@ void Ray::enableRendering ( float Limit ) {
     RayEnd = sf::Vector2f ( Limit, a * Limit + b );
     RayOpacity = 1.f; }
 
-bool Ray::isRenderingEnabled ( ) {
-
-    return RenderingTime.asSeconds() > 0.f; }
-
 sf::Color Ray::getColor ( ) {
 
     return Color; }
@@ -60,6 +60,13 @@ sf::Color Ray::getColor ( ) {
 void Ray::setColor ( sf::Color Color ) {
 
     this->Color = Color; }
+
+bool Ray::getIntersection ( Shape * MyShape, sf::Vector2f &Intersection, float &Distance ) {
+
+    sf::Vector2f Begin = sf::Vector2f( xs, a * xs + b );
+    sf::Vector2f End = sf::Vector2f( xe, a * xe + b );
+
+    return MyShape->getIntersection( Begin, End, Intersection, Distance ); }
 
 bool Ray::getIntersection ( sf::Vector2f Center, float Radius, sf::Vector2f &Intersection, float &Distance ) {
 

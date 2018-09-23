@@ -2,6 +2,8 @@
 
 Spaceship::~Spaceship ( ) {
 
+    delete MyShape;
+
     if ( Controller ) {
 
         Controller->setSpaceship( nullptr ); } }
@@ -17,6 +19,10 @@ void Spaceship::setController ( SpaceshipController * Controller ) {
     if ( Controller ) {
 
         Controller->setSpaceship( this ); } }
+
+Shape * Spaceship::getShape ( ) {
+
+    return MyShape; }
 
 sf::FloatRect Spaceship::getInfluenceArea ( ) {
 
@@ -311,7 +317,10 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
                 MissileCount--; } } }
 
     updatePosition( ElapsedTime );
-    ThrusterExhaust.update( ElapsedTime ); }
+    ThrusterExhaust.update( ElapsedTime );
+
+    MyShape->setOrigin( getPosition() );
+    MyShape->setRotation( getVelocityAngle() ); }
 
 void Spaceship::render ( sf::RenderWindow &Window ) {
 
@@ -319,9 +328,9 @@ void Spaceship::render ( sf::RenderWindow &Window ) {
     sf::CircleShape Circle;
     Circle.setRadius( getRadius() );
     Circle.setOrigin( getRadius(), getRadius() );
-    Circle.setFillColor( sf::Color::Blue );
+    Circle.setFillColor( sf::Color( 255, 0, 0, 127 ) );
     Circle.setPosition( getPosition() );
-    //Window.draw( Circle );
+    Window.draw( Circle );
     // TODO TEMP
 
     sf::Sprite Sprite ( Texture );
@@ -351,7 +360,23 @@ void Spaceship::render ( sf::RenderWindow &Window ) {
     ThrusterExhaust.render( Window );
     Window.draw( ThrusterSprite );
     Window.draw( Sprite );
-    Window.draw( AccentSprite ); }
+    Window.draw( AccentSprite );
+
+
+    // TODO TEMP
+    sf::VertexArray Array;
+    Array.setPrimitiveType( sf::PrimitiveType::Lines );
+
+    for ( Shape::Segment &MySegment : MyShape->getOutline() ) {
+
+        Array.append( sf::Vertex( MySegment.Begin, sf::Color::Green ) );
+        Array.append( sf::Vertex( MySegment.End, sf::Color::Green ) ); }
+
+    Window.draw( Array );
+    // TODO TEMP
+
+
+    }
 
 void Spaceship::render ( sf::RenderTexture &Buffer ) {
 

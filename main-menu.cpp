@@ -461,13 +461,13 @@ void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
         if ( std::fabs( SignedDistance ) > MaximumDistance ) {
 
-            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) { // TODO sqn(A) != sgn(B) <=> ( A * B ) < 0
+            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) { // TODO sgn(A) != sgn(B) <=> ( A * B ) < 0 || ( A = 0 && B != 0 ) || ( A != 0 && B = 0 )
 
                 Factor *= 2.5; } }
 
         if ( std::fabs( MenuOptionPointerPosition.y ) > ( 1.25 * Graphics->getWindowHeight() ) ) {
 
-            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) { // TODO sqn(A) != sgn(B) <=> ( A * B ) < 0
+            if ( ( SignedDistance > 0.f && MenuOptionPointerVelocity < 0.f ) || ( SignedDistance < 0.f && MenuOptionPointerVelocity > 0.f ) ) { // TODO sgn(A) != sgn(B) <=> ( A * B ) < 0 || ( A = 0 && B != 0 ) || ( A != 0 && B = 0 )
 
                 MenuOptionPointerVelocity = 0.f; } }
 

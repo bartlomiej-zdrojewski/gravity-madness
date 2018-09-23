@@ -1,5 +1,9 @@
 #include "missile.hpp"
 
+Missile::~Missile ( ) {
+
+    delete MyShape; }
+
 void Missile::setSpaceship ( Spaceship * MySpaceship ) {
 
     this->MySpaceship = MySpaceship; }
@@ -7,6 +11,10 @@ void Missile::setSpaceship ( Spaceship * MySpaceship ) {
 void Missile::setScoreCounter ( ScoreCounter * MyScore ) {
 
     this->MyScore = MyScore; }
+
+Shape * Missile::getShape ( ) {
+
+    return MyShape; }
 
 sf::FloatRect Missile::getInfluenceArea ( ) {
 
@@ -109,11 +117,12 @@ void Missile::update ( sf::Time ElapsedTime ) {
 
                 ThrusterAngleOffset = 0.f; } }
 
+        Thrust -= ThrustReduction * ElapsedTime.asSeconds();
+
         sf::Vector2f ThrusterPosition = getPosition();
         ThrusterPosition += ( SQRT2_2ND * 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
         ThrusterPosition += ( SQRT2_2ND * 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
 
-        Thrust -= ThrustReduction * ElapsedTime.asSeconds();
         ThrusterExhaust.setOriginPosition( ThrusterPosition );
 
         if ( Thrust > 0.f ) {
@@ -132,18 +141,12 @@ void Missile::update ( sf::Time ElapsedTime ) {
             ThrusterExhaust.generateParticles( (unsigned int) ( ( Thrust / 100.f ) * 200 * ElapsedTime.asSeconds() ) ); }
 
         updatePosition( ElapsedTime );
-        ThrusterExhaust.update( ElapsedTime ); } }
+        ThrusterExhaust.update( ElapsedTime );
+
+        MyShape->setOrigin( getPosition() );
+        MyShape->setRotation( getVelocityAngle() ); } }
 
 void Missile::render ( sf::RenderWindow &Window ) {
-
-    // TODO TEMP
-    sf::CircleShape Circle;
-    Circle.setRadius( getRadius() );
-    Circle.setOrigin( getRadius(), getRadius() );
-    Circle.setPosition( getPosition() );
-    Circle.setFillColor( sf::Color( 0, 0, 255 ) );
-    //Window.draw( Circle );
-    // TODO TEMP
 
     sf::Sprite Sprite ( Texture );
     sf::Sprite ThrusterSprite ( ThrusterTexture );

@@ -9,6 +9,7 @@
 #include "logger.hpp"
 #include "score-counter.hpp"
 #include "script.hpp"
+#include "shape.hpp"
 
 class GameplaySettings : public Logger {
 
@@ -57,6 +58,7 @@ public:
         std::string AccentTexture;
         float Mass;
         float Radius;
+        std::string Shape;
         float HealthLimit;
         float HealthRestoration;
         float EnergyLimit;

@@ -10,6 +10,7 @@
 #include "particle-system.hpp"
 #include "planet.hpp"
 #include "score-counter.hpp"
+#include "shape.hpp"
 
 class Missile : public Body {
 
@@ -19,7 +20,11 @@ public:
 
         MySpaceship = nullptr;
         MyScore = nullptr;
+        MyShape = new Shape ( );
         Target = nullptr;
+
+        MyShape->loadOutline( "(0.71,0.00),(0.53,13.00),(0.12,104.00),(0.50,135.00),(0.68,153.00),(0.35,162.00),(0.50,162.00),"
+                              "(0.50,-162.00),(0.35,-162.00),(0.68,-153.00),(0.50,-135.00),(0.12,-104.00),(0.53,-13.00)", 20.f );
 
         Thrust = 250.f;
         ThrustReduction = 25.f;
@@ -32,9 +37,12 @@ public:
         ExplosionDelay = sf::seconds( 5.f );
         ExplosionTime = ExplosionDelay; }
 
+    ~ Missile ( );
+
     void setSpaceship ( Spaceship * MySpaceship );
     void setScoreCounter ( ScoreCounter * MyScore );
 
+    Shape * getShape ( );
     sf::FloatRect getInfluenceArea ( );
 
     float getExplosionPower ( );
@@ -70,6 +78,7 @@ private:
 
     Spaceship * MySpaceship;
     ScoreCounter * MyScore;
+    Shape * MyShape;
     Spaceship * Target;
 
     float Thrust;

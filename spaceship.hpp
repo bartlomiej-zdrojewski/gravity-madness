@@ -7,6 +7,7 @@
 #include "constants.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
+#include "shape.hpp"
 
 class Asteroid;
 class SpaceshipController;
@@ -17,6 +18,7 @@ public:
 
     explicit Spaceship ( float Mass, float Radius ) : Body ( Mass, Radius ) {
 
+        MyShape = new Shape ( );
         Controller = nullptr;
         RayShot = false;
         MissileShot = false;
@@ -42,6 +44,7 @@ public:
     SpaceshipController * getController ( );
     void setController ( SpaceshipController * Controller );
 
+    Shape * getShape ( );
     sf::FloatRect getInfluenceArea ( );
 
     float getHealth ( );
@@ -98,6 +101,7 @@ public:
 
 private:
 
+    Shape * MyShape;
     SpaceshipController * Controller;
 
     bool RayShot;

@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "player-interface.hpp"
 
 PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
@@ -89,7 +91,7 @@ void PlayerInterface::disableArrow ( ) {
 
 void PlayerInterface::displayNotification ( std::string Notification ) {
 
-    NextNotification = Notification; }
+    NextNotification = std::move( Notification ); }
 
 void PlayerInterface::beginFadeOut ( ) {
 

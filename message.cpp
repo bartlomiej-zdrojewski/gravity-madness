@@ -17,7 +17,14 @@ Message::Message ( GraphicsModule * Graphics ) {
               "For more details check log file or contact support team.";
     Text[3] = "During game runtime one or more errors have been reported.\n"
               "As a result, the game can not be continued and will be closed now.\n"
-              "For more details check log file or contact support team."; }
+              "For more details check log file or contact support team.";
+    Text[4] = ""; // TODO LOW PERFORMANCE ERROR
+    Text[5] = "Hey! My name is Bartek and I'm a creator of this game. I've had loads of fun making it\n"
+              "and I hope you'll have too by playing it. But before that, I've got some tips for you:\n"
+              "1) If you need it, there is an epilepsy protection that can be enabled in settings section.\n"
+              "2) Remember to choose graphic card instead of cpu. Everything look so much cooler with it!\n"
+              "3) I strongly recommend you to try the tutorial. The controls are not that obvious.\n"
+              "That's all for now. Thanks again and have fun!"; }
 
 void Message::setType ( Types Type ) {
 
@@ -51,6 +58,18 @@ void Message::update ( ) {
         case Types::RunTimeError: {
 
             TextPrototype.setString( Text[3] );
+
+            break; }
+
+        case Types::LowPerformanceError: {
+
+            TextPrototype.setString( Text[4] );
+
+            break; }
+
+        case Types::WelcomeMessage: {
+
+            TextPrototype.setString( Text[5] );
 
             break; }
 
@@ -163,6 +182,18 @@ void Message::render ( sf::RenderWindow &Window ) {
         case Types::RunTimeError: {
 
             FullText = Text[3];
+
+            break; }
+
+        case Types::LowPerformanceError: {
+
+            TextPrototype.setString( Text[4] );
+
+            break; }
+
+        case Types::WelcomeMessage: {
+
+            TextPrototype.setString( Text[5] );
 
             break; }
 
