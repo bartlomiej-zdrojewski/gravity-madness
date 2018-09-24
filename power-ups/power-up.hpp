@@ -2,6 +2,7 @@
 #define GRAVITY_MADNESS_POWER_UP
 
 #include <SFML/Graphics.hpp>
+#include "../graphics-module.hpp"
 #include "../spaceship.hpp"
 
 class PowerUp {
@@ -9,6 +10,14 @@ class PowerUp {
 public:
 
     PowerUp ( sf::Time Duration, float * Gravity, unsigned int * AsteroidCount );
+
+    virtual void * clone ( ) {
+
+        return nullptr; }
+
+    virtual void * clone ( GraphicsModule * Graphics ) {
+
+        return nullptr; }
 
     bool isCaught ( );
     bool isExpired ( );
@@ -23,7 +32,7 @@ public:
     float getInfluenceRadius ( );
 
     void update ( sf::Time ElapsedTime );
-    void render ( sf::RenderWindow &Window );
+    void render ( sf::RenderWindow &Window, bool Debug = false );
     void finish ( );
 
     void onCatch ( Spaceship * MySpaceship );
@@ -60,6 +69,7 @@ private:
     sf::Time OscillationTime;
     sf::Vector2f OscillationFrequency;
     sf::Time ExistenceTime;
+    sf::Time ExistenceDuration;
 
     };
 

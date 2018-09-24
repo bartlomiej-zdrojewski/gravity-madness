@@ -5,12 +5,6 @@ MainMenu::MainMenu ( GraphicsModule * Graphics, GameplaySettings * Gameplay ) {
     this->Graphics = Graphics;
     this->Gameplay = Gameplay;
 
-    Launch = false;
-    Terminate = false;
-    VideoChanged = false;
-    SettingsChanged = false;
-    Mode = MenuMode;
-
     MenuOptionCount = 5;
     MenuOptionText[0] = "Play now";
     MenuOptionText[1] = "Customize everything\nand play as you like";
@@ -203,6 +197,13 @@ void MainMenu::render ( sf::RenderWindow &Window ) {
 
 void MainMenu::reset ( ) {
 
+    LaunchGame = false;
+    LaunchTutorial = false;
+    Terminate = false;
+    VideoChanged = false;
+    SettingsChanged = false;
+    Mode = MenuMode;
+
     WindowWidth = Graphics->getWindowWidth();
     WindowHeight = Graphics->getWindowHeight();
     FullScreen = Graphics->isFullScreenEnabled();
@@ -254,21 +255,28 @@ void MainMenu::reset ( ) {
     ParticleIndexes.clear();
     ParticleVelocities.clear();
 
-    updateMenu( sf::seconds( 0.01f ) );
-    updateGameplaySection( sf::seconds( 0.01f ) );
-    updateSpaceshipsSection( sf::seconds( 0.01f ) );
-    updateSettingsSection( sf::seconds( 0.01f ) );
-    updateControllersSection( sf::seconds( 0.01f ) );
-    updateBackground( sf::seconds( 0.01f ) ); }
+    updateMenu( sf::seconds( ALMOST_NO_TIME ) );
+    updateGameplaySection( sf::seconds( ALMOST_NO_TIME ) );
+    updateSpaceshipsSection( sf::seconds( ALMOST_NO_TIME ) );
+    updateSettingsSection( sf::seconds( ALMOST_NO_TIME ) );
+    updateControllersSection( sf::seconds( ALMOST_NO_TIME ) );
+    updateBackground( sf::seconds( ALMOST_NO_TIME ) ); }
 
-bool MainMenu::onLaunch ( ) {
+bool MainMenu::onLaunchTutorial ( ) {
 
-    if ( Launch ) {
+    if ( LaunchTutorial ) {
 
-        Launch = false;
-        Terminate = false;
+        reset();
 
-        setMode( Modes::MenuMode );
+        return true; }
+
+    return false; }
+
+bool MainMenu::onLaunchGame ( ) {
+
+    if ( LaunchGame ) {
+
+        reset();
 
         return true; }
 
@@ -278,8 +286,7 @@ bool MainMenu::onTerminate ( ) {
 
     if ( Terminate ) {
 
-        Launch = false;
-        Terminate = false;
+        reset();
 
         return true; }
 
@@ -294,8 +301,6 @@ bool MainMenu::onVideoChanged ( ) {
         Graphics->setAntialiasingLevel( AntialiasingLevel );
 
         reset();
-
-        VideoChanged = false;
 
         return true; }
 
@@ -520,7 +525,7 @@ void MainMenu::updateMenu ( sf::Event &Event ) {
 
                     case 0: {
 
-                        Launch = true;
+                        LaunchGame = true;
 
                         break; }
 
@@ -532,7 +537,7 @@ void MainMenu::updateMenu ( sf::Event &Event ) {
 
                     case 2: {
 
-                        // TODO TUTORIAL
+                        LaunchTutorial = true;
 
                         break; }
 
@@ -558,7 +563,7 @@ void MainMenu::updateMenu ( sf::Event &Event ) {
 
                     case 0: {
 
-                        Launch = true;
+                        LaunchGame = true;
 
                         break; }
 
@@ -570,7 +575,7 @@ void MainMenu::updateMenu ( sf::Event &Event ) {
 
                     case 2: {
 
-                        // TODO TUTORIAL
+                        LaunchTutorial = true;
 
                         break; }
 
@@ -1452,7 +1457,7 @@ void MainMenu::updateSpaceshipsSection ( sf::Event &Event ) {
                     SpaceshipOption = 0;
                     SpaceshipCardsOffsetDirection = 0.f;
 
-                    Launch = true; }
+                    LaunchGame = true; }
 
                 else {
 
@@ -1471,7 +1476,7 @@ void MainMenu::updateSpaceshipsSection ( sf::Event &Event ) {
                     SpaceshipOption = 0;
                     SpaceshipCardsOffsetDirection = 0.f;
 
-                    Launch = true; }
+                    LaunchGame = true; }
 
                 else {
 

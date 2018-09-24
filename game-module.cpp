@@ -10,7 +10,7 @@ GameModule::GameModule ( GraphicsModule * Graphics ) {
 
         PlayerSpaceship[i] = nullptr;
         PlayerScore[i] = nullptr;
-        Interface[i] = nullptr; }
+        PlayerInterface[i] = nullptr; }
 
     reset(); }
 
@@ -106,7 +106,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
 
                     if ( getDistance(Position, ActivePlanet->getPosition() ) <= MinimumDistance ) {
 
-                        Position = sf::Vector2f( 1000000.f, 1000000.f );
+                        Position = sf::Vector2f( ALMOST_INFINITY, ALMOST_INFINITY );
 
                         break; } } }
 
@@ -168,9 +168,9 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
             PlayerSpaceship[i]->setController( new PlayerController ( Gameplay->getControllerSettings( i ) ) );
             PlayerScore[i]->addMultiplier( ScoreMultiplier );
             PlayerScore[i]->addMultiplier( Prototype.ScoreMultiplier );
-            Interface[i] = new PlayerInterface ( Graphics );
-            Interface[i]->setSpaceship( PlayerSpaceship[i] );
-            Interface[i]->setScoreCounter( PlayerScore[i] ); }
+            PlayerInterface[i] = new Interface ( Graphics );
+            PlayerInterface[i]->setSpaceship( PlayerSpaceship[i] );
+            PlayerInterface[i]->setScoreCounter( PlayerScore[i] ); }
 
         else { // Enemy
 
@@ -282,18 +282,18 @@ void GameModule::update ( ) {
 
         for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-            Interface[i]->setViewport( Views[i].getViewport() );
+            PlayerInterface[i]->setViewport( Views[i].getViewport() );
 
             if ( PlayerSpaceship[i] ) {
 
                 Views[i].setCenter( PlayerSpaceship[i]->getPosition() ); }
 
-            else if ( !Interface[i]->isFadedOut() ) {
+            else if ( !PlayerInterface[i]->isFadedOut() ) {
 
                 Views[i].setCenter( Views[i].getCenter() + PlayerFinalVelocity[i] * ElapsedTime.asSeconds() ); }
 
             PlayerScore[i]->update( ElapsedTime );
-            Interface[i]->update( ElapsedTime ); } }
+            PlayerInterface[i]->update( ElapsedTime ); } }
 
     else {
 
@@ -394,9 +394,9 @@ void GameModule::update ( ) {
 
                 for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-                    if ( !Interface[i]->isFadedOut() ) {
+                    if ( !PlayerInterface[i]->isFadedOut() ) {
 
-                        Interface[i]->beginFadeOut(); } } } }
+                        PlayerInterface[i]->beginFadeOut(); } } } }
 
         else {
 
@@ -428,9 +428,9 @@ void GameModule::update ( sf::Event &Event ) {
 
                 for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-                    if ( !Interface[i]->isFadedOut() ) {
+                    if ( !PlayerInterface[i]->isFadedOut() ) {
 
-                        Interface[i]->endFadeOut(); } } } } }
+                        PlayerInterface[i]->endFadeOut(); } } } } }
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -438,7 +438,9 @@ void GameModule::update ( sf::Event &Event ) {
 
             PlayerSpaceship[i]->update( Event ); } } }
 
-void GameModule::render ( sf::RenderWindow &Window ) {
+void GameModule::render ( sf::RenderWindow &Window, bool Debug ) {
+
+    Debug = true; // TODO DELETE
 
     if ( PlayerCount > 0 ) { // Players' view (for game mode)
 
@@ -446,7 +448,7 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
             Window.setView( Views[i] );
 
-            if ( PlayerSpaceship[i] || !Interface[i]->isFadedOut() ) {
+            if ( PlayerSpaceship[i] || !PlayerInterface[i]->isFadedOut() ) {
 
                 renderAreaLimit( Window );
 
@@ -464,7 +466,7 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
                     if ( isOnScreen( Views[i], ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
 
-                        ActivePowerUp->render( Window ); } }
+                        ActivePowerUp->render( Window, Debug ); } }
 
                 for ( auto ActivePlanet : Planets ) {
 
@@ -482,17 +484,17 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
                     if ( isOnScreen( Views[i], ActiveSpaceship->getInfluenceArea() ) ) {
 
-                        ActiveSpaceship->render( Window ); } }
+                        ActiveSpaceship->render( Window, Debug ); } }
 
                 for ( auto ActiveMissile : Missiles ) {
 
                     if ( isOnScreen( Views[i], ActiveMissile->getInfluenceArea() ) ) {
 
-                        ActiveMissile->render( Window ); } } }
+                        ActiveMissile->render( Window, Debug ); } } }
 
             Window.setView( Window.getDefaultView() );
 
-            Interface[i]->render( Window ); }
+            PlayerInterface[i]->render( Window ); }
 
         renderViewsOutline( Window ); }
 
@@ -523,7 +525,7 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
             if ( isOnScreen( NoPlayerView, ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
 
-                ActivePowerUp->render( Window ); } }
+                ActivePowerUp->render( Window, Debug ); } }
 
         for ( auto ActivePlanet : Planets ) {
 
@@ -541,13 +543,13 @@ void GameModule::render ( sf::RenderWindow &Window ) {
 
             if ( isOnScreen( NoPlayerView, ActiveSpaceship->getInfluenceArea() ) ) {
 
-                ActiveSpaceship->render( Window ); } }
+                ActiveSpaceship->render( Window, Debug ); } }
 
         for ( auto ActiveMissile : Missiles ) {
 
             if ( isOnScreen( NoPlayerView, ActiveMissile->getInfluenceArea() ) ) {
 
-                ActiveMissile->render( Window ); } }
+                ActiveMissile->render( Window, Debug ); } }
 
         Window.setView( Window.getDefaultView() ); } }
 
@@ -559,8 +561,8 @@ void GameModule::reset ( ) {
     EndingCondition = false;
 
     Gravity = 1.f;
-    DetectionDistance = 600.f;
-    AreaRadius = 1500.f;
+    DetectionDistance = 800.f;
+    AreaRadius = 2500.f;
     ScoreMultiplier = 1.f;
     IntentionalCollisionDuration = sf::seconds( 1.5f );
     SkipProtectionTime = sf::seconds( 0.5f );
@@ -583,13 +585,14 @@ void GameModule::reset ( ) {
             delete PlayerSpaceship[i]->getController();
             PlayerSpaceship[i]->setController( nullptr ); }
 
-        if ( Interface[i] ) {
+        if ( PlayerInterface[i] ) {
 
-            Interface[i]->setSpaceship( nullptr );
-            delete Interface[i]; }
+            PlayerInterface[i]->setSpaceship( nullptr );
+            delete PlayerInterface[i]; }
 
         PlayerSpaceship[i] = nullptr;
-        Interface[i] = nullptr; }
+        PlayerScore[i] = nullptr;
+        PlayerInterface[i] = nullptr; }
 
     for ( auto i = Planets.begin(); i != Planets.end(); ) {
 
@@ -651,7 +654,7 @@ bool GameModule::onTerminate ( ) {
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        if ( !Interface[i]->isFadedOut() ) {
+        if ( !PlayerInterface[i]->isFadedOut() ) {
 
             FadedOut = false;
 
@@ -732,15 +735,12 @@ void GameModule::destructBody ( Body * Object ) {
 
         if ( Object == PlayerSpaceship[i] ) {
 
-            Interface[i]->update( sf::seconds( 0.01f ) );
-            Interface[i]->beginFadeOut();
-
-            delete PlayerSpaceship[i]->getController();
-            PlayerSpaceship[i]->setController( nullptr );
+            PlayerInterface[i]->update( sf::seconds( ALMOST_NO_TIME ) );
+            PlayerInterface[i]->beginFadeOut();
 
             PlayerFinalVelocity[i] = PlayerSpaceship[i]->getVelocity();
             PlayerSpaceship[i] = nullptr;
-            Interface[i]->setSpaceship( nullptr );
+            PlayerInterface[i]->setSpaceship( nullptr );
 
             break; } }
 
@@ -750,12 +750,12 @@ void GameModule::displayNotification ( std::string Message ) {
 
     for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-        Interface[i]->displayNotification( Message ); } }
+        PlayerInterface[i]->displayNotification( Message ); } }
 
 Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Intersection, bool AffectMissiles ) {
 
     Spaceship * Target = nullptr;
-    float TargetDistance = 1000000.f;
+    float TargetDistance = ALMOST_INFINITY;
     sf::Vector2f TargetIntersection = Requester->getPosition();
 
     float Distance;
@@ -823,7 +823,7 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
 
 Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float DetectionAngle, float &Distance, float &Angle ) {
 
-    float TargetDistance = 1000000.f;
+    float TargetDistance = ALMOST_INFINITY;
     Spaceship * Target = nullptr;
     Angle = PI;
 
@@ -860,13 +860,13 @@ Spaceship * GameModule::getAngularTarget ( Spaceship * Requester, float Detectio
 
     else {
 
-        Distance = 1000000.f; }
+        Distance = ALMOST_INFINITY; }
 
     return Target; }
 
 Spaceship * GameModule::getAngularTarget ( Missile * Requester, float DetectionAngle ) {
 
-    float TargetDistance = 1000000.f;
+    float TargetDistance = ALMOST_INFINITY;
     Spaceship * Target = nullptr;
 
     for ( auto ActiveSpaceship : Spaceships ) {
@@ -891,7 +891,7 @@ Spaceship * GameModule::getAngularTarget ( Missile * Requester, float DetectionA
 
 PowerUp * GameModule::detectPowerUp ( Spaceship * Requester, float &Distance, float &Angle ) {
 
-    float TargetDistance = 1000000.f;
+    float TargetDistance = ALMOST_INFINITY;
     PowerUp * Target = nullptr;
     Angle = PI;
 
@@ -920,7 +920,7 @@ PowerUp * GameModule::detectPowerUp ( Spaceship * Requester, float &Distance, fl
 
     else {
 
-        Distance = 1000000.f; }
+        Distance = ALMOST_INFINITY; }
 
     return Target; }
 
@@ -965,7 +965,7 @@ void GameModule::updateAsteroids ( sf::Time ElapsedTime ) {
         float Distance = AreaRadius + 1000.f;
 
         NewAsteroid->setPosition( sf::Vector2f( Distance * cosf( Angle ), Distance * sinf( Angle ) ) );
-        NewAsteroid->setVelocity( sf::Vector2f( 50.f * cosf( Angle - PI + AngleFluctuation ), 50.f * sinf( Angle - PI + AngleFluctuation ) ) );
+        NewAsteroid->setVelocity( sf::Vector2f( 60.f * cosf( Angle - PI + AngleFluctuation ), 60.f * sinf( Angle - PI + AngleFluctuation ) ) );
 
         Asteroids.push_back( NewAsteroid ); }
 
@@ -1060,7 +1060,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
         sf::Vector2f AccelerationSum;
 
-        float ClosestBodyDistance = 1000000.f;
+        float ClosestBodyDistance = ALMOST_INFINITY;
         sf::Vector2f ClosestBodyAcceleration;
 
         for ( auto ActivePlanet : Planets ) {
@@ -1119,7 +1119,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                             if ( PlayerSpaceship[i] == ActiveSpaceship ) {
 
-                                Interface[i]->onDamage();
+                                PlayerInterface[i]->onDamage();
 
                                 break; } } } } } }
 
@@ -1142,7 +1142,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     if ( PlayerSpaceship[i] == ActiveSpaceship ) {
 
-                        Interface[i]->enableArrow();
+                        PlayerInterface[i]->enableArrow();
 
                         break; } } }
 
@@ -1152,7 +1152,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     if ( PlayerSpaceship[i] == ActiveSpaceship ) {
 
-                        Interface[i]->disableArrow();
+                        PlayerInterface[i]->disableArrow();
 
                         break; } } }
 
@@ -1192,7 +1192,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                                 if ( PlayerSpaceship[i] == FirstSpaceship ) {
 
-                                    Interface[i]->onDamage();
+                                    PlayerInterface[i]->onDamage();
 
                                     auto * NewIntentionalCollision = new IntentionalCollision ( );
 
@@ -1210,7 +1210,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                                 if ( PlayerSpaceship[i] == SecondSpaceship ) {
 
-                                    Interface[i]->onDamage();
+                                    PlayerInterface[i]->onDamage();
 
                                     auto * NewIntentionalCollision = new IntentionalCollision ( );
 
@@ -1302,7 +1302,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                         if ( PlayerSpaceship[i] == Target ) {
 
-                            Interface[i]->onDamage();
+                            PlayerInterface[i]->onDamage();
 
                             break; } } }
 
@@ -1420,6 +1420,9 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                             displayNotification( AlivePlayersNotification ); } } } }
 
+            delete (*i)->getController();
+            (*i)->setController( nullptr );
+
             updateIntentionalCollisions( *i );
             destructBody( *i );
 
@@ -1501,7 +1504,7 @@ void GameModule::updateMissiles ( sf::Time ElapsedTime ) {
 
                             if ( PlayerSpaceship[i] == ActiveSpaceship ) {
 
-                                Interface[i]->onDamage();
+                                PlayerInterface[i]->onDamage();
 
                                 break; } } }
 
@@ -1569,12 +1572,12 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
         PowerUpPauseTime = PowerUpPauseDuration;
 
-        sf::Vector2f Position ( 1000000.f, 1000000.f );
+        sf::Vector2f Position ( ALMOST_INFINITY, ALMOST_INFINITY );
         float MinimumPlanetDistance = 200.f;
         float MinimumPowerUpDistance = 100.f;
         unsigned int Attempts = 25;
 
-        while ( Attempts > 0 && Position == sf::Vector2f ( 1000000.f, 1000000.f ) ) {
+        while ( Attempts > 0 && Position == sf::Vector2f ( ALMOST_INFINITY, ALMOST_INFINITY ) ) {
 
             float Angle = ( - PI ) + getRandomFloat() * 2.f * PI;
 
@@ -1587,7 +1590,7 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
                     if ( getDistance( Position, ActivePlanet->getPosition() ) <= ( MinimumPlanetDistance + ActivePlanet->getRadius() ) ) {
 
-                        Position = sf::Vector2f ( 1000000.f, 1000000.f );
+                        Position = sf::Vector2f ( ALMOST_INFINITY, ALMOST_INFINITY );
 
                         break; } } }
 
@@ -1597,7 +1600,7 @@ void GameModule::updatePowerUps ( sf::Time ElapsedTime ) {
 
                     if ( getDistance( Position, ActivePowerUp->getPosition() ) <= ( MinimumPowerUpDistance + ActivePowerUp->getRadius() ) ) {
 
-                        Position = sf::Vector2f ( 1000000.f, 1000000.f );
+                        Position = sf::Vector2f ( ALMOST_INFINITY, ALMOST_INFINITY );
 
                         break; } } }
 
@@ -1801,7 +1804,7 @@ void GameModule::updateIntentionalCollisions ( Spaceship * DestructedSpaceship )
             Collision->Score->update( ScoreCounter::Event::Collision, Collision->Time.asSeconds() );
             Collision->Time = sf::seconds( 0.f ); } }
 
-    updateIntentionalCollisions( sf::seconds( 0.01f ) ); }
+    updateIntentionalCollisions( sf::seconds( ALMOST_NO_TIME ) ); }
 
 void GameModule::updateViews ( ) {
 
@@ -1815,9 +1818,9 @@ void GameModule::updateViews ( ) {
 
     if ( PlayerCount > 1 ) {
 
-        if ( Interface[0]->getFadeInAlpha() != 0.f ) {
+        if ( PlayerInterface[0]->getFadeInAlpha() != 0.f ) {
 
-            ViewOutlineColor.a = (sf::Uint8) ( 255 * ( 1.f - Interface[0]->getFadeInAlpha() ) ); }
+            ViewOutlineColor.a = (sf::Uint8) ( 255 * ( 1.f - PlayerInterface[0]->getFadeInAlpha() ) ); }
 
         else if ( EndingCondition ) {
 
@@ -1825,7 +1828,7 @@ void GameModule::updateViews ( ) {
 
             for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
-                Alpha = fminf( Alpha, Interface[i]->getFadeOutAlpha() ); }
+                Alpha = fminf( Alpha, PlayerInterface[i]->getFadeOutAlpha() ); }
 
             ViewOutlineColor.a = (sf::Uint8) ( 255 * ( 1.f - Alpha ) ); } }
 
@@ -1905,12 +1908,14 @@ void GameModule::renderViewsOutline ( sf::RenderWindow &Window ) {
 
 void GameModule::initAreaLimit ( ) {
 
-    AreaLimit.resize( 1000 );
+    auto VertexCount = (unsigned int) ( 0.4f * AreaRadius );
 
-    for ( unsigned int i = 0; i < 1000; i++ ) {
+    AreaLimit.resize( VertexCount );
 
-        AreaLimit[i].position.x = AreaRadius * cosf( 2.f * PI * ( i / 1000.f ) );
-        AreaLimit[i].position.y = AreaRadius * sinf( 2.f * PI * ( i / 1000.f ) );
+    for ( unsigned int i = 0; i < VertexCount; i++ ) {
+
+        AreaLimit[i].position.x = AreaRadius * cosf( 2.f * PI * ( (float) i / ( 0.4f * AreaRadius ) ) );
+        AreaLimit[i].position.y = AreaRadius * sinf( 2.f * PI * ( (float) i / ( 0.4f * AreaRadius ) ) );
         AreaLimit[i].color = sf::Color::White; } }
 
 void GameModule::renderAreaLimit ( sf::RenderWindow &Window ) {

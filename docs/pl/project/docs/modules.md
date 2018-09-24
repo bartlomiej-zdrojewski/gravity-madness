@@ -117,7 +117,7 @@ graczy oraz maksymalną ilość asteroid i bonusów
 * Generuje [obiekty bazowe](gameplay/#obiekty-bazowe), czyli planety i
 statki
 * Tworzy
-[interfejsy](classes/#playerinterface)
+[interfejsy](classes/#Interface)
 i
 [liczniki punktów](classes/#scorecounter)
 dla wszystkich graczy

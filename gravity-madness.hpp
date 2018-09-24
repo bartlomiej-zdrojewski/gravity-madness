@@ -23,7 +23,7 @@
 #include "logger-manager.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
-#include "player-interface.hpp"
+#include "interface.hpp"
 #include "ray.hpp"
 #include "script.hpp"
 #include "spaceship.hpp"

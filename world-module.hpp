@@ -25,6 +25,7 @@ public:
         RunTimeErrorMode,
         MainMenuMode,
         GameMode,
+        TutorialMode,
         PauseMenuMode,
         ScoreBoardMode,
         DebugMode
@@ -41,6 +42,7 @@ public:
         Graphics = nullptr;
         // Audio = nullptr;
         Game = nullptr;
+        Tutorial = nullptr;
         Debug = nullptr;
         Gameplay = nullptr;
         MyMainMenu = nullptr;
@@ -113,6 +115,7 @@ private:
     GraphicsModule * Graphics;
     // AudioModule * Audio;
     GameModule * Game;
+    TutorialModule * Tutorial;
     DebugModule * Debug;
     GameplaySettings * Gameplay;
     MainMenu * MyMainMenu;

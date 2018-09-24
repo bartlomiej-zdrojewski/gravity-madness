@@ -146,7 +146,17 @@ void Missile::update ( sf::Time ElapsedTime ) {
         MyShape->setOrigin( getPosition() );
         MyShape->setRotation( getVelocityAngle() ); } }
 
-void Missile::render ( sf::RenderWindow &Window ) {
+void Missile::render ( sf::RenderWindow &Window, bool Debug ) {
+
+    if ( Debug ) {
+
+        sf::CircleShape CollisionCircle;
+        CollisionCircle.setRadius( getRadius() );
+        CollisionCircle.setOrigin( getRadius(), getRadius() );
+        CollisionCircle.setPosition( getPosition() );
+        CollisionCircle.setFillColor( sf::Color( 0, 255, 0, 64 ) );
+
+        Window.draw( CollisionCircle ); }
 
     sf::Sprite Sprite ( Texture );
     sf::Sprite ThrusterSprite ( ThrusterTexture );
@@ -167,7 +177,19 @@ void Missile::render ( sf::RenderWindow &Window ) {
 
     ThrusterExhaust.render( Window );
     Window.draw( ThrusterSprite );
-    Window.draw( Sprite ); }
+    Window.draw( Sprite );
+
+    if ( Debug ) {
+
+        sf::VertexArray ShapeVertexes;
+        ShapeVertexes.setPrimitiveType( sf::PrimitiveType::Lines );
+
+        for ( Shape::Segment &MySegment : MyShape->getOutline() ) {
+
+            ShapeVertexes.append( sf::Vertex( MySegment.Begin, sf::Color::Green ) );
+            ShapeVertexes.append( sf::Vertex( MySegment.End, sf::Color::Green ) ); }
+
+        Window.draw( ShapeVertexes ); } }
 
 void Missile::render ( sf::RenderTexture &Buffer ) {
 

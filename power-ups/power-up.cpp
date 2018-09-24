@@ -1,3 +1,4 @@
+#include <iostream>
 #include "power-up.hpp"
 
 PowerUp::PowerUp ( sf::Time Duration, float * Gravity, unsigned int * AsteroidCount ) {
@@ -13,7 +14,8 @@ PowerUp::PowerUp ( sf::Time Duration, float * Gravity, unsigned int * AsteroidCo
 
     FadeDuration = sf::seconds( 1.f );
     OscillationFrequency = sf::Vector2f( 0.25f + getRandomFloat() * 0.25f, 0.25f + getRandomFloat() * 0.25f );
-    ExistenceTime = Duration; }
+    ExistenceDuration = Duration;
+    ExistenceTime = ExistenceDuration; }
 
 bool PowerUp::isCaught ( ) {
 
@@ -73,12 +75,21 @@ void PowerUp::update ( sf::Time ElapsedTime ) {
 
             updateEffect( ElapsedTime ); } } }
 
-void PowerUp::render ( sf::RenderWindow &Window ) {
+void PowerUp::render ( sf::RenderWindow &Window, bool Debug ) {
 
     if ( !Caught ) {
 
-        sf::Sprite Sprite ( Texture );
+        if ( Debug ) {
 
+            sf::CircleShape CollisionCircle;
+            CollisionCircle.setRadius( getInfluenceRadius() );
+            CollisionCircle.setOrigin( getInfluenceRadius(), getInfluenceRadius() );
+            CollisionCircle.setPosition( getPosition() );
+            CollisionCircle.setFillColor( sf::Color( 0, 255, 0, 64 ) );
+
+            Window.draw( CollisionCircle ); }
+
+        sf::Sprite Sprite ( Texture );
         Sprite.setOrigin( Texture.getSize().x / 2.f, Texture.getSize().y / 2.f );
         Sprite.setScale( ( 2.f * getRadius() ) / Texture.getSize().x, ( 2.f * getRadius() ) / Texture.getSize().y );
         Sprite.setPosition( getPosition() + getRadius() * sf::Vector2f( cosf( PI * OscillationTime.asSeconds() * OscillationFrequency.x ), sinf( PI * OscillationTime.asSeconds() * OscillationFrequency.y ) ) );

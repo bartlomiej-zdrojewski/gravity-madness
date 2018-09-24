@@ -18,7 +18,7 @@
 #include "missile.hpp"
 #include "particle-system.hpp"
 #include "planet.hpp"
-#include "player-interface.hpp"
+#include "interface.hpp"
 #include "power-ups/high-energy-power-up.hpp"
 #include "power-ups/high-gravity-power-up.hpp"
 #include "power-ups/high-health-power-up.hpp"
@@ -32,11 +32,13 @@
 #include "power-ups/random-gravity-power-up.hpp"
 #include "ray.hpp"
 #include "spaceship.hpp"
+#include "tutorial-module.hpp"
 
 class DebugModule;
 
 class GameModule {
 
+    friend class TutorialModule;
     friend class DebugModule;
 
 public:
@@ -49,7 +51,7 @@ public:
 
     void update ( );
     void update ( sf::Event &Event );
-    void render ( sf::RenderWindow &Window );
+    void render ( sf::RenderWindow &Window, bool Debug = false );
 
     void reset ( );
     void terminate ( );
@@ -124,7 +126,7 @@ private:
     ScoreCounter * PlayerScore [ MAXIMUM_PLAYER_COUNT ];
     sf::Vector2f PlayerFinalVelocity [ MAXIMUM_PLAYER_COUNT ];
     sf::View Views [ MAXIMUM_PLAYER_COUNT ];
-    PlayerInterface * Interface [ MAXIMUM_PLAYER_COUNT ];
+    Interface * PlayerInterface [ MAXIMUM_PLAYER_COUNT ];
 
     unsigned int AsteroidCount;
     sf::Time AsteroidPauseTime;

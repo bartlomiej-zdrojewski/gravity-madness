@@ -13,6 +13,8 @@ public:
 
         Texture = Graphics->getTexture( "PowerUpLowHealth" ); }
 
+    void * clone ( GraphicsModule * Graphics );
+
 private:
 
     void onEffectBegin ( );

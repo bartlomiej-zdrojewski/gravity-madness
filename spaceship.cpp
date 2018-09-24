@@ -302,7 +302,7 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
             ThrusterAngleOffset = 0.f; }
 
-        if ( Controller->onRayShot() && !RayShot && Energy >= RayPower ) {
+        if ( Controller->onRayShot() && !RayShot && Energy >= RayPower && RayPower > 0.f ) {
 
             RayShot = true;
 
@@ -322,16 +322,17 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
     MyShape->setOrigin( getPosition() );
     MyShape->setRotation( getVelocityAngle() ); }
 
-void Spaceship::render ( sf::RenderWindow &Window ) {
+void Spaceship::render ( sf::RenderWindow &Window, bool Debug ) {
 
-    // TODO TEMP
-    sf::CircleShape Circle;
-    Circle.setRadius( getRadius() );
-    Circle.setOrigin( getRadius(), getRadius() );
-    Circle.setFillColor( sf::Color( 255, 0, 0, 127 ) );
-    Circle.setPosition( getPosition() );
-    Window.draw( Circle );
-    // TODO TEMP
+    if ( Debug ) {
+
+        sf::CircleShape CollisionCircle;
+        CollisionCircle.setRadius( getRadius() );
+        CollisionCircle.setOrigin( getRadius(), getRadius() );
+        CollisionCircle.setPosition( getPosition() );
+        CollisionCircle.setFillColor( sf::Color( 0, 255, 0, 64 ) );
+
+        Window.draw( CollisionCircle ); }
 
     sf::Sprite Sprite ( Texture );
     sf::Sprite AccentSprite ( AccentTexture );
@@ -362,21 +363,17 @@ void Spaceship::render ( sf::RenderWindow &Window ) {
     Window.draw( Sprite );
     Window.draw( AccentSprite );
 
+    if ( Debug ) {
 
-    // TODO TEMP
-    sf::VertexArray Array;
-    Array.setPrimitiveType( sf::PrimitiveType::Lines );
+        sf::VertexArray ShapeVertexes;
+        ShapeVertexes.setPrimitiveType( sf::PrimitiveType::Lines );
 
-    for ( Shape::Segment &MySegment : MyShape->getOutline() ) {
+        for ( Shape::Segment &MySegment : MyShape->getOutline() ) {
 
-        Array.append( sf::Vertex( MySegment.Begin, sf::Color::Green ) );
-        Array.append( sf::Vertex( MySegment.End, sf::Color::Green ) ); }
+            ShapeVertexes.append( sf::Vertex( MySegment.Begin, sf::Color::Green ) );
+            ShapeVertexes.append( sf::Vertex( MySegment.End, sf::Color::Green ) ); }
 
-    Window.draw( Array );
-    // TODO TEMP
-
-
-    }
+        Window.draw( ShapeVertexes ); } }
 
 void Spaceship::render ( sf::RenderTexture &Buffer ) {
 
@@ -453,7 +450,6 @@ ParticleSystem * Spaceship::onCollision ( Planet * Other ) {
 
 ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
-    float Distance;
     BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.80f ); // 20% of kinetic energy is released
 
     setVelocity( Collision.getFirstVelocity() );
@@ -468,15 +464,13 @@ ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
     do {
 
-        updatePosition( sf::seconds( 0.01f ) );
-        Other->updatePosition( sf::seconds( 0.01f ) );
+        updatePosition( sf::seconds( ALMOST_NO_TIME ) );
+        Other->updatePosition( sf::seconds( ALMOST_NO_TIME ) );
 
-        float DistanceX = getPosition().x - Other->getPosition().x;
-        float DistanceY = getPosition().y - Other->getPosition().y;
+        MyShape->setOrigin( getPosition() );
+        MyShape->setRotation( getVelocityAngle() ); }
 
-        Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
-
-    while ( Distance <= ( getRadius() + Other->getRadius() ) );
+    while ( MyShape->isIntersecting( Other->getPosition(), Other->getRadius() ) );
 
     if ( isDestructed() ) {
 
@@ -499,7 +493,6 @@ ParticleSystem * Spaceship::onCollision ( Asteroid * Other ) {
 
 ParticleSystem * Spaceship::onCollision ( Spaceship * Other ) {
 
-    float Distance;
     BodyCollision Collision ( BodyCollision::Types::Elastic, this, Other, 0.70f ); // 30% of kinetic energy is released
 
     setVelocity( Collision.getFirstVelocity() );
@@ -515,15 +508,16 @@ ParticleSystem * Spaceship::onCollision ( Spaceship * Other ) {
 
     do {
 
-        updatePosition( sf::seconds( 0.01f ) );
-        Other->updatePosition( sf::seconds( 0.01f ) );
+        updatePosition( sf::seconds( ALMOST_NO_TIME ) );
+        Other->updatePosition( sf::seconds( ALMOST_NO_TIME ) );
 
-        float DistanceX = getPosition().x - Other->getPosition().x;
-        float DistanceY = getPosition().y - Other->getPosition().y;
+        MyShape->setOrigin( getPosition() );
+        MyShape->setRotation( getVelocityAngle() );
 
-        Distance = sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
+        Other->getShape()->setOrigin( Other->getPosition() );
+        Other->getShape()->setRotation( Other->getVelocityAngle() ); }
 
-    while ( Distance <= ( getRadius() + Other->getRadius() ) );
+    while ( MyShape->isIntersecting( Other->getShape() ) );
 
     return nullptr; }
 

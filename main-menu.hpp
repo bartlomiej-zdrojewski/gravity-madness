@@ -42,7 +42,8 @@ public:
     void render ( sf::RenderWindow &Window );
     void reset ( );
 
-    bool onLaunch ( );
+    bool onLaunchTutorial ( );
+    bool onLaunchGame ( );
     bool onTerminate ( );
     bool onVideoChanged ( );
     bool onSettingsChanged ( );
@@ -128,7 +129,8 @@ private:
     GraphicsModule * Graphics;
     GameplaySettings * Gameplay;
 
-    bool Launch;
+    bool LaunchGame;
+    bool LaunchTutorial;
     bool Terminate;
     bool VideoChanged;
     bool SettingsChanged;

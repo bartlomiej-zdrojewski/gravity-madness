@@ -9,11 +9,11 @@
 #define SCORE_TAB_FONT_HORIZONTAL_OFFSET_FIX (-0.025f)
 #define SCORE_TAB_FONT_VERTICAL_OFFSET_FIX (-0.45f)
 
-class PlayerInterface {
+class Interface {
 
 public:
 
-    explicit PlayerInterface ( GraphicsModule * Graphics );
+    explicit Interface ( GraphicsModule * Graphics );
 
     void setSpaceship ( Spaceship * MySpaceship );
     void setScoreCounter ( ScoreCounter * Score );

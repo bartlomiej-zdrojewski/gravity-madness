@@ -36,9 +36,7 @@ BodyCollision::BodyCollision ( BodyCollision::Types Type, Body * First, Body * S
         float BeginEnergy = FirstBeginEnergy + SecondBeginEnergy;
         float EndEnergy = 0.5f * ( First->getMass() + Second->getMass() ) * powf( getLength( Velocity ), 2.f );
 
-        ReleasedEnergy = ( BeginEnergy - EndEnergy ) / 1000000.f;
-
-        } }
+        ReleasedEnergy = ( BeginEnergy - EndEnergy ) / 1000000.f; } }
 
 sf::Vector2f BodyCollision::getFirstVelocity ( ) {
 

@@ -83,6 +83,7 @@ void WorldModule::update ( ) {
 
                 else {
 
+                    Tutorial = new TutorialModule( Graphics, Game, Gameplay );
                     MyMainMenu = new MainMenu ( Graphics, Gameplay );
                     MyPauseMenu = new PauseMenu ( Graphics );
                     MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );
@@ -115,7 +116,11 @@ void WorldModule::update ( ) {
 
             MyMainMenu->update();
 
-            if ( MyMainMenu->onLaunch() ) {
+            if ( MyMainMenu->onLaunchTutorial() ) {
+
+                setMode( Modes::TutorialMode ); }
+
+            else if ( MyMainMenu->onLaunchGame() ) {
 
                 Game->setGameplay( Gameplay );
 
@@ -149,6 +154,16 @@ void WorldModule::update ( ) {
 
             break; }
 
+        case TutorialMode: {
+
+            Tutorial->update();
+
+            if ( Tutorial->onTerminate() ) {
+
+                setMode( Modes::MainMenuMode ); }
+
+            break; }
+
         case PauseMenuMode: {
 
             MyPauseMenu->update();
@@ -176,8 +191,6 @@ void WorldModule::update ( ) {
             MyScoreBoard->update();
 
             if ( MyScoreBoard->onClose() ) {
-
-                MyMainMenu->reset();
 
                 setMode( Modes::MainMenuMode ); }
 
@@ -234,6 +247,7 @@ void WorldModule::update ( sf::Event &Event ) {
 
                 else {
 
+                    Tutorial = new TutorialModule( Graphics, Game, Gameplay );
                     MyMainMenu = new MainMenu ( Graphics, Gameplay );
                     MyPauseMenu = new PauseMenu ( Graphics );
                     MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );
@@ -266,7 +280,11 @@ void WorldModule::update ( sf::Event &Event ) {
 
             MyMainMenu->update( Event );
 
-            if ( MyMainMenu->onLaunch() ) {
+            if ( MyMainMenu->onLaunchTutorial() ) {
+
+                setMode( Modes::TutorialMode ); }
+
+            else if ( MyMainMenu->onLaunchGame() ) {
 
                 Game->setGameplay( Gameplay );
 
@@ -293,6 +311,16 @@ void WorldModule::update ( sf::Event &Event ) {
             else if ( Game->onTerminate() ) {
 
                 setMode( Modes::ScoreBoardMode ); }
+
+            break; }
+
+        case TutorialMode: {
+
+            Tutorial->update( Event );
+
+            if ( Tutorial->onTerminate() ) {
+
+                setMode( Modes::MainMenuMode ); }
 
             break; }
 
@@ -323,8 +351,6 @@ void WorldModule::update ( sf::Event &Event ) {
             MyScoreBoard->update( Event );
 
             if ( MyScoreBoard->onClose() ) {
-
-                MyMainMenu->reset();
 
                 setMode( Modes::MainMenuMode ); }
 
@@ -385,6 +411,12 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
         case GameMode: {
 
             Game->render( Window );
+
+            break; }
+
+        case TutorialMode: {
+
+            Tutorial->render( Window );
 
             break; }
 
@@ -556,6 +588,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
 
             else {
 
+                Tutorial = new TutorialModule( Graphics, Game, Gameplay );
                 MyMainMenu = new MainMenu ( Graphics, Gameplay );
                 MyPauseMenu = new PauseMenu ( Graphics );
                 MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );

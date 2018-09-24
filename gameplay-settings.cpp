@@ -765,7 +765,7 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
     Prototype.AccentTexture = "SpaceshipAccent";
     Prototype.Mass = 350.f;
     Prototype.Radius = 35.f;
-    Prototype.Shape = ""; // TODO
+    Prototype.Shape = ""; // TODO LOAD SHAPE
     Prototype.HealthLimit = 200.f;
     Prototype.HealthRestoration = 2.f;
     Prototype.EnergyLimit = 2500.f;

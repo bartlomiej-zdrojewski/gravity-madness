@@ -1,5 +1,13 @@
 #include "random-gravity-power-up.hpp"
 
+void * RandomGravityPowerUp::clone ( GraphicsModule * Graphics ) {
+
+    auto NewPowerUp = new RandomGravityPowerUp ( Graphics, Gravity, AsteroidCount );
+
+    NewPowerUp->setPosition( getPosition() );
+
+    return NewPowerUp; }
+
 void RandomGravityPowerUp::onEffectBegin ( ) {
 
     *Gravity = 1.f; }

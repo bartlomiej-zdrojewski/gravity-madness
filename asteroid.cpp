@@ -73,8 +73,8 @@ ParticleSystem * Asteroid::onCollision ( Asteroid * Other ) {
 
     do {
 
-        updatePosition( sf::seconds( 0.01f ) );
-        Other->updatePosition( sf::seconds( 0.01f ) );
+        updatePosition( sf::seconds( ALMOST_NO_TIME ) );
+        Other->updatePosition( sf::seconds( ALMOST_NO_TIME ) );
 
         float DistanceX = getPosition().x - Other->getPosition().x;
         float DistanceY = getPosition().y - Other->getPosition().y;

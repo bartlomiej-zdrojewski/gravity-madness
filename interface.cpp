@@ -1,8 +1,8 @@
 #include <utility>
 
-#include "player-interface.hpp"
+#include "interface.hpp"
 
-PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
+Interface::Interface ( GraphicsModule * Graphics ) {
 
     this->Graphics = Graphics;
 
@@ -58,11 +58,11 @@ PlayerInterface::PlayerInterface ( GraphicsModule * Graphics ) {
     DamageFadeTime = sf::seconds( 0.f );
     DamageFadeDuration = sf::seconds( 0.5f ); }
 
-void PlayerInterface::setSpaceship ( Spaceship * MySpaceship ) {
+void Interface::setSpaceship ( Spaceship * MySpaceship ) {
 
     this->MySpaceship = MySpaceship; }
 
-void PlayerInterface::setScoreCounter ( ScoreCounter * MyScore ) {
+void Interface::setScoreCounter ( ScoreCounter * MyScore ) {
 
     this->MyScore = MyScore;
 
@@ -72,7 +72,7 @@ void PlayerInterface::setScoreCounter ( ScoreCounter * MyScore ) {
         ScoreValueFloating = ScoreValue;
         ScoreMultiplierValue = MyScore->getMultiplier(); } }
 
-void PlayerInterface::setViewport ( sf::FloatRect Viewport ) {
+void Interface::setViewport ( sf::FloatRect Viewport ) {
 
     Viewport.left = Graphics->getWindowWidth() * Viewport.left;
     Viewport.top = Graphics->getWindowHeight() * Viewport.top;
@@ -81,23 +81,23 @@ void PlayerInterface::setViewport ( sf::FloatRect Viewport ) {
 
     this->Viewport = Viewport; }
 
-void PlayerInterface::enableArrow ( ) {
+void Interface::enableArrow ( ) {
 
     Arrow = true; }
 
-void PlayerInterface::disableArrow ( ) {
+void Interface::disableArrow ( ) {
 
     Arrow = false; }
 
-void PlayerInterface::displayNotification ( std::string Notification ) {
+void Interface::displayNotification ( std::string Notification ) {
 
     NextNotification = std::move( Notification ); }
 
-void PlayerInterface::beginFadeOut ( ) {
+void Interface::beginFadeOut ( ) {
 
     FadeOut = true; }
 
-void PlayerInterface::endFadeOut ( ) {
+void Interface::endFadeOut ( ) {
 
     FadeOut = true;
     float FadeAlpha = 0.f;
@@ -109,11 +109,11 @@ void PlayerInterface::endFadeOut ( ) {
     FadeOutDuration = FadeOutDelay + sf::seconds( 1.f );
     FadeOutTime = FadeOutDelay + sf::seconds( FadeAlpha ); }
 
-bool PlayerInterface::isFadedOut ( ) {
+bool Interface::isFadedOut ( ) {
 
     return ( FadeOutTime >= ( FadeOutDuration + sf::seconds( 1.f ) ) ); }
 
-float PlayerInterface::getFadeInAlpha ( ) {
+float Interface::getFadeInAlpha ( ) {
 
     if ( FadeIn ) {
 
@@ -121,7 +121,7 @@ float PlayerInterface::getFadeInAlpha ( ) {
 
     return 0.f; }
 
-float PlayerInterface::getFadeOutAlpha ( ) {
+float Interface::getFadeOutAlpha ( ) {
 
     if ( FadeOut ) {
 
@@ -139,7 +139,7 @@ float PlayerInterface::getFadeOutAlpha ( ) {
 
     return 0.f; }
 
-void PlayerInterface::update ( sf::Time ElapsedTime ) {
+void Interface::update ( sf::Time ElapsedTime ) {
 
     if ( MySpaceship ) {
 
@@ -179,7 +179,7 @@ void PlayerInterface::update ( sf::Time ElapsedTime ) {
     updateArrow( ElapsedTime );
     updateNotification( ElapsedTime ); }
 
-void PlayerInterface::render ( sf::RenderWindow &Window ) {
+void Interface::render ( sf::RenderWindow &Window ) {
 
     renderHealthBar( Window );
     renderEnergyBar( Window );
@@ -189,12 +189,12 @@ void PlayerInterface::render ( sf::RenderWindow &Window ) {
     renderNotification( Window );
     renderFade( Window ); }
 
-void PlayerInterface::onDamage ( ) {
+void Interface::onDamage ( ) {
 
     DamageFade = true;
     DamageFadeTime = DamageFadeDuration; }
 
-std::string PlayerInterface::getScoreText ( ) {
+std::string Interface::getScoreText ( ) {
 
     std::string Data = std::to_string( ScoreValue );
 
@@ -203,14 +203,14 @@ std::string PlayerInterface::getScoreText ( ) {
 
     return Data; }
 
-std::string PlayerInterface::getScoreMultiplierText ( ) {
+std::string Interface::getScoreMultiplierText ( ) {
 
     char Buffer [256];
     std::sprintf( Buffer, "%.2f", ScoreMultiplierValue );
 
     return "multiplier " + std::string( Buffer ); }
 
-void PlayerInterface::updateHealthBar ( sf::Time ElapsedTime ) {
+void Interface::updateHealthBar ( sf::Time ElapsedTime ) {
 
     float ElementSize = 10.f;
     float ElementMargin = 5.f;
@@ -227,7 +227,7 @@ void PlayerInterface::updateHealthBar ( sf::Time ElapsedTime ) {
 
     updateBar( ElapsedTime, HealthBarOpacity, 15.f, ElementSize, ElementMargin, Health, HealthLimit ); }
 
-void PlayerInterface::updateEnergyBar ( sf::Time ElapsedTime ) {
+void Interface::updateEnergyBar ( sf::Time ElapsedTime ) {
 
     float ElementSize = 10.f;
     float ElementMargin = 5.f;
@@ -244,7 +244,7 @@ void PlayerInterface::updateEnergyBar ( sf::Time ElapsedTime ) {
 
     updateBar( ElapsedTime, EnergyBarOpacity, 15.f, ElementSize, ElementMargin, Energy, EnergyLimit ); }
 
-void PlayerInterface::updateMissileTab ( sf::Time ElapsedTime ) {
+void Interface::updateMissileTab ( sf::Time ElapsedTime ) {
 
     if ( MissileTabOpacity.size() != MissileLimit ) {
 
@@ -274,7 +274,7 @@ void PlayerInterface::updateMissileTab ( sf::Time ElapsedTime ) {
 
             MissileTabOpacity[i] = UnactivatedOpacity; } } }
 
-void PlayerInterface::updateScoreTab ( sf::Time ElapsedTime ) {
+void Interface::updateScoreTab ( sf::Time ElapsedTime ) {
 
     float ElementSize = 35.f;
 
@@ -344,13 +344,13 @@ void PlayerInterface::updateScoreTab ( sf::Time ElapsedTime ) {
 
         TextPrototype.setCharacterSize( --ScoreMultiplierFontSize ); } }
 
-void PlayerInterface::updateArrow ( sf::Time ElapsedTime ) {
+void Interface::updateArrow ( sf::Time ElapsedTime ) {
 
     if ( MySpaceship ) {
 
         ArrowAngle = atan2f( - MySpaceship->getPosition().y, - MySpaceship->getPosition().x ); } }
 
-void PlayerInterface::updateNotification ( sf::Time ElapsedTime ) {
+void Interface::updateNotification ( sf::Time ElapsedTime ) {
 
     if ( Notification.empty() ) {
 
@@ -408,7 +408,7 @@ void PlayerInterface::updateNotification ( sf::Time ElapsedTime ) {
 
         TextPrototype.setCharacterSize( --NotificationFontSize ); } }
 
-void PlayerInterface::renderHealthBar ( sf::RenderWindow &Window ) {
+void Interface::renderHealthBar ( sf::RenderWindow &Window ) {
 
     sf::Vector2f ElementSize ( 30.f, 10.f );
     sf::Vector2f ElementMargin ( 20.f, 5.f );
@@ -425,7 +425,7 @@ void PlayerInterface::renderHealthBar ( sf::RenderWindow &Window ) {
 
     renderBar( Window, HealthBarOpacity, sf::Color( 255, 23, 68 ), sf::Vector2f( 15.f, 15.f ), ElementSize, ElementMargin ); } // #FF1744
 
-void PlayerInterface::renderEnergyBar ( sf::RenderWindow &Window ) {
+void Interface::renderEnergyBar ( sf::RenderWindow &Window ) {
 
     sf::Vector2f ElementSize ( 30.f, 10.f );
     sf::Vector2f ElementMargin ( 20.f, 5.f );
@@ -442,7 +442,7 @@ void PlayerInterface::renderEnergyBar ( sf::RenderWindow &Window ) {
 
     renderBar( Window, EnergyBarOpacity, sf::Color( 61, 90, 254 ), sf::Vector2f( ElementSize.x + ElementMargin.y + 15.f, 15.f ), ElementSize, ElementMargin ); } // #3D5AFE
 
-void PlayerInterface::renderMissileTab ( sf::RenderWindow &Window ) {
+void Interface::renderMissileTab ( sf::RenderWindow &Window ) {
 
     float ElementSize = 40.f;
     float ElementMargin = 5.f;
@@ -471,7 +471,7 @@ void PlayerInterface::renderMissileTab ( sf::RenderWindow &Window ) {
 
         MissileSprite.move( sf::Vector2f( - ElementMargin, 0.f ) ); } }
 
-void PlayerInterface::renderScoreTab ( sf::RenderWindow &Window ) {
+void Interface::renderScoreTab ( sf::RenderWindow &Window ) {
 
     sf::Text ScoreText;
     ScoreText.setString( getScoreText() );
@@ -531,7 +531,7 @@ void PlayerInterface::renderScoreTab ( sf::RenderWindow &Window ) {
     Window.draw( ScoreText );
     Window.draw( ScoreMultiplierText ); }
 
-void PlayerInterface::renderArrow ( sf::RenderWindow &Window ) {
+void Interface::renderArrow ( sf::RenderWindow &Window ) {
 
     if ( Arrow ) {
 
@@ -546,7 +546,7 @@ void PlayerInterface::renderArrow ( sf::RenderWindow &Window ) {
 
         Window.draw( Sprite ); } }
 
-void PlayerInterface::renderNotification ( sf::RenderWindow &Window ) {
+void Interface::renderNotification ( sf::RenderWindow &Window ) {
 
     sf::Text Text;
 
@@ -558,7 +558,7 @@ void PlayerInterface::renderNotification ( sf::RenderWindow &Window ) {
 
     Window.draw( Text ); }
 
-void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
+void Interface::renderFade ( sf::RenderWindow &Window ) {
 
     sf::RectangleShape Fade;
 
@@ -597,7 +597,7 @@ void PlayerInterface::renderFade ( sf::RenderWindow &Window ) {
 
     Window.draw( Fade ); }
 
-void PlayerInterface::updateBar ( sf::Time ElapsedTime, std::vector <float> &Opacity, float BarMargin, float ElementSize, float ElementMargin, float Value, float Limit ) {
+void Interface::updateBar ( sf::Time ElapsedTime, std::vector <float> &Opacity, float BarMargin, float ElementSize, float ElementMargin, float Value, float Limit ) {
 
     if ( ( Viewport.height - 2.f * BarMargin ) < 0.f ) {
 
@@ -637,7 +637,7 @@ void PlayerInterface::updateBar ( sf::Time ElapsedTime, std::vector <float> &Opa
 
             Opacity[i] = UnactivatedOpacity; } } }
 
-void PlayerInterface::renderBar ( sf::RenderWindow &Window, std::vector <float> Opacity, sf::Color Color, sf::Vector2f BarMargin, sf::Vector2f ElementSize, sf::Vector2f ElementMargin ) {
+void Interface::renderBar ( sf::RenderWindow &Window, std::vector <float> Opacity, sf::Color Color, sf::Vector2f BarMargin, sf::Vector2f ElementSize, sf::Vector2f ElementMargin ) {
 
     ElementSize.y = ( Viewport.height - 2 * BarMargin.y + ElementMargin.y ) / Opacity.size() - ElementMargin.y;
 

@@ -24,6 +24,8 @@ public:
             Offset[i] = 0.5f + 0.5f * getRandomFloat();
             Phase[i] = asinf( 0.2f / Amplitude[i] - Offset[i] ); } }
 
+    void * clone ( GraphicsModule * Graphics );
+
 private:
 
     void onEffectBegin ( );
