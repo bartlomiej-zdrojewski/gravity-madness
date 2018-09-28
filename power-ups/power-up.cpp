@@ -1,4 +1,3 @@
-#include <iostream>
 #include "power-up.hpp"
 
 PowerUp::PowerUp ( sf::Time Duration, float * Gravity, unsigned int * AsteroidCount ) {

@@ -22,11 +22,14 @@ public:
 
 private:
 
+    static std::string blankUnderscore ( std::string Text );
+
     Spaceship * getPlayerSpaceship ( );
     Spaceship * getEnemySpaceship ( );
 
     void reset ( );
     bool loadNextChallenge ( );
+    void loadNonStaticDescriptions ( );
 
 private:
 
@@ -37,8 +40,8 @@ private:
             None,
             Time,
             InAreaAndNoVelocity,
-            NoPowerUps,
-            NoPowerUpsAndTime,
+            PowerUpCaught,
+            PowerUpCaughtAndTime,
             NoEnemies
 
             };
@@ -100,6 +103,24 @@ private:
     uint8_t ChallengeState;
     int ChallengeIndex;
     sf::Time ChallengeTime;
+
+    std::string TitleText;
+    unsigned int TitleFontSize;
+    float TitlePosition;
+
+    std::string SubTitleText;
+    unsigned int SubTitleFontSize;
+    float SubTitlePosition;
+
+    std::string ContentText;
+    unsigned int ContentFontSize;
+    float ContentPosition;
+
+    unsigned int MenuOptionCount;
+    unsigned int MenuOption;
+    std::string MenuOptionText [2];
+    unsigned int MenuOptionFontSize;
+    float MenuOptionPosition [2];
 
     std::vector <Challenge> Challenges;
 
