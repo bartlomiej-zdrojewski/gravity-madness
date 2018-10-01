@@ -135,7 +135,17 @@ void GameplaySettings::loadSpaceshipPrototypes ( Script * Config ) {
                     Prototype.MissileLimit = (unsigned int) Script::getIntegerValue( MissileLimitNode[0] );
                     Prototype.ScoreMultiplier = Script::getRealValue( ScoreMultiplierNode[0] );
 
-                    SpaceshipPrototypes.push_back( Prototype ); } }
+                    size_t i = 0;
+
+                    while ( i < SpaceshipPrototypes.size() ) {
+
+                        if ( Prototype.ScoreMultiplier >= SpaceshipPrototypes[i].ScoreMultiplier ) {
+
+                            break; }
+
+                        i++; }
+
+                    SpaceshipPrototypes.insert( SpaceshipPrototypes.begin() + i, Prototype );} }
 
             else {
 
@@ -760,23 +770,23 @@ void GameplaySettings::loadDefaultSpaceshipPrototypes ( ) {
 
     SpaceshipPrototype Prototype;
 
-    Prototype.Name = "Theseus the Unbroken";
-    Prototype.Texture = "Spaceship";
-    Prototype.AccentTexture = "SpaceshipAccent";
-    Prototype.Mass = 350.f;
-    Prototype.Radius = 35.f;
-    Prototype.Shape = ""; // TODO LOAD SHAPE
-    Prototype.HealthLimit = 200.f;
+    Prototype.Name = "Perun the Unexpected";
+    Prototype.Texture = "SpaceshipPerun";
+    Prototype.AccentTexture = "SpaceshipAccentPerun";
+    Prototype.Mass = 400.f;
+    Prototype.Radius = 40.f;
+    Prototype.Shape = "(0.71,0.00),(1.00,135.00),(0.37,154.00),(0.44,180.00),(0.35,-154.00),(1.00,-135.00)";
+    Prototype.HealthLimit = 250.f;
     Prototype.HealthRestoration = 2.f;
-    Prototype.EnergyLimit = 2500.f;
-    Prototype.EnergyRestoration = 20.f;
-    Prototype.Thrust = 75.f;
-    Prototype.BrakingFactor = 0.6f;
-    Prototype.FuelColor = sf::Color( 255, 64, 129 ); // #FF4081
-    Prototype.RayPower = 20.f;
-    Prototype.RayColor = sf::Color( 245, 0, 87 ); // #F50057
+    Prototype.EnergyLimit = 5000.f;
+    Prototype.EnergyRestoration = 40.f;
+    Prototype.Thrust = 120.f;
+    Prototype.BrakingFactor = 0.75f;
+    Prototype.FuelColor = sf::Color( 178, 255, 89 ); // #B2FF59
+    Prototype.RayPower = 30.f;
+    Prototype.RayColor = sf::Color( 118, 255, 3 ); // #76FF03
     Prototype.MissileCount = 3;
-    Prototype.MissileLimit = 3;
-    Prototype.ScoreMultiplier = 2.0f;
+    Prototype.MissileLimit = 5;
+    Prototype.ScoreMultiplier = 1.0f;
 
     SpaceshipPrototypes.push_back( Prototype ); }

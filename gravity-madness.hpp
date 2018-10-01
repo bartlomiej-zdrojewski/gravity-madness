@@ -1,8 +1,8 @@
 #ifndef GRAVITY_MADNESS
 #define GRAVITY_MADNESS
 
-#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #if ( SFML_VERSION_MINOR < 2 )
     #warning "The oldest tested version of SFML is 2.2, therefore the older ones may not work as expected. For the best result try the 2.5 version."

@@ -4,12 +4,35 @@
 
     <Spaceship>
 
+        <Name>Theseus the Unbroken</Name>
+        <Texture>SpaceshipTheseus</Texture>
+        <AccentTexture>SpaceshipAccentTheseus</AccentTexture>
+        <Mass>350.00</Mass>
+        <Radius>35.00</Radius>
+        <Shape>(0.71,0.00),(0.32,124.00),(1.00,135.00),(0.45,166.00),(0.45,-166.00),(1.00,-135.00),(0.32,-124.00)</Shape>
+        <HealthLimit>200.00</HealthLimit>
+        <HealthRestoration>2.00</HealthRestoration>
+        <EnergyLimit>2500.00</EnergyLimit>
+        <EnergyRestoration>20.00</EnergyRestoration>
+        <Thrust>75.00</Thrust>
+        <BrakingFactor>0.6</BrakingFactor>
+        <FuelColor>#FF4081</FuelColor>
+        <RayPower>20.00</RayPower>
+        <RayColor>#F50057</RayColor>
+        <MissileCount>3</MissileCount>
+        <MissileLimit>3</MissileLimit>
+        <ScoreMultiplier>2.00</ScoreMultiplier>
+
+    </Spaceship>
+
+    <Spaceship>
+
         <Name>Gilgamesh the Immortal</Name>
-        <Texture>SpaceshipAzrael</Texture>
-        <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
+        <Texture>SpaceshipGilgamesh</Texture>
+        <AccentTexture>SpaceshipAccentGilgamesh</AccentTexture>
         <Mass>400.00</Mass>
         <Radius>40.00</Radius>
-        <Shape>(0.80,0.00),(0.80,120.00),(0.80,-120.00)</Shape>
+        <Shape>(0.71,0.00),(0.54,109.00),(0.67,131.00),(0.49,120.00),(0.45,166.00),(0.45,-166.00),(0.49,-120.00),(0.67,-131.00),(0.54,-109.00)</Shape>
         <HealthLimit>300.00</HealthLimit>
         <HealthRestoration>6.00</HealthRestoration>
         <EnergyLimit>4000.00</EnergyLimit>
@@ -22,29 +45,6 @@
         <MissileCount>3</MissileCount>
         <MissileLimit>5</MissileLimit>
         <ScoreMultiplier>1.25</ScoreMultiplier>
-
-    </Spaceship>
-
-    <Spaceship>
-
-        <Name>Perun the Unexpected</Name>
-        <Texture>SpaceshipAzrael</Texture>
-        <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
-        <Mass>400.00</Mass>
-        <Radius>40.00</Radius>
-        <Shape>(0.80,0.00),(0.80,120.00),(0.80,-120.00)</Shape>
-        <HealthLimit>250.00</HealthLimit>
-        <HealthRestoration>2.00</HealthRestoration>
-        <EnergyLimit>5000.00</EnergyLimit>
-        <EnergyRestoration>40.00</EnergyRestoration>
-        <Thrust>120.00</Thrust>
-        <BrakingFactor>0.75</BrakingFactor>
-        <FuelColor>#B2FF59</FuelColor>
-        <RayPower>30.00</RayPower>
-        <RayColor>#76FF03</RayColor>
-        <MissileCount>3</MissileCount>
-        <MissileLimit>5</MissileLimit>
-        <ScoreMultiplier>1.00</ScoreMultiplier>
 
     </Spaceship>
 
@@ -78,7 +78,7 @@
         <AccentTexture>SpaceshipAccentAzrael</AccentTexture>
         <Mass>800.00</Mass>
         <Radius>45.00</Radius>
-        <Shape>(0.71,0.00),(1.00,135.00),(0.37,154.00),(0.44,180.00),(0.35,-154.00),(1.00,-135.00)</Shape>
+        <Shape>(0.71,0.00),(0.48,68.00),(0.84,148.00),(0.28,108.00),(0.45,166.00),(0.45,-166.00),(0.28,-108.00),(0.84,-148.00),(0.48,-68.00)</Shape>
         <HealthLimit>400.00</HealthLimit>
         <HealthRestoration>3.00</HealthRestoration>
         <EnergyLimit>10000.00</EnergyLimit>
@@ -90,7 +90,7 @@
         <RayColor>#2979FF</RayColor>
         <MissileCount>5</MissileCount>
         <MissileLimit>8</MissileLimit>
-        <ScoreMultiplier>0.25</ScoreMultiplier>
+        <ScoreMultiplier>0.50</ScoreMultiplier>
 
     </Spaceship>
 

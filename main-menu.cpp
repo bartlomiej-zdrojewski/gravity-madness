@@ -107,7 +107,7 @@ void MainMenu::update ( ) {
 
     else {
 
-        // TODO FRAME COUNTER
+        // TODO LOW PERFORMANCE MESSAGE
 
         } }
 
@@ -340,6 +340,16 @@ std::string MainMenu::blankUnderscore ( std::string Text ) {
         Position = Text.find( '_' ); }
 
     return Text; }
+
+std::vector <sf::Texture*> MainMenu::getBrakesTextures ( ) {
+
+    std::vector <sf::Texture*> BrakesTextures;
+
+    for ( unsigned int i = 0; i < 5; i++ ) {
+
+        BrakesTextures.push_back( &Graphics->getTexture( "Brakes" + std::to_string( i + 1 ) ) ); }
+
+    return BrakesTextures; }
 
 void MainMenu::updateMenu ( sf::Time ElapsedTime ) {
 
@@ -1202,6 +1212,7 @@ void MainMenu::loadSpaceshipCards ( ) {
         MySpaceship->setTexture( Graphics->getTexture( MyPrototype->Texture ) );
         MySpaceship->setAccentTexture( Graphics->getTexture( MyPrototype->AccentTexture ), Gameplay->getPlayerColor( 0 ) );
         MySpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), MyPrototype->FuelColor );
+        MySpaceship->setBrakesTextures( getBrakesTextures(), MyPrototype->FuelColor );
         MySpaceship->setPosition( sf::Vector2f( 500.f, 150.f ) );
         MySpaceship->setVelocity( sf::Vector2f( 25.f, 0.f ) );
         MySpaceship->setController( new VisualizationController ( ) );

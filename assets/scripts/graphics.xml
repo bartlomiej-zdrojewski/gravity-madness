@@ -22,18 +22,43 @@
         </Texture>
 
         <Texture>
+            <Name>Brakes1</Name>
+            <Path>brakes-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes2</Name>
+            <Path>brakes-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes3</Name>
+            <Path>brakes-3.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes4</Name>
+            <Path>brakes-4.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes5</Name>
+            <Path>brakes-5.png</Path>
+        </Texture>
+
+        <Texture>
             <Name>Missile</Name>
             <Path>missile.png</Path>
         </Texture>
 
         <Texture>
             <Name>Spaceship</Name>
-            <Path>spaceship-azrael.png</Path>
+            <Path>spaceship.png</Path>
         </Texture>
 
         <Texture>
             <Name>SpaceshipAccent</Name>
-            <Path>spaceship-accent-azrael.png</Path>
+            <Path>spaceship-accent.png</Path>
         </Texture>
 
         <Texture>
@@ -54,6 +79,36 @@
         <Texture>
             <Name>SpaceshipAccentGogmagog</Name>
             <Path>spaceship-accent-gogmagog.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipPerun</Name>
+            <Path>spaceship-perun.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentPerun</Name>
+            <Path>spaceship-accent-perun.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipGilgamesh</Name>
+            <Path>spaceship-gilgamesh.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentGilgamesh</Name>
+            <Path>spaceship-accent-gilgamesh.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipTheseus</Name>
+            <Path>spaceship-theseus.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentTheseus</Name>
+            <Path>spaceship-accent-theseus.png</Path>
         </Texture>
 
         <Texture>

@@ -3,6 +3,9 @@
 
 #include "graphics-module.hpp"
 
+#define MESSAGE_FONT_HORIZONTAL_OFFSET_FIX (-0.f)
+#define MESSAGE_FONT_VERTICAL_OFFSET_FIX (-0.2f)
+
 class Message {
 
 public:
@@ -37,7 +40,7 @@ private:
 
     std::string Text [6];
     unsigned int FontSize;
-    float FontFix;
+    float VerticalFontFix;
     float LineHeight;
     sf::Vector2f FrameSize;
     sf::Vector2f FramePosition;

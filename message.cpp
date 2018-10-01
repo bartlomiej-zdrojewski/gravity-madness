@@ -18,7 +18,7 @@ Message::Message ( GraphicsModule * Graphics ) {
     Text[3] = "During game runtime one or more errors have been reported.\n"
               "As a result, the game can not be continued and will be closed now.\n"
               "For more details check log file or contact support team.";
-    Text[4] = ""; // TODO LOW PERFORMANCE ERROR
+    Text[4] = "LOW FPS"; // TODO LOW PERFORMANCE ERROR
     Text[5] = "Hey! My name is Bartek and I'm a creator of this game. I've had loads of fun making it\n"
               "and I hope you'll have too by playing it. But before that, I've got some tips for you:\n"
               "1) If you need it, there is an epilepsy protection that can be enabled in settings section.\n"
@@ -104,14 +104,10 @@ void Message::update ( ) {
     while ( LineSeparator != std::string::npos );
 
     LineHeight = TextPrototype.getLocalBounds().height / LineCount;
-    FontFix = - 0.15f * LineHeight;
+    VerticalFontFix = MESSAGE_FONT_VERTICAL_OFFSET_FIX * LineHeight;
     FrameSize.y = TextPrototype.getLocalBounds().height + 2.f * FrameMargin.y;
     FramePosition.x = 0.5f * ( Graphics->getWindowWidth() - FrameSize.x );
-    FramePosition.y = 0.5f * ( Graphics->getWindowHeight() - FrameSize.y );
-
-    // TODO KEY TIP
-
-    }
+    FramePosition.y = 0.5f * ( Graphics->getWindowHeight() - FrameSize.y ); }
 
 void Message::update ( sf::Event &Event ) {
 
@@ -163,7 +159,7 @@ void Message::render ( sf::RenderWindow &Window ) {
 
     TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
     TextPrototype.setCharacterSize( FontSize );
-    TextPrototype.setPosition( FramePosition + FrameMargin + sf::Vector2f( 0.f, FontFix ) );
+    TextPrototype.setPosition( FramePosition + FrameMargin + sf::Vector2f( 0.f, VerticalFontFix ) );
 
     switch ( Type ) {
 
@@ -223,11 +219,7 @@ void Message::render ( sf::RenderWindow &Window ) {
         Position.y += LineHeight;
         TextPrototype.setPosition( Position ); }
 
-    while ( End != std::string::npos );
-
-    // TODO KEY TIP
-
-    }
+    while ( End != std::string::npos ); }
 
 bool Message::onClose ( ) {
 

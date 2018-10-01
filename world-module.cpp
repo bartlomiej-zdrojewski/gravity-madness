@@ -9,11 +9,9 @@ WorldModule::~WorldModule ( ) {
     delete Gameplay;
     delete Debug;
     delete Game;
-    delete Graphics;
     // delete Audio;
-    delete Log;
-
-    }
+    delete Graphics;
+    delete Log; }
 
 WorldModule::Modes WorldModule::getMode ( ) {
 
@@ -211,7 +209,7 @@ void WorldModule::update ( ) {
             return; } }
 
     Log->update();
-
+    
     if ( Mode > Modes::RunTimeErrorMode && Log->wasErrorLogged() ) {
 
         MyMessage->setType( Message::Types::RunTimeError );
@@ -477,8 +475,8 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
         else if ( std::string( Setting.name() ) == "AudioSettings" ) {
 
-            // delete AudioConfig;
-            // AudioConfig = new Script ( Config.getTextValue( Setting ) );
+            // TODO delete AudioConfig;
+            // TODO AudioConfig = new Script ( Config.getTextValue( Setting ) );
 
             }
 
@@ -530,14 +528,14 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
     if ( InitState == 0 ) {
 
         GraphicsThread = new sf::Thread ( &GraphicsModule::init, Graphics );
-        // AudioThread = new sf::Thread ( &GraphicsModule::init, Audio );
+        // TODO AudioThread = new sf::Thread ( &GraphicsModule::init, Audio );
 
         GraphicsThread->launch();
-        // SoundThread->launch();
+        // TODO AudioThread->launch();
 
         InitState++; }
 
-    else if ( InitState < 2 ) { // TODO 3 with sounds module
+    else if ( InitState < 2 ) { // TODO 3 with audio module
 
         Graphics->initContext();
 
@@ -550,7 +548,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
     else {
 
         delete GraphicsThread;
-        //delete AudioThread;
+        // TODO delete AudioThread;
 
         Log->update();
 

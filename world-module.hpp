@@ -23,6 +23,7 @@ public:
         InitTimeWarningMode,
         InitTimeErrorMode,
         RunTimeErrorMode,
+
         MainMenuMode,
         GameMode,
         TutorialMode,
@@ -40,7 +41,7 @@ public:
 
         Log = nullptr;
         Graphics = nullptr;
-        // Audio = nullptr;
+        // TODO Audio = nullptr;
         Game = nullptr;
         Tutorial = nullptr;
         Debug = nullptr;
@@ -51,7 +52,7 @@ public:
         MyMessage = nullptr;
 
         GraphicsThread = nullptr;
-        // AudioThread = nullptr;
+        // TODO AudioThread = nullptr;
 
         Script * GraphicsConfig = nullptr;
         Script * AudioConfig = nullptr;
@@ -66,21 +67,21 @@ public:
 
         Log = new LoggerManager ( LogPath );
         Graphics = new GraphicsModule ( GraphicsConfig, &InitState );
-        // Audio = new AudioModule ( );
+        // TODO Audio = new AudioModule ( );
 
         InitState = 0;
         VideoChanged = false;
 
         Log->manage( getLogger() );
         Log->manage( Graphics->getLogger() );
-        // Log->manage( Audio->getLogger() );
+        // TODO Log->manage( Audio->getLogger() );
 
         Graphics->setWindowSize( InitWindowWidth, InitWindowHeight );
         InitFullScreen ? Graphics->enableFullScreen() : Graphics->disableFullScreen();
         Graphics->setAntialiasingLevel( InitAntialiasing );
         InitEpilepsyProtection ? Graphics->enableEpilepsyProtection() : Graphics->disableEpilepsyProtection();
 
-        // Audio options
+        // TODO Audio options
 
         }
 
@@ -113,7 +114,7 @@ private:
 
     LoggerManager * Log;
     GraphicsModule * Graphics;
-    // AudioModule * Audio;
+    // TODO AudioModule * Audio;
     GameModule * Game;
     TutorialModule * Tutorial;
     DebugModule * Debug;
@@ -124,7 +125,7 @@ private:
     Message * MyMessage;
 
     sf::Thread * GraphicsThread;
-    // sf::Thread * AudioThread;
+    // TODO sf::Thread * AudioThread;
 
     Modes Mode;
     int8_t InitState;

@@ -61,14 +61,15 @@ public:
 
 private:
 
+    static float getRandomFloat ( );
     static float getMinDistance ( sf::Vector2f A, sf::Vector2f B );
     static float getDistance ( sf::Vector2f A, sf::Vector2f B );
-    static float getRandomFloat ( );
+
+    std::vector <sf::Texture*> getBrakesTextures ( );
 
     bool isPlayer ( Spaceship * MySpaceship );
     bool isOnScreen ( sf::View &View, sf::FloatRect Area );
     bool isOnScreen ( sf::View &View, sf::Vector2f Center, float Radius );
-
     unsigned int getAlivePlayerCount ( );
     int getLastAlivePlayer ( );
 

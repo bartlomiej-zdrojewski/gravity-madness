@@ -37,7 +37,11 @@ public:
         MissileCount = 3;
         MissileLimit = 5;
         ThrusterAngleOffset = 0.f;
-        ThrusterMaximumAngleOffset = 0.1f * PI; }
+        ThrusterMaximumAngleOffset = 0.1f * PI;
+
+        BrakesTextureIndex = 0;
+        BrakesTextureDuration = sf::seconds( 0.1f );
+        BrakesAlpha = 0.f; }
 
     ~ Spaceship ( );
 
@@ -85,6 +89,7 @@ public:
     void setAccentTexture ( sf::Texture &AccentTexture, sf::Color AccentColor );
     void setAccentTextureColor ( sf::Color AccentColor );
     void setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color ThrusterFuelColor );
+    void setBrakesTextures ( std::vector <sf::Texture*> BrakesTextures, sf::Color BrakesFuelColor ); // Must be called before render
 
     void update ( sf::Event &Event );
     void update ( sf::Time ElapsedTime );
@@ -124,11 +129,17 @@ private:
     sf::Texture Texture;
     sf::Texture AccentTexture;
     sf::Texture ThrusterTexture;
+    std::vector <sf::Texture*> BrakesTextures;
     sf::Color AccentColor;
     float ThrusterAngleOffset;
     float ThrusterMaximumAngleOffset;
     ParticleSystem ThrusterExhaust;
     sf::Color ThrusterFuelColor;
+    unsigned int BrakesTextureIndex;
+    sf::Time BrakesTextureTime;
+    sf::Time BrakesTextureDuration;
+    sf::Color BrakesFuelColor;
+    float BrakesAlpha;
 
     };
 

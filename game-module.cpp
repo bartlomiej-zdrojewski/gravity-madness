@@ -150,6 +150,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setMissileCount( Prototype.MissileCount );
         NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
         NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.FuelColor );
+        NewSpaceship->setBrakesTextures( getBrakesTextures(), Prototype.FuelColor );
 
         float PositionAngle = ( (float) SpaceshipOrder[i] / (float) Gameplay->getSpaceshipCount() ) * ( 2.f * PI );
         float PositionModule = AreaRadius - 200.f;
@@ -159,7 +160,7 @@ void GameModule::setGameplay ( GameplaySettings * Gameplay ) {
         NewSpaceship->setPosition( sf::Vector2f( PositionModule * cosf( PositionAngle ), PositionModule * sinf( PositionAngle  ) ) );
         NewSpaceship->setVelocity( sf::Vector2f( VelocityModule * cosf( VelocityAngle ), VelocityModule * sinf( VelocityAngle  ) ) );
 
-        if ( i < PlayerCount ) { // Palyer
+        if ( i < PlayerCount ) { // Player
 
             NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), Gameplay->getPlayerColor( i ) );
 
@@ -296,7 +297,7 @@ void GameModule::update ( ) {
 
     else {
 
-        // TODO LOW FPS COUNTER AND MESSAGE
+        // TODO LOW PERFORMANCE MESSAGE
 
         }
 
@@ -661,6 +662,10 @@ bool GameModule::onTerminate ( ) {
 
     return EndingCondition && FadedOut; }
 
+float GameModule::getRandomFloat ( ) {
+
+    return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }
+
 float GameModule::getMinDistance ( sf::Vector2f A, sf::Vector2f B ) {
 
     return std::min( fabsf( A.x - B.x ), fabsf( A.y - B.y ) ); }
@@ -672,9 +677,15 @@ float GameModule::getDistance ( sf::Vector2f A, sf::Vector2f B ) {
 
     return sqrtf( DistanceX * DistanceX + DistanceY * DistanceY ); }
 
-float GameModule::getRandomFloat ( ) {
+std::vector <sf::Texture*> GameModule::getBrakesTextures ( ) {
 
-    return ( static_cast <float> ( rand() ) / static_cast <float> ( RAND_MAX ) ); }
+    std::vector <sf::Texture*> BrakesTextures;
+
+    for ( unsigned int i = 0; i < 5; i++ ) {
+
+        BrakesTextures.push_back( &Graphics->getTexture( "Brakes" + std::to_string( i + 1 ) ) ); }
+
+    return BrakesTextures; }
 
 bool GameModule::isPlayer ( Spaceship * MySpaceship ) {
 
@@ -792,7 +803,7 @@ Spaceship * GameModule::getRayTarget ( Spaceship * Requester, sf::Vector2f &Inte
 
                         ActiveMissile->onShot();
 
-                        // TODO PARTICLE EFFECT ON HIT
+                        // TODO CREATE PARTICLE SYSTEM ON HIT
 
                         } } } } }
 
@@ -1309,7 +1320,7 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                     ( (AIController*) Target->getController() )->enableShotPanic(); }
 
-                // TODO PARTICLE EFFECT ON HIT
+                // TODO CREATE PARTICLE SYSTEM ON HIT
 
                 }
 

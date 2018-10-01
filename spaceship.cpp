@@ -26,7 +26,7 @@ Shape * Spaceship::getShape ( ) {
 
 sf::FloatRect Spaceship::getInfluenceArea ( ) {
 
-    sf::FloatRect InfluenceArea ( getPosition().x - getRadius(), getPosition().y - getRadius(), 2.f * getRadius(), 2.f * getRadius() );
+    sf::FloatRect InfluenceArea ( getPosition().x - 2.f * getRadius(), getPosition().y - 2.f * getRadius(), 4.f * getRadius(), 4.f * getRadius() );
 
     if ( ThrusterExhaust.getInfluenceArea().left < InfluenceArea.left ) {
 
@@ -213,6 +213,11 @@ void Spaceship::setThrusterTexture ( sf::Texture &ThrusterTexture, sf::Color Thr
     this->ThrusterTexture = ThrusterTexture;
     this->ThrusterFuelColor = ThrusterFuelColor; }
 
+void Spaceship::setBrakesTextures ( std::vector <sf::Texture*> BrakesTextures, sf::Color BrakesFuelColor ) {
+
+    this->BrakesTextures = std::move( BrakesTextures );
+    this->BrakesFuelColor = BrakesFuelColor; }
+
 void Spaceship::update ( sf::Event &Event ) {
 
     if ( isDestructed() ) {
@@ -235,8 +240,19 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
     sf::Vector2f ThrusterPosition = getPosition();
     ThrusterPosition += ( SQRT2_2ND * 0.5f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() ), sinf( PI + getVelocityAngle() ) );
     ThrusterPosition += ( SQRT2_2ND * 0.3125f * getRadius() ) * sf::Vector2f( cosf( PI + getVelocityAngle() + ThrusterAngleOffset ), sinf( PI + getVelocityAngle() + ThrusterAngleOffset ) );
-
     ThrusterExhaust.setOriginPosition( ThrusterPosition );
+
+    BrakesTextureTime += ElapsedTime;
+    BrakesAlpha = fmaxf( 0.f, BrakesAlpha - ElapsedTime.asSeconds() );
+
+    if ( BrakesTextureTime > BrakesTextureDuration ) {
+
+        BrakesTextureIndex++;
+        BrakesTextureTime = sf::seconds( 0.f );
+
+        if ( BrakesTextureIndex >= BrakesTextures.size() ) {
+
+            BrakesTextureIndex = 0; } }
 
     if ( Controller ) {
 
@@ -274,7 +290,7 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
             ThrusterExhaust.setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
             ThrusterExhaust.generateParticles( (unsigned int) ( ( Thrust / 100.f ) * 200 * ElapsedTime.asSeconds() ) ); }
 
-        else if ( Controller->onThrustBackward() && Energy >= ( Thrust * ElapsedTime.asSeconds() ) ) {
+        else if ( Controller->onThrustBackward() && Energy >= ( BrakingFactor * Thrust * ElapsedTime.asSeconds() ) ) {
 
             const float MinimumVelocity = 1.f;
 
@@ -282,6 +298,7 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
 
                 float Angle = getVelocityAngle() + PI;
                 float Module = sqrtf( getVelocity().x * getVelocity().x + getVelocity().y * getVelocity().y );
+                BrakesAlpha = fminf( fminf( 1.f, Module / ( BrakingFactor * Thrust ) ), BrakesAlpha + 3.f * ElapsedTime.asSeconds() );
 
                 sf::Vector2f Acceleration;
                 Acceleration.x = BrakingFactor * Module * cosf( Angle );
@@ -337,6 +354,7 @@ void Spaceship::render ( sf::RenderWindow &Window, bool Debug ) {
     sf::Sprite Sprite ( Texture );
     sf::Sprite AccentSprite ( AccentTexture );
     sf::Sprite ThrusterSprite ( ThrusterTexture );
+    sf::Sprite BrakesSprite ( *BrakesTextures[ BrakesTextureIndex ] );
 
     Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
     Sprite.setScale( ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().x, ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().y );
@@ -358,7 +376,14 @@ void Spaceship::render ( sf::RenderWindow &Window, bool Debug ) {
     ThrusterSprite.setPosition( getPosition() + ThrusterModule * sf::Vector2f( cosf( ThrusterAngle ), sinf( ThrusterAngle ) ) );
     ThrusterSprite.setRotation( RAD_TO_DEG * ( PI + ThrusterAngle + ThrusterAngleOffset ) + 90.f );
 
+    BrakesSprite.setOrigin( (float) AccentTexture.getSize().x / 2, (float) AccentTexture.getSize().y / 2 );
+    BrakesSprite.setScale( ( SQRT2_2ND * 4.f * getRadius() ) / AccentTexture.getSize().x, ( SQRT2_2ND * 4.f * getRadius() ) / AccentTexture.getSize().y );
+    BrakesSprite.setPosition( getPosition() );
+    BrakesSprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
+    BrakesSprite.setColor( sf::Color( BrakesFuelColor.r, BrakesFuelColor.g, BrakesFuelColor.b, (sf::Uint8) ( 255.f * BrakesAlpha ) ) );
+
     ThrusterExhaust.render( Window );
+    Window.draw( BrakesSprite );
     Window.draw( ThrusterSprite );
     Window.draw( Sprite );
     Window.draw( AccentSprite );
@@ -380,6 +405,7 @@ void Spaceship::render ( sf::RenderTexture &Buffer ) {
     sf::Sprite Sprite ( Texture );
     sf::Sprite AccentSprite ( AccentTexture );
     sf::Sprite ThrusterSprite ( ThrusterTexture );
+    sf::Sprite BrakesSprite ( *BrakesTextures[ BrakesTextureIndex ] );
 
     Sprite.setOrigin( (float) Texture.getSize().x / 2, (float) Texture.getSize().y / 2 );
     Sprite.setScale( ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().x, ( SQRT2_2ND * 2.f * getRadius() ) / Texture.getSize().y );
@@ -401,7 +427,14 @@ void Spaceship::render ( sf::RenderTexture &Buffer ) {
     ThrusterSprite.setPosition( getPosition() + ThrusterModule * sf::Vector2f( cosf( ThrusterAngle ), sinf( ThrusterAngle ) ) );
     ThrusterSprite.setRotation( RAD_TO_DEG * ( PI + ThrusterAngle + ThrusterAngleOffset ) + 90.f );
 
+    BrakesSprite.setOrigin( (float) AccentTexture.getSize().x / 2, (float) AccentTexture.getSize().y / 2 );
+    BrakesSprite.setScale( ( SQRT2_2ND * 4.f * getRadius() ) / AccentTexture.getSize().x, ( SQRT2_2ND * 4.f * getRadius() ) / AccentTexture.getSize().y );
+    BrakesSprite.setPosition( getPosition() );
+    BrakesSprite.setRotation( RAD_TO_DEG * getVelocityAngle() + 90.f );
+    BrakesSprite.setColor( sf::Color( BrakesFuelColor.r, BrakesFuelColor.g, BrakesFuelColor.b, (sf::Uint8) ( 255.f * BrakesAlpha ) ) );
+
     ThrusterExhaust.render( Buffer );
+    Buffer.draw( BrakesSprite );
     Buffer.draw( ThrusterSprite );
     Buffer.draw( Sprite );
     Buffer.draw( AccentSprite ); }

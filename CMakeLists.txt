@@ -4,7 +4,7 @@ project(gravity-madness)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE RELEASE)
 
-if(WIN32) # TODO fix version 2.2
+if(WIN32) # TODO fix errors for SFML 2.2
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")

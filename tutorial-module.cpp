@@ -142,7 +142,7 @@ void TutorialModule::update ( ) {
 
     if ( ElapsedTime.asSeconds() <= 0.1f ) {
 
-        // TODO LOW FPS MESSAGE
+        // TODO LOW PERFORMANCE MESSAGE
 
         }
 
@@ -604,7 +604,7 @@ Spaceship * TutorialModule::getPlayerSpaceship ( ) {
 
     auto * NewSpaceship = new Spaceship ( 400.00, 40.00 );
 
-    NewSpaceship->getShape()->loadOutline( "(0.71,0.00),(1.00,135.00),(0.37,154.00),(0.44,180.00),(0.35,-154.00),(1.00,-135.00)", 40.00 ); // TODO LOAD SHAPE
+    NewSpaceship->getShape()->loadOutline( "(0.71,0.00),(1.00,135.00),(0.37,154.00),(0.44,180.00),(0.35,-154.00),(1.00,-135.00)", 40.00 );
     NewSpaceship->setHealthLimit( 100.00 );
     NewSpaceship->setHealth( 100.00 );
     NewSpaceship->setHealthRestoration( 0.f );
@@ -620,6 +620,7 @@ Spaceship * TutorialModule::getPlayerSpaceship ( ) {
     NewSpaceship->setTexture( Graphics->getTexture( "Spaceship" ) );
     NewSpaceship->setAccentTexture( Graphics->getTexture( "SpaceshipAccent" ), Gameplay->getPlayerColor( 0 ) );
     NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), sf::Color( 255, 64, 129 ) ); // #FF4081
+    NewSpaceship->setBrakesTextures( Game->getBrakesTextures(), sf::Color( 255, 64, 129 ) ); // #FF4081
 
     return NewSpaceship; }
 
@@ -627,7 +628,7 @@ Spaceship * TutorialModule::getEnemySpaceship ( ) {
 
     auto * NewSpaceship = new Spaceship ( 400.00, 40.00 );
 
-    NewSpaceship->getShape()->loadOutline( "(0.71,0.00),(1.00,135.00),(0.37,154.00),(0.44,180.00),(0.35,-154.00),(1.00,-135.00)", 40.00 ); // TODO LOAD SHAPE
+    NewSpaceship->getShape()->loadOutline( "(0.71,0.00),(1.00,135.00),(0.37,154.00),(0.44,180.00),(0.35,-154.00),(1.00,-135.00)", 40.00 );
     NewSpaceship->setHealthLimit( 100.00 );
     NewSpaceship->setHealth( 100.00 );
     NewSpaceship->setHealthRestoration( 0.f );
@@ -641,8 +642,9 @@ Spaceship * TutorialModule::getEnemySpaceship ( ) {
     NewSpaceship->setMissileLimit( 5 );
     NewSpaceship->setMissileCount( 5 );
     NewSpaceship->setTexture( Graphics->getTexture( "Spaceship" ) );
-    NewSpaceship->setAccentTexture( Graphics->getTexture( "SpaceshipAccent" ), Gameplay->getPlayerColor( 0 ) );
+    NewSpaceship->setAccentTexture( Graphics->getTexture( "SpaceshipAccent" ), sf::Color( 255, 23, 68 ) ); // #FF1744
     NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), sf::Color( 255, 64, 129 ) ); // #FF4081
+    NewSpaceship->setBrakesTextures( Game->getBrakesTextures(), sf::Color( 255, 64, 129 ) ); // #FF4081
 
     return NewSpaceship; }
 

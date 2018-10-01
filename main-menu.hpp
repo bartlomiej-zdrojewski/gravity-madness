@@ -94,6 +94,8 @@ private:
     static std::string getTimeText ( sf::Time Time );
     static std::string blankUnderscore ( std::string Text );
 
+    std::vector <sf::Texture*> getBrakesTextures ( );
+
     void updateMenu ( sf::Time ElapsedTime );
     void updateMenu ( sf::Event &Event );
     void renderMenu ( sf::RenderWindow &Window );
