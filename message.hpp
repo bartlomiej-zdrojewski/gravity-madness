@@ -38,7 +38,7 @@ private:
     bool Close;
     Types Type;
 
-    std::string Text [6];
+    std::string Texts [6];
     unsigned int FontSize;
     float VerticalFontFix;
     float LineHeight;

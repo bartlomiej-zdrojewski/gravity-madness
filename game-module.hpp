@@ -51,7 +51,7 @@ public:
 
     void update ( );
     void update ( sf::Event &Event );
-    void render ( sf::RenderWindow &Window, bool Debug = false );
+    void render ( sf::RenderWindow &Window, bool DisplayShape = false );
 
     void reset ( );
     void terminate ( );

@@ -83,6 +83,7 @@ public:
         AIPersonality = AIPersonalities::Random;
         EndingCondition = EndingConditions::NoEnemies;
         TimeLimit = sf::seconds( 5.f * 60.f );
+        HighScore = 0;
         Winner = 0;
 
         for ( unsigned int i = 0; i < MAXIMUM_PLAYER_COUNT; i++ ) {
@@ -90,13 +91,13 @@ public:
             SpaceshipAssignments[i] = -1; }
 
         PlayerNames[0] = "Faraday"; // Michael Faraday (physics)
-        PlayerNames[1] = "Mendel"; // Gregor Mendel (biology)
-        PlayerNames[2] = "Lavoisier"; // Marie-Anne Paulze Lavoisier (chemistry)
+        PlayerNames[1] = "Lavoisier"; // Marie-Anne Paulze Lavoisier (chemistry)
+        PlayerNames[2] = "Mendel"; // Gregor Mendel (biology)
         PlayerNames[3] = "Euclid"; // Euclid (math)
         PlayerColors[0] = sf::Color( 0, 176, 255 ); // #00B0FF
-        PlayerColors[1] = sf::Color( 0, 230, 118 ); // #00E676
-        PlayerColors[2] = sf::Color( 255, 145, 0 ); // #FF9100
-        PlayerColors[3] = sf::Color( 255, 234, 0 ); // #FFEA00
+        PlayerColors[1] = sf::Color( 213, 0, 249 ); // #D500F9
+        PlayerColors[2] = sf::Color( 0, 230, 118 ); // #00E676
+        PlayerColors[3] = sf::Color( 255, 196, 0 ); // #FFC400
 
         loadDefaultSpaceshipPrototypes(); }
 
@@ -155,6 +156,8 @@ public:
     sf::Time getTimeLimit ( );
     void setTimeLimit ( sf::Time TimeLimit );
 
+    unsigned int getHighScore ( );
+    void setHighScore ( unsigned int HighScore );
     ScoreCounter * getScores ( );
 
     unsigned char getWinner ( );
@@ -166,6 +169,7 @@ private:
 
 private:
 
+
     AreaSizes AreaSize;
     AsteroidFrequencies AsteroidFrequency;
     unsigned int PlayerCount;
@@ -174,6 +178,7 @@ private:
     EndingConditions EndingCondition;
     sf::Time TimeLimit;
 
+    unsigned int HighScore;
     ScoreCounter Scores [ MAXIMUM_PLAYER_COUNT ];
     unsigned char Winner;
 

@@ -4,14 +4,17 @@ project(gravity-madness)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE RELEASE)
 
-if(WIN32) # TODO fix errors for SFML 2.2
+if(WIN32)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
     set(SFML_STATIC_LIBRARIES TRUE)
 
-    #set(GUI_TYPE WIN32) # Comment to launch with the console
+    set(GUI_TYPE WIN32) # Comment to launch with the console
     set(SFML_PATH "C:/Development/SFML-2.5.0-64") # Put your own path to SFML 2.x directory
+
+    ENABLE_LANGUAGE(RC)
+    set(RESOURCE_FILES resources.rc)
 
     if(EXISTS ${SFML_PATH})
 
@@ -62,7 +65,7 @@ set(CONTROLLER_HEADER_FILES controllers/spaceship-controller.hpp controllers/pla
 set(POWER_UP_HEADER_FILES power-ups/power-up.hpp power-ups/low-health-power-up.hpp power-ups/high-health-power-up.hpp power-ups/low-energy-power-up.hpp power-ups/high-energy-power-up.hpp power-ups/missile-power-up.hpp power-ups/no-asteroids-power-up.hpp power-ups/more-asteroids-power-up.hpp power-ups/low-gravity-power-up.hpp power-ups/high-gravity-power-up.hpp power-ups/random-gravity-power-up.hpp)
 set(OTHER_HEADER_FILES script.hpp logger.hpp logger-manager.hpp body.hpp planet.hpp spaceship.hpp interface.hpp constants.hpp ray.hpp particle-system.hpp asteroid.hpp missile.hpp body-collision.hpp gameplay-settings.hpp main-menu.hpp pause-menu.hpp score-board.hpp message.hpp score-board.cpp score-counter.hpp shape.hpp)
 
-set(SOURCE_FILES ${PUGIXML_SOURCE_FILES} ${MODULE_SOURCE_FILES} ${CONTROLLER_SOURCE_FILES} ${POWER_UP_SOURCE_FILES} ${OTHER_SOURCE_FILES})
+set(SOURCE_FILES ${RESOURCE_FILES} ${PUGIXML_SOURCE_FILES} ${MODULE_SOURCE_FILES} ${CONTROLLER_SOURCE_FILES} ${POWER_UP_SOURCE_FILES} ${OTHER_SOURCE_FILES})
 set(HEADER_FILES ${PUGIXML_HEADER_FILES} ${MODULE_HEADER_FILES} ${CONTROLLER_HEADER_FILES} ${POWER_UP_HEADER_FILES} ${OTHER_HEADER_FILES})
 
 add_executable(gravity-madness ${GUI_TYPE} ${SOURCE_FILES} ${HEADER_FILES})
@@ -76,6 +79,21 @@ else()
     target_link_libraries(gravity-madness ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
 
 endif()
+
+add_custom_command(TARGET gravity-madness POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/LICENSE $<TARGET_FILE_DIR:gravity-madness>/license.txt)
+
+add_custom_command(TARGET gravity-madness POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/icon.ico $<TARGET_FILE_DIR:gravity-madness>/icon.ico)
+
+add_custom_command(TARGET gravity-madness POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/icon.png $<TARGET_FILE_DIR:gravity-madness>/icon.png)
+
+add_custom_command(TARGET gravity-madness POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/logo-bright.png $<TARGET_FILE_DIR:gravity-madness>/logo-bright.png)
+
+add_custom_command(TARGET gravity-madness POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/logo-dark.png $<TARGET_FILE_DIR:gravity-madness>/logo-dark.png)
 
 add_custom_command(TARGET gravity-madness POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:gravity-madness>/assets)

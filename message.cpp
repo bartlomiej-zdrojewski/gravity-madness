@@ -6,29 +6,35 @@ Message::Message ( GraphicsModule * Graphics ) {
 
     Close = false;
     Type = Types::None;
+    FontSize = 100;
 
-    Text[0] = "NONE";
-    Text[1] = "During game initialisation one or more warnings have been reported.\n"
-              "As a result, some of the game features may not work as expected.\n"
-              "However the crucial ones should stay unaffected and fully functional.\n"
-              "For more details check log file or contact support team.";
-    Text[2] = "During game initialisation one or more errors have been reported.\n"
-              "As a result, the game can not be continued and will be closed now.\n"
-              "For more details check log file or contact support team.";
-    Text[3] = "During game runtime one or more errors have been reported.\n"
-              "As a result, the game can not be continued and will be closed now.\n"
-              "For more details check log file or contact support team.";
-    Text[4] = "LOW FPS"; // TODO LOW PERFORMANCE ERROR
-    Text[5] = "Hey! My name is Bartek and I'm a creator of this game. I've had loads of fun making it\n"
-              "and I hope you'll have too by playing it. But before that, I've got some tips for you:\n"
-              "1) If you need it, there is an epilepsy protection that can be enabled in settings section.\n"
-              "2) Remember to choose graphic card instead of cpu. Everything look so much cooler with it!\n"
-              "3) I strongly recommend you to try the tutorial. The controls are not that obvious.\n"
-              "That's all for now. Thanks again and have fun!"; }
+    Texts[0] = "NONE";
+    Texts[1] = "During game initialisation one or more warnings have been reported.\n"
+               "As a result, some of the game features may not work as expected.\n"
+               "However the crucial ones should stay unaffected and work properly.\n"
+               "For more details check log file or contact support team.";
+    Texts[2] = "During game initialisation one or more errors have been reported.\n"
+               "As a result, the game can not be continued and will be closed now.\n"
+               "For more details check log file or contact support team.";
+    Texts[3] = "During game runtime one or more errors have been reported.\n"
+               "As a result, the game can not be continued and will be closed now.\n"
+               "For more details check log file or contact support team.";
+    Texts[4] = "During game runtime significantly low performance has been detected (below 10 fps).\n"
+               "It may cause some algorithms to crash, so game can not be continued and will closed now.\n"
+               "Graphics settings have been lowered to minimum to prevent future performance problems.\n"
+               "They can be changed in the settings section. For more details contact support team.";
+    Texts[5] = "Hey! My name is Bartek and I'm a creator of this game. I've had lots of fun making it\n"
+               "and I hope you'll have too, while playing it. But before that, I've got some tips for you:\n"
+               "1) If you need it, there is an epilepsy protection that can be enabled in settings section.\n"
+               "2) Remember to choose graphic card instead of cpu. Everything look so much cooler with that!\n"
+               "3) I strongly recommend you to try the tutorial. The controls are not that obvious.\n"
+               "That's all for now. Thanks again and have fun!"; }
 
 void Message::setType ( Types Type ) {
 
-    this->Type = Type; }
+    this->Type = Type;
+
+    update(); }
 
 void Message::update ( ) {
 
@@ -45,42 +51,42 @@ void Message::update ( ) {
 
         case Types::InitTimeWarning: {
 
-            TextPrototype.setString( Text[1] );
+            TextPrototype.setString( Texts[1] );
 
             break; }
 
         case Types::InitTimeError: {
 
-            TextPrototype.setString( Text[2] );
+            TextPrototype.setString( Texts[2] );
 
             break; }
 
         case Types::RunTimeError: {
 
-            TextPrototype.setString( Text[3] );
+            TextPrototype.setString( Texts[3] );
 
             break; }
 
         case Types::LowPerformanceError: {
 
-            TextPrototype.setString( Text[4] );
+            TextPrototype.setString( Texts[4] );
 
             break; }
 
         case Types::WelcomeMessage: {
 
-            TextPrototype.setString( Text[5] );
+            TextPrototype.setString( Texts[5] );
 
             break; }
 
         default: {
 
-            TextPrototype.setString( Text[0] );
+            TextPrototype.setString( Texts[0] );
 
             break; } }
 
     FontSize = 100;
-    FrameSize = sf::Vector2f ( 0.8f * Graphics->getWindowWidth(), Graphics->getWindowHeight() );
+    FrameSize = sf::Vector2f ( 0.9f * Graphics->getWindowWidth(), Graphics->getWindowHeight() );
     FrameMargin = sf::Vector2f ( 20.f, 25.f );
 
     TextPrototype.setCharacterSize( FontSize );
@@ -145,9 +151,9 @@ void Message::update ( sf::Event &Event ) {
 
 void Message::render ( sf::RenderWindow &Window ) {
 
+    sf::Text Text;
+    std::string TextString;
     sf::RectangleShape Frame;
-    sf::Text TextPrototype;
-    std::string FullText;
 
     Frame.setSize( FrameSize );
     Frame.setPosition( FramePosition );
@@ -157,45 +163,45 @@ void Message::render ( sf::RenderWindow &Window ) {
 
     Window.draw( Frame );
 
-    TextPrototype.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
-    TextPrototype.setCharacterSize( FontSize );
-    TextPrototype.setPosition( FramePosition + FrameMargin + sf::Vector2f( 0.f, VerticalFontFix ) );
+    Text.setFont( Graphics->getFont( "RobotoCondensedLight" ) );
+    Text.setCharacterSize( FontSize );
+    Text.setPosition( FramePosition + FrameMargin + sf::Vector2f( 0.f, VerticalFontFix ) );
 
     switch ( Type ) {
 
         case Types::InitTimeWarning: {
 
-            FullText = Text[1];
+            TextString = Texts[1];
 
             break; }
 
         case Types::InitTimeError: {
 
-            FullText = Text[2];
+            TextString = Texts[2];
 
             break; }
 
         case Types::RunTimeError: {
 
-            FullText = Text[3];
+            TextString = Texts[3];
 
             break; }
 
         case Types::LowPerformanceError: {
 
-            TextPrototype.setString( Text[4] );
+            TextString = Texts[4];
 
             break; }
 
         case Types::WelcomeMessage: {
 
-            TextPrototype.setString( Text[5] );
+            TextString = Texts[5];
 
             break; }
 
         default: {
 
-            FullText = Text[0];
+            TextString = Texts[0];
 
             break; } }
 
@@ -206,18 +212,18 @@ void Message::render ( sf::RenderWindow &Window ) {
     do {
 
         Begin = End + ( End > 0 ? 1 : 0 );
-        End = FullText.find( '\n', End + 1 );
-        Position = TextPrototype.getPosition();
+        End = TextString.find( '\n', End + 1 );
+        Position = Text.getPosition();
 
-        TextPrototype.setString( FullText.substr( Begin, End - Begin ) );
-        Position.x += 0.5f *( FrameSize.x - 2.f * FrameMargin.x - TextPrototype.getLocalBounds().width );
-        TextPrototype.setPosition( Position );
+        Text.setString( TextString.substr( Begin, End - Begin ) );
+        Position.x += 0.5f *( FrameSize.x - 2.f * FrameMargin.x - Text.getLocalBounds().width );
+        Text.setPosition( Position );
 
-        Window.draw( TextPrototype );
+        Window.draw( Text );
 
         Position.x = FramePosition.x + FrameMargin.x;
         Position.y += LineHeight;
-        TextPrototype.setPosition( Position ); }
+        Text.setPosition( Position ); }
 
     while ( End != std::string::npos ); }
 

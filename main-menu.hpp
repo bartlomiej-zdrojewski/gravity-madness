@@ -42,11 +42,12 @@ public:
     void render ( sf::RenderWindow &Window );
     void reset ( );
 
-    bool onLaunchTutorial ( );
     bool onLaunchGame ( );
-    bool onTerminate ( );
+    bool onLaunchTutorial ( );
     bool onVideoChanged ( );
     bool onSettingsChanged ( );
+    bool onLowPerformance ( );
+    bool onTerminate ( );
 
 private:
 
@@ -133,11 +134,14 @@ private:
 
     bool LaunchGame;
     bool LaunchTutorial;
-    bool Terminate;
     bool VideoChanged;
     bool SettingsChanged;
+    bool LowPerformance;
+    bool Terminate;
     Modes Mode;
     sf::Clock Clock;
+    // TODO sf::Time PerformanceTimer;
+    // TODO sf::Time LowPerformanceTimer;
 
     unsigned int WindowWidth;
     unsigned int WindowHeight;

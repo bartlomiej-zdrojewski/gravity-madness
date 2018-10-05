@@ -457,7 +457,7 @@ void TutorialModule::update ( sf::Event &Event ) {
 
         if ( Event.type == sf::Event::KeyPressed ) {
 
-            if ( Event.key.code == sf::Keyboard::Escape || Event.key.code == sf::Keyboard::Enter || Event.key.code == sf::Keyboard::Space ) {
+            if ( Event.key.code == sf::Keyboard::Escape || Event.key.code == sf::Keyboard::Return || Event.key.code == sf::Keyboard::Space ) {
 
                 Game->PlayerInterface[0]->endFadeOut(); } }
 

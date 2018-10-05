@@ -136,7 +136,7 @@ void Missile::update ( sf::Time ElapsedTime ) {
             ThrusterExhaust.setOriginVelocity( getVelocity() );
             ThrusterExhaust.setAngleRange( PI + getVelocityAngle() + ThrusterAngleOffset, 0.05f * PI );
             ThrusterExhaust.setVelocityRange( 250.f, 500.f );
-            ThrusterExhaust.setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+            ThrusterExhaust.setColorRange( sf::Color ( 255, 255, 0 ), sf::Color ( 255, 255, 255 ) );
             ThrusterExhaust.setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
             ThrusterExhaust.generateParticles( (unsigned int) ( ( Thrust / 100.f ) * 200 * ElapsedTime.asSeconds() ) ); }
 
@@ -146,9 +146,9 @@ void Missile::update ( sf::Time ElapsedTime ) {
         MyShape->setOrigin( getPosition() );
         MyShape->setRotation( getVelocityAngle() ); } }
 
-void Missile::render ( sf::RenderWindow &Window, bool Debug ) {
+void Missile::render ( sf::RenderWindow &Window, bool DisplayShape ) {
 
-    if ( Debug ) {
+    if ( DisplayShape ) {
 
         sf::CircleShape CollisionCircle;
         CollisionCircle.setRadius( getRadius() );
@@ -179,15 +179,15 @@ void Missile::render ( sf::RenderWindow &Window, bool Debug ) {
     Window.draw( ThrusterSprite );
     Window.draw( Sprite );
 
-    if ( Debug ) {
+    if ( DisplayShape ) {
 
         sf::VertexArray ShapeVertexes;
         ShapeVertexes.setPrimitiveType( sf::PrimitiveType::Lines );
 
         for ( Shape::Segment &MySegment : MyShape->getOutline() ) {
 
-            ShapeVertexes.append( sf::Vertex( MySegment.Begin, sf::Color::Green ) );
-            ShapeVertexes.append( sf::Vertex( MySegment.End, sf::Color::Green ) ); }
+            ShapeVertexes.append( sf::Vertex( MySegment.Begin, sf::Color( 0, 255, 0 ) ) );
+            ShapeVertexes.append( sf::Vertex( MySegment.End, sf::Color( 0, 255, 0 ) ) ); }
 
         Window.draw( ShapeVertexes ); } }
 
@@ -229,7 +229,7 @@ ParticleSystem * Missile::onCollision ( Planet * Other ) {
     Explosion->setOriginVelocity( sf::Vector2f( 0, 0 ) );
     Explosion->setAngleRange( Normal, PI / 2.f );
     Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
-    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setColorRange( sf::Color ( 255, 255, 0 ), sf::Color ( 255, 255, 255 ) );
     Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
     Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) + Velocity > 200.f ? 1000 : 500 );
 
@@ -249,7 +249,7 @@ ParticleSystem * Missile::onCollision ( Asteroid * Other ) {
     Explosion->setOriginVelocity( Collision.getSecondVelocity() );
     Explosion->setAngleRange( Normal, PI / 2.f );
     Explosion->setVelocityRange( 15.f, 15.f + 0.8f * Velocity );
-    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setColorRange( sf::Color ( 255, 255, 0 ), sf::Color ( 255, 255, 255 ) );
     Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
     Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) + Velocity > 200.f ? 1000 : 500 );
 
@@ -270,7 +270,7 @@ ParticleSystem * Missile::onCollision ( Spaceship * Other ) {
     Explosion->setOriginVelocity( Collision.getSecondVelocity() );
     Explosion->setAngleRange( Normal, PI / 3.f );
     Explosion->setVelocityRange( 10.f, 20.f + 0.8f * Velocity );
-    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setColorRange( sf::Color ( 255, 255, 0 ), sf::Color ( 255, 255, 255 ) );
     Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
     Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) );
 
@@ -303,7 +303,7 @@ ParticleSystem * Missile::onCollision ( Missile * Other ) {
     Explosion->setOriginVelocity( sf::Vector2f( 0, 0 ) );
     Explosion->setAngleRange( Normal, 0.8f * PI );
     Explosion->setVelocityRange( - 10.f - 0.2f * Velocity, 20.f + 0.8f * Velocity );
-    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setColorRange( sf::Color ( 255, 255, 0 ), sf::Color ( 255, 255, 255 ) );
     Explosion->setDuration( sf::seconds( 0.2f ), sf::seconds( 2.f ) );
     Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) );
 
@@ -323,7 +323,7 @@ ParticleSystem * Missile::onDestruction ( ) {
     Explosion->setOriginVelocity( getVelocity() );
     Explosion->setAngleRange( 0.f, PI );
     Explosion->setVelocityRange( - 100.f, 100.f );
-    Explosion->setColorRange( sf::Color ( 200, 0, 50 ), sf::Color ( 255, 50, 150 ) );
+    Explosion->setColorRange( sf::Color ( 255, 255, 0 ), sf::Color ( 255, 255, 255 ) );
     Explosion->setDuration( sf::seconds( 1.f ), sf::seconds( 3.f ) );
     Explosion->generateParticles( (unsigned int) ( ExplosionPower * 25 ) );
 

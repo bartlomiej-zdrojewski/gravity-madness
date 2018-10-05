@@ -433,7 +433,7 @@ const std::unordered_map < int, std::string > PlayerControllerSettings::Encoder 
     { sf::Keyboard::SemiColon, ";" }, { sf::Keyboard::Comma, "COMMA" }, { sf::Keyboard::Period, "PERIOD" },
     { sf::Keyboard::Quote, "QUOTE" }, { sf::Keyboard::Slash, "/" }, { sf::Keyboard::BackSlash, "\\" },
     { sf::Keyboard::Tilde, "~" }, { sf::Keyboard::Equal, "=" }, { sf::Keyboard::Dash, "-" },
-    { sf::Keyboard::Space, "SPACE" }, { sf::Keyboard::Enter, "ENTER" }, { sf::Keyboard::BackSpace, "BACKSPACE" },
+    { sf::Keyboard::Space, "SPACE" }, { sf::Keyboard::Return, "ENTER" }, { sf::Keyboard::BackSpace, "BACKSPACE" },
     { sf::Keyboard::Tab, "TAB" }, { sf::Keyboard::PageUp , "PAGE_UP" }, { sf::Keyboard::PageDown, "PAGE_DOWN" },
     { sf::Keyboard::End, "END" }, { sf::Keyboard::Home, "HOME" }, { sf::Keyboard::Insert, "INSERT" },
     { sf::Keyboard::Delete, "DELETE" }, { sf::Keyboard::Pause, "PAUSE" },

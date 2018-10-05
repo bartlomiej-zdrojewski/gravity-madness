@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+
+<Graphics>
+
+    <Textures>
+
+        <Path>assets/graphics/textures/</Path>
+
+        <Texture>
+            <Name>IconArrow</Name>
+            <Path>icon-arrow.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>IconMissile</Name>
+            <Path>icon-missile.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Thruster</Name>
+            <Path>thruster.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes1</Name>
+            <Path>brakes-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes2</Name>
+            <Path>brakes-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes3</Name>
+            <Path>brakes-3.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes4</Name>
+            <Path>brakes-4.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Brakes5</Name>
+            <Path>brakes-5.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Missile</Name>
+            <Path>missile.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>Spaceship</Name>
+            <Path>spaceship.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccent</Name>
+            <Path>spaceship-accent.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAzrael</Name>
+            <Path>spaceship-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentAzrael</Name>
+            <Path>spaceship-accent-azrael.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipGogmagog</Name>
+            <Path>spaceship-gogmagog.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentGogmagog</Name>
+            <Path>spaceship-accent-gogmagog.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipPerun</Name>
+            <Path>spaceship-perun.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentPerun</Name>
+            <Path>spaceship-accent-perun.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipGilgamesh</Name>
+            <Path>spaceship-gilgamesh.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentGilgamesh</Name>
+            <Path>spaceship-accent-gilgamesh.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipTheseus</Name>
+            <Path>spaceship-theseus.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>SpaceshipAccentTheseus</Name>
+            <Path>spaceship-accent-theseus.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidSmall1</Name>
+            <Path>asteroid-small-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidSmall2</Name>
+            <Path>asteroid-small-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidSmall3</Name>
+            <Path>asteroid-small-3.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidMedium1</Name>
+            <Path>asteroid-medium-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidMedium2</Name>
+            <Path>asteroid-medium-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidMedium3</Name>
+            <Path>asteroid-medium-3.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidBig1</Name>
+            <Path>asteroid-big-1.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidBig2</Name>
+            <Path>asteroid-big-2.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>AsteroidBig3</Name>
+            <Path>asteroid-big-3.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpLowHealth</Name>
+            <Path>power-up-low-health.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpHighHealth</Name>
+            <Path>power-up-high-health.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpLowEnergy</Name>
+            <Path>power-up-low-energy.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpHighEnergy</Name>
+            <Path>power-up-high-energy.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpMissile</Name>
+            <Path>power-up-missile.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpNoAsteroids</Name>
+            <Path>power-up-no-asteroids.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpMoreAsteroids</Name>
+            <Path>power-up-more-asteroids.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpLowGravity</Name>
+            <Path>power-up-low-gravity.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpHighGravity</Name>
+            <Path>power-up-high-gravity.png</Path>
+        </Texture>
+
+        <Texture>
+            <Name>PowerUpRandomGravity</Name>
+            <Path>power-up-random-gravity.png</Path>
+        </Texture>
+
+    </Textures>
+
+    <Fonts>
+
+        <Path>assets/graphics/fonts/</Path>
+
+        <Font>
+            <Name>RobotoCondensedLight</Name>
+            <Path>roboto-condensed-light.ttf</Path>
+        </Font>
+
+        <Font>
+            <Name>SairaCondensedLight</Name>
+            <Path>saira-condensed-light.ttf</Path>
+        </Font>
+
+        <Font>
+            <Name>ShareTechMonoRegular</Name>
+            <Path>share-tech-mono-regular.ttf</Path>
+        </Font>
+
+    </Fonts>
+
+</Graphics>

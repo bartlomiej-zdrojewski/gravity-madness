@@ -172,6 +172,9 @@ void GraphicsModule::init ( ) {
 
         logError( "Failed to load graphics module config script!" ); }
 
+    InitProgress = 0.f;
+    unsigned int InitProgressState = 0;
+
     for ( auto File : TextureFiles ) {
 
         if ( !ImageBuffer.loadFromFile( File.Path ) ) {
@@ -184,6 +187,9 @@ void GraphicsModule::init ( ) {
         ImageState = 1;
 
         while ( ImageState != 2 );
+
+        InitProgressState++;
+        InitProgress = (float) InitProgressState / (float) ( TextureFiles.size() + FontFiles.size() );
 
         ImageState = 0; }
 
@@ -201,8 +207,12 @@ void GraphicsModule::init ( ) {
 
             logError( "Failed to insert '" + File.Name + "' font into hash map!" );
 
-            continue; } }
+            continue; }
 
+        InitProgressState++;
+        InitProgress = (float) InitProgressState / (float) ( TextureFiles.size() + FontFiles.size() ); }
+
+    InitProgress = 1.f;
     ImageBuffer.create( 0, 0 );
 
     (*InitState)++; }
@@ -223,6 +233,10 @@ void GraphicsModule::initContext ( ) {
         logError( "Failed to insert '" + ImageName + "' texture into hash map!" ); }
 
     ImageState = 2; }
+
+float GraphicsModule::getInitProgress ( ) {
+
+    return InitProgress; }
 
 unsigned int GraphicsModule::getWindowWidth ( ) {
 
@@ -301,7 +315,7 @@ sf::Font& GraphicsModule::getFont ( std::string Name ) {
 
     return *Element->second; }
 
-void GraphicsModule::initDefault ( ) { // TODO Load from memory
+void GraphicsModule::initDefault ( ) {
 
     Textures.insert( { "default", new sf::Texture () } );
     Fonts.insert( { "default", new sf::Font () } ); }

@@ -252,15 +252,15 @@ void GameModule::update ( ) {
 
                         if ( Minutes % 5 == 0 ) {
 
-                            MinutesNotification = std::to_string( Minutes ) + " minutes are left"; } }
+                            MinutesNotification = std::to_string( Minutes ) + " minutes left"; } }
 
                     else if ( Minutes > 1 ) {
 
-                        MinutesNotification = std::to_string( Minutes ) + " minutes are left"; }
+                        MinutesNotification = std::to_string( Minutes ) + " minutes left"; }
 
                     else if ( Minutes == 1 ) {
 
-                        MinutesNotification = std::to_string( Minutes ) + " minute is left"; }
+                        MinutesNotification = std::to_string( Minutes ) + " minute left"; }
 
                     if ( !MinutesNotification.empty() ) {
 
@@ -307,7 +307,8 @@ void GameModule::update ( ) {
 
             if ( getAlivePlayerCount() == 0 ) {
 
-                EndingCondition = true; }
+                EndingCondition = true;
+                Gameplay->setWinner( 0x00 ); }
 
             else {
 
@@ -318,7 +319,7 @@ void GameModule::update ( ) {
                         if ( GameplayTime.asSeconds() <= 0.f ) {
 
                             EndingCondition = true;
-                            Gameplay->setWinner( 0 );
+                            Gameplay->setWinner( 0x00 );
 
                             for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -340,7 +341,7 @@ void GameModule::update ( ) {
                         if ( getAlivePlayerCount() == Spaceships.size() ) {
 
                             EndingCondition = true;
-                            Gameplay->setWinner( 0 );
+                            Gameplay->setWinner( 0x00 );
 
                             for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -424,7 +425,7 @@ void GameModule::update ( sf::Event &Event ) {
 
         if ( Event.type == sf::Event::KeyPressed ) {
 
-            if ( Event.key.code == sf::Keyboard::Escape || Event.key.code == sf::Keyboard::Enter || Event.key.code == sf::Keyboard::Space ) {
+            if ( Event.key.code == sf::Keyboard::Escape || Event.key.code == sf::Keyboard::Return || Event.key.code == sf::Keyboard::Space ) {
 
                 for ( unsigned int i = 0; i < PlayerCount; i++ ) {
 
@@ -438,9 +439,7 @@ void GameModule::update ( sf::Event &Event ) {
 
             PlayerSpaceship[i]->update( Event ); } } }
 
-void GameModule::render ( sf::RenderWindow &Window, bool Debug ) {
-
-    Debug = true; // TODO DELETE
+void GameModule::render ( sf::RenderWindow &Window, bool DisplayShape ) {
 
     if ( PlayerCount > 0 ) { // Players' view (for game mode)
 
@@ -466,7 +465,7 @@ void GameModule::render ( sf::RenderWindow &Window, bool Debug ) {
 
                     if ( isOnScreen( Views[i], ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
 
-                        ActivePowerUp->render( Window, Debug ); } }
+                        ActivePowerUp->render( Window, DisplayShape ); } }
 
                 for ( auto ActivePlanet : Planets ) {
 
@@ -484,13 +483,13 @@ void GameModule::render ( sf::RenderWindow &Window, bool Debug ) {
 
                     if ( isOnScreen( Views[i], ActiveSpaceship->getInfluenceArea() ) ) {
 
-                        ActiveSpaceship->render( Window, Debug ); } }
+                        ActiveSpaceship->render( Window, DisplayShape ); } }
 
                 for ( auto ActiveMissile : Missiles ) {
 
                     if ( isOnScreen( Views[i], ActiveMissile->getInfluenceArea() ) ) {
 
-                        ActiveMissile->render( Window, Debug ); } } }
+                        ActiveMissile->render( Window, DisplayShape ); } } }
 
             Window.setView( Window.getDefaultView() );
 
@@ -525,7 +524,7 @@ void GameModule::render ( sf::RenderWindow &Window, bool Debug ) {
 
             if ( isOnScreen( NoPlayerView, ActivePowerUp->getPosition(), ActivePowerUp->getInfluenceRadius() ) ) {
 
-                ActivePowerUp->render( Window, Debug ); } }
+                ActivePowerUp->render( Window, DisplayShape ); } }
 
         for ( auto ActivePlanet : Planets ) {
 
@@ -543,13 +542,13 @@ void GameModule::render ( sf::RenderWindow &Window, bool Debug ) {
 
             if ( isOnScreen( NoPlayerView, ActiveSpaceship->getInfluenceArea() ) ) {
 
-                ActiveSpaceship->render( Window, Debug ); } }
+                ActiveSpaceship->render( Window, DisplayShape ); } }
 
         for ( auto ActiveMissile : Missiles ) {
 
             if ( isOnScreen( NoPlayerView, ActiveMissile->getInfluenceArea() ) ) {
 
-                ActiveMissile->render( Window, Debug ); } }
+                ActiveMissile->render( Window, DisplayShape ); } }
 
         Window.setView( Window.getDefaultView() ); } }
 
@@ -1381,19 +1380,19 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                         if ( EnemiesCount % 5 == 0 ) {
 
-                            EnemiesNotification = std::to_string( EnemiesCount ) + " enemies are left"; } }
+                            EnemiesNotification = std::to_string( EnemiesCount ) + " enemies left"; } }
 
                     else if ( EnemiesCount > 1 ) {
 
-                        EnemiesNotification = std::to_string( EnemiesCount ) + " enemies are left"; }
+                        EnemiesNotification = std::to_string( EnemiesCount ) + " enemies left"; }
 
                     else if ( EnemiesCount == 1 ) {
 
-                        EnemiesNotification = "1 enemy is left"; }
+                        EnemiesNotification = "1 enemy left"; }
 
                     else {
 
-                        EnemiesNotification = "No enemies are left"; }
+                        EnemiesNotification = "No enemies left"; }
 
                     if ( !EnemiesNotification.empty() ) {
 
@@ -1410,19 +1409,19 @@ void GameModule::updateSpaceships ( sf::Time ElapsedTime ) {
 
                         if ( AlivePlayersCount % 5 == 0 ) {
 
-                            AlivePlayersNotification = std::to_string( AlivePlayersCount ) + " players are left"; } }
+                            AlivePlayersNotification = std::to_string( AlivePlayersCount ) + " players left"; } }
 
                     else if ( AlivePlayersCount > 1 ) {
 
-                        AlivePlayersNotification = std::to_string( AlivePlayersCount ) + " players are left"; }
+                        AlivePlayersNotification = std::to_string( AlivePlayersCount ) + " players left"; }
 
                     else if ( AlivePlayersCount == 1 ) {
 
-                        AlivePlayersNotification = "1 players is left"; }
+                        AlivePlayersNotification = "1 player left"; }
 
                     else {
 
-                        AlivePlayersNotification = "No players are left"; }
+                        AlivePlayersNotification = "No players left"; }
 
                     if ( !AlivePlayersNotification.empty() ) {
 
@@ -1851,8 +1850,8 @@ void GameModule::updateViews ( ) {
 
         if ( ViewWidth >= ViewHeight ) {
 
-            Views[0].setSize( ViewWidth / 2.f, ViewHeight );
-            Views[1].setSize( ViewWidth / 2.f, ViewHeight );
+            Views[0].setSize( 0.75f * ViewWidth, 0.75f * 2.f * ViewHeight );
+            Views[1].setSize( 0.75f * ViewWidth, 0.75f * 2.f * ViewHeight );
             Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 0.5f, 1.f ) );
             Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 1.f ) );
 
@@ -1863,8 +1862,8 @@ void GameModule::updateViews ( ) {
 
         else {
 
-            Views[0].setSize( ViewWidth, ViewHeight / 2.f );
-            Views[1].setSize( ViewWidth, ViewHeight / 2.f );
+            Views[0].setSize( 0.75f * 2.f * ViewWidth, 0.75f * ViewHeight );
+            Views[1].setSize( 0.75f * 2.f * ViewWidth, 0.75f * ViewHeight );
             Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 1.f, 0.5f ) );
             Views[1].setViewport( sf::FloatRect( 0.f, 0.5f, 1.f, 0.5f ) );
 
@@ -1875,9 +1874,9 @@ void GameModule::updateViews ( ) {
 
     else if ( PlayerCount == 3 ) {
 
-        Views[0].setSize( ViewWidth / 2.f, 0.6f * ViewHeight );
-        Views[1].setSize( ViewWidth / 2.f, 0.6f * ViewHeight );
-        Views[2].setSize( ViewWidth, 0.4f * ViewHeight );
+        Views[0].setSize( 0.75f * ViewWidth, 0.75f * 1.2f * ViewHeight );
+        Views[1].setSize( 0.75f * ViewWidth, 0.75f * 1.2f * ViewHeight );
+        Views[2].setSize( 0.75f * 2.f * ViewWidth, 0.75f * 0.8f * ViewHeight );
         Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 0.5f, 0.6f ) );
         Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 0.6f ) );
         Views[2].setViewport( sf::FloatRect( 0.f, 0.6f, 1.f, 0.4f ) );
@@ -1893,10 +1892,10 @@ void GameModule::updateViews ( ) {
 
     else if ( PlayerCount == 4 ) {
 
-        Views[0].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
-        Views[1].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
-        Views[2].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
-        Views[3].setSize( ViewWidth / 2.f, ViewHeight / 2.f );
+        Views[0].setSize( ViewWidth, ViewHeight );
+        Views[1].setSize( ViewWidth, ViewHeight );
+        Views[2].setSize( ViewWidth, ViewHeight );
+        Views[3].setSize( ViewWidth, ViewHeight );
         Views[0].setViewport( sf::FloatRect( 0.f, 0.f, 0.5f, 0.5f ) );
         Views[1].setViewport( sf::FloatRect( 0.5f, 0.f, 0.5f, 0.5f ) );
         Views[2].setViewport( sf::FloatRect( 0.f, 0.5f, 0.5f, 0.5f ) );

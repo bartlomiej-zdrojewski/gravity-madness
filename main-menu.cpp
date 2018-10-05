@@ -58,6 +58,7 @@ void MainMenu::setMode ( Modes Mode ) {
 void MainMenu::update ( ) {
 
     sf::Time ElapsedTime = Clock.restart();
+    // TODO PerformanceTimer += ElapsedTime;
 
     if ( ElapsedTime.asSeconds() < 0.1f ) {
 
@@ -108,6 +109,24 @@ void MainMenu::update ( ) {
     else {
 
         // TODO LOW PERFORMANCE MESSAGE
+
+        /*
+
+        if ( PerformanceTimer.asSeconds() > 10.f ) {
+
+            PerformanceTimer = sf::seconds( 0.f );
+            LowPerformanceTimer = sf::seconds( 0.f ); }
+
+        else {
+
+            LowPerformanceTimer += ElapsedTime;
+
+            if ( LowPerformanceTimer.asSeconds() > 1.f ) {
+
+                LowPerformance = true;
+                LowPerformanceTimer = sf::seconds( 0.f ); } }
+
+        */
 
         } }
 
@@ -199,9 +218,10 @@ void MainMenu::reset ( ) {
 
     LaunchGame = false;
     LaunchTutorial = false;
-    Terminate = false;
     VideoChanged = false;
     SettingsChanged = false;
+    LowPerformance = false;
+    Terminate = false;
     Mode = MenuMode;
 
     WindowWidth = Graphics->getWindowWidth();
@@ -262,16 +282,6 @@ void MainMenu::reset ( ) {
     updateControllersSection( sf::seconds( ALMOST_NO_TIME ) );
     updateBackground( sf::seconds( ALMOST_NO_TIME ) ); }
 
-bool MainMenu::onLaunchTutorial ( ) {
-
-    if ( LaunchTutorial ) {
-
-        reset();
-
-        return true; }
-
-    return false; }
-
 bool MainMenu::onLaunchGame ( ) {
 
     if ( LaunchGame ) {
@@ -282,9 +292,9 @@ bool MainMenu::onLaunchGame ( ) {
 
     return false; }
 
-bool MainMenu::onTerminate ( ) {
+bool MainMenu::onLaunchTutorial ( ) {
 
-    if ( Terminate ) {
+    if ( LaunchTutorial ) {
 
         reset();
 
@@ -316,6 +326,26 @@ bool MainMenu::onSettingsChanged ( ) {
         EpilepsyProtection ? Graphics->enableEpilepsyProtection() : Graphics->disableEpilepsyProtection();
 
         SettingsChanged = false;
+
+        return true; }
+
+    return false; }
+
+bool MainMenu::onLowPerformance ( ) {
+
+    if ( LowPerformance ) {
+
+        reset();
+
+        return true; }
+
+    return false; }
+
+bool MainMenu::onTerminate ( ) {
+
+    if ( Terminate ) {
+
+        reset();
 
         return true; }
 
@@ -1228,7 +1258,7 @@ void MainMenu::loadSpaceshipCards ( ) {
 
         #else
 
-            SpaceshipCards.back().VisualizationArea->create( 1000, 300, Context );
+            SpaceshipCards.back().VisualizationArea->create( 1000, 300 );
         
         #endif
 
@@ -1659,8 +1689,8 @@ void MainMenu::renderSpaceshipsSection ( sf::RenderWindow &Window ) {
                 case 1: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 255, 23, 68 ), Card.Prototype.HealthRestoration / SpaceshipMaximumValues[i] ); break; // #FF1744
                 case 2: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 61, 90, 254 ), Card.Prototype.EnergyLimit / SpaceshipMaximumValues[i] ); break; // #3D5AFE
                 case 3: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 61, 90, 254 ), Card.Prototype.EnergyRestoration / SpaceshipMaximumValues[i] ); break; // #3D5AFE
-                case 4: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 213, 0, 249 ), Card.Prototype.Thrust / SpaceshipMaximumValues[i] ); break;
-                case 5: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 213, 0, 249 ), Card.Prototype.RayPower / SpaceshipMaximumValues[i] ); break;
+                case 4: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 213, 0, 249 ), Card.Prototype.Thrust / SpaceshipMaximumValues[i] ); break; // #D500F9
+                case 5: renderSpaceshipsSectionBar( Window, BarPosition, BarSize, sf::Color( 213, 0, 249 ), Card.Prototype.RayPower / SpaceshipMaximumValues[i] ); break; // #D500F9
 
                 default: break; }
 
@@ -2359,11 +2389,11 @@ void MainMenu::updateControllersSection ( sf::Time ElapsedTime ) {
 
                     ControllersModificationState = 0; }
 
-                else if ( Key == sf::Keyboard::Enter || Key == sf::Keyboard::Space ) {
+                else if ( Key == sf::Keyboard::Return || Key == sf::Keyboard::Space ) {
 
                     ControllersModificationState = 2; }
 
-                else if ( Key == sf::Keyboard::Backspace ) {
+                else if ( Key == sf::Keyboard::BackSpace ) {
 
                     ControllersModificationState = 3; } }
 

@@ -193,7 +193,7 @@ Spaceship * DebugModule::getSpaceship ( ) {
     NewSpaceship->setMissileLimit( Prototype.MissileLimit );
     NewSpaceship->setMissileCount( Prototype.MissileCount );
     NewSpaceship->setTexture( Graphics->getTexture( Prototype.Texture ) );
-    NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color::Red ); // TODO
+    NewSpaceship->setAccentTexture( Graphics->getTexture( Prototype.AccentTexture ), sf::Color::Red );
     NewSpaceship->setThrusterTexture( Graphics->getTexture( "Thruster" ), Prototype.FuelColor );
 
     return NewSpaceship; }

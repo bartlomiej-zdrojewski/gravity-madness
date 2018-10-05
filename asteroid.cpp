@@ -50,7 +50,7 @@ ParticleSystem * Asteroid::onCollision ( Planet * Other ) {
     Explosion->setOriginVelocity( sf::Vector2f( 0, 0 ) );
     Explosion->setAngleRange( Normal, 0.95f * PI );
     Explosion->setVelocityRange( 10.f, 10.f + 0.8f * Velocity );
-    Explosion->setColorRange( sf::Color ( 25, 25, 50 ), sf::Color ( 125, 125, 150 ) );
+    Explosion->setColorRange( sf::Color ( 38, 50, 56 ), sf::Color ( 84, 110, 122 ) );
     Explosion->setDuration( sf::seconds( 0.5f ), sf::seconds( 4.f ) );
     Explosion->generateParticles( (unsigned int) ( getMass() * ( Velocity / 100.f ) ) );
 

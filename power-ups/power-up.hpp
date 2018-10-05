@@ -32,7 +32,7 @@ public:
     float getInfluenceRadius ( );
 
     void update ( sf::Time ElapsedTime );
-    void render ( sf::RenderWindow &Window, bool Debug = false );
+    void render ( sf::RenderWindow &Window, bool DisplayShape = false );
     void finish ( );
 
     void onCatch ( Spaceship * MySpaceship );

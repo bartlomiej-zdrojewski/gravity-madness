@@ -339,9 +339,9 @@ void Spaceship::update ( sf::Time ElapsedTime ) {
     MyShape->setOrigin( getPosition() );
     MyShape->setRotation( getVelocityAngle() ); }
 
-void Spaceship::render ( sf::RenderWindow &Window, bool Debug ) {
+void Spaceship::render ( sf::RenderWindow &Window, bool DisplayShape ) {
 
-    if ( Debug ) {
+    if ( DisplayShape ) {
 
         sf::CircleShape CollisionCircle;
         CollisionCircle.setRadius( getRadius() );
@@ -388,15 +388,15 @@ void Spaceship::render ( sf::RenderWindow &Window, bool Debug ) {
     Window.draw( Sprite );
     Window.draw( AccentSprite );
 
-    if ( Debug ) {
+    if ( DisplayShape ) {
 
         sf::VertexArray ShapeVertexes;
         ShapeVertexes.setPrimitiveType( sf::PrimitiveType::Lines );
 
         for ( Shape::Segment &MySegment : MyShape->getOutline() ) {
 
-            ShapeVertexes.append( sf::Vertex( MySegment.Begin, sf::Color::Green ) );
-            ShapeVertexes.append( sf::Vertex( MySegment.End, sf::Color::Green ) ); }
+            ShapeVertexes.append( sf::Vertex( MySegment.Begin, sf::Color( 0, 255, 0 ) ) );
+            ShapeVertexes.append( sf::Vertex( MySegment.End, sf::Color( 0, 255, 0 ) ) ); }
 
         Window.draw( ShapeVertexes ); } }
 

@@ -74,11 +74,11 @@ void PowerUp::update ( sf::Time ElapsedTime ) {
 
             updateEffect( ElapsedTime ); } } }
 
-void PowerUp::render ( sf::RenderWindow &Window, bool Debug ) {
+void PowerUp::render ( sf::RenderWindow &Window, bool DisplayShape ) {
 
     if ( !Caught ) {
 
-        if ( Debug ) {
+        if ( DisplayShape ) {
 
             sf::CircleShape CollisionCircle;
             CollisionCircle.setRadius( getInfluenceRadius() );

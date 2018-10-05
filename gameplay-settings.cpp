@@ -754,6 +754,14 @@ void GameplaySettings::setTimeLimit ( sf::Time TimeLimit ) {
 
     this->TimeLimit = TimeLimit; }
 
+unsigned int GameplaySettings::getHighScore ( ) {
+
+    return HighScore; }
+
+void GameplaySettings::setHighScore ( unsigned int HighScore ) {
+
+    this->HighScore = HighScore; }
+
 ScoreCounter * GameplaySettings::getScores ( ) {
 
     return Scores; }

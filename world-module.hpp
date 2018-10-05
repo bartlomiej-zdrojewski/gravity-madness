@@ -23,7 +23,9 @@ public:
         InitTimeWarningMode,
         InitTimeErrorMode,
         RunTimeErrorMode,
+        LowPerformanceErrorMode,
 
+        WelcomeMode,
         MainMenuMode,
         GameMode,
         TutorialMode,
@@ -81,7 +83,7 @@ public:
         Graphics->setAntialiasingLevel( InitAntialiasing );
         InitEpilepsyProtection ? Graphics->enableEpilepsyProtection() : Graphics->disableEpilepsyProtection();
 
-        // TODO Audio options
+        // TODO AUDIO OPTIONS
 
         }
 
@@ -102,9 +104,10 @@ public:
 private:
 
     bool config ( Script ** GraphicsConfig, Script ** AudioConfig );
-    void init ( sf::RenderWindow * Window = nullptr );
-
+    void init ( );
     void saveSettings ( );
+
+    void renderLoadingScreen ( sf::RenderWindow &Window );
 
 private:
 
@@ -127,17 +130,23 @@ private:
     sf::Thread * GraphicsThread;
     // TODO sf::Thread * AudioThread;
 
+    float LoadingProgress;
+    sf::Texture LoadingTextures [2];
+    sf::Clock LoadingClock;
+    sf::Time LoadingTime;
+
     Modes Mode;
     int8_t InitState;
     bool VideoChanged;
 
     std::string LogPath;
+    bool FirstLaunch;
     unsigned int InitWindowWidth;
     unsigned int InitWindowHeight;
     bool InitFullScreen;
     unsigned int InitAntialiasing;
     bool InitEpilepsyProtection;
-    unsigned int HighScore;
+    unsigned int InitHighScore;
     bool Debugging;
 
     };

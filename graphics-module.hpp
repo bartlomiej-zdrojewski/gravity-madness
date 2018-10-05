@@ -12,6 +12,7 @@ public:
 
     GraphicsModule ( Script * Config, int8_t * InitState ) : Config ( Config ), InitState( InitState ), Logger ( ) {
 
+        InitProgress = 0.f;
         ImageState = 0;
         WindowWidth = 0;
         WindowHeight = 0;
@@ -25,6 +26,7 @@ public:
 
     void init ( );
     void initContext ( );
+    float getInitProgress ( );
 
     unsigned int getWindowWidth ( );
     unsigned int getWindowHeight ( );
@@ -59,6 +61,7 @@ private:
 
     Script * Config;
     int8_t * InitState;
+    float InitProgress;
 
     volatile int8_t ImageState;
     std::string ImageName;

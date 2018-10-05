@@ -86,7 +86,17 @@ void WorldModule::update ( ) {
                     MyPauseMenu = new PauseMenu ( Graphics );
                     MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );
 
-                    setMode( Modes::MainMenuMode ); } }
+                    if ( FirstLaunch ) {
+
+                        FirstLaunch = false;
+                        saveSettings();
+
+                        MyMessage->setType( Message::Types::WelcomeMessage );
+                        setMode( Modes::WelcomeMode ); }
+
+                    else {
+
+                        setMode( Modes::MainMenuMode ); } } }
 
             break; }
 
@@ -110,6 +120,26 @@ void WorldModule::update ( ) {
 
             break; }
 
+        case LowPerformanceErrorMode: {
+
+            MyMessage->update();
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::IdleMode ); }
+
+            break; }
+
+        case WelcomeMode: {
+
+            MyMessage->update();
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::MainMenuMode ); }
+
+            break; }
+
         case MainMenuMode: {
 
             MyMainMenu->update();
@@ -124,11 +154,25 @@ void WorldModule::update ( ) {
 
                 setMode( Modes::GameMode ); }
 
+            else if ( MyMainMenu->onLowPerformance() ) {
+
+                Graphics->setWindowSize( 800, 600 );
+                Graphics->disableFullScreen();
+                Graphics->setAntialiasingLevel( 0 );
+
+                saveSettings();
+                VideoChanged = true;
+
+                MyMessage->setType( Message::Types::LowPerformanceError );
+                setMode( Modes::LowPerformanceErrorMode ); }
+
             else if ( MyMainMenu->onTerminate() ) {
 
                 setMode( Modes::IdleMode ); }
 
             if ( MyMainMenu->onVideoChanged() ) {
+
+                saveSettings();
 
                 VideoChanged = true; }
 
@@ -188,7 +232,17 @@ void WorldModule::update ( ) {
 
             MyScoreBoard->update();
 
-            if ( MyScoreBoard->onClose() ) {
+            if ( MyScoreBoard->onHighScore() ) {
+
+                saveSettings(); }
+
+            if ( MyScoreBoard->onRestart() ) {
+
+                Game->setGameplay( Gameplay );
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyScoreBoard->onClose() ) {
 
                 setMode( Modes::MainMenuMode ); }
 
@@ -209,8 +263,8 @@ void WorldModule::update ( ) {
             return; } }
 
     Log->update();
-    
-    if ( Mode > Modes::RunTimeErrorMode && Log->wasErrorLogged() ) {
+
+    if ( Mode > Modes::LowPerformanceErrorMode && Log->wasErrorLogged() ) {
 
         MyMessage->setType( Message::Types::RunTimeError );
 
@@ -274,19 +328,51 @@ void WorldModule::update ( sf::Event &Event ) {
 
             break; }
 
+        case LowPerformanceErrorMode: {
+
+            MyMessage->update( Event );
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::IdleMode ); }
+
+            break; }
+
+        case WelcomeMode: {
+
+            MyMessage->update( Event );
+
+            if ( MyMessage->onClose() ) {
+
+                setMode( Modes::MainMenuMode ); }
+
+            break; }
+
         case MainMenuMode: {
 
             MyMainMenu->update( Event );
 
-            if ( MyMainMenu->onLaunchTutorial() ) {
-
-                setMode( Modes::TutorialMode ); }
-
-            else if ( MyMainMenu->onLaunchGame() ) {
+            if ( MyMainMenu->onLaunchGame() ) {
 
                 Game->setGameplay( Gameplay );
 
                 setMode( Modes::GameMode ); }
+
+            else if ( MyMainMenu->onLaunchTutorial() ) {
+
+                setMode( Modes::TutorialMode ); }
+
+            else if ( MyMainMenu->onLowPerformance() ) {
+
+                Graphics->setWindowSize( 800, 600 );
+                Graphics->disableFullScreen();
+                Graphics->setAntialiasingLevel( 0 );
+
+                saveSettings();
+                VideoChanged = true;
+
+                MyMessage->setType( Message::Types::LowPerformanceError );
+                setMode( Modes::LowPerformanceErrorMode ); }
 
             else if ( MyMainMenu->onTerminate() ) {
 
@@ -294,7 +380,13 @@ void WorldModule::update ( sf::Event &Event ) {
 
             if ( MyMainMenu->onVideoChanged() ) {
 
+                saveSettings();
+
                 VideoChanged = true; }
+
+            if ( MyMainMenu->onSettingsChanged() ) {
+
+                saveSettings(); }
 
             break; }
 
@@ -348,7 +440,17 @@ void WorldModule::update ( sf::Event &Event ) {
 
             MyScoreBoard->update( Event );
 
-            if ( MyScoreBoard->onClose() ) {
+            if ( MyScoreBoard->onHighScore() ) {
+
+                saveSettings(); }
+
+            if ( MyScoreBoard->onRestart() ) {
+
+                Game->setGameplay( Gameplay );
+
+                setMode( Modes::GameMode ); }
+
+            else if ( MyScoreBoard->onClose() ) {
 
                 setMode( Modes::MainMenuMode ); }
 
@@ -378,7 +480,7 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 
         case InitMode: {
 
-            init( &Window );
+            renderLoadingScreen( Window );
 
             return; }
 
@@ -395,6 +497,18 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
             break; }
 
         case RunTimeErrorMode: {
+
+            MyMessage->render( Window );
+
+            break; }
+
+        case LowPerformanceErrorMode: {
+
+            MyMessage->render( Window );
+
+            break; }
+
+        case WelcomeMode: {
 
             MyMessage->render( Window );
 
@@ -444,12 +558,13 @@ void WorldModule::render ( sf::RenderWindow &Window ) {
 bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
     LogPath = "log.txt";
+    FirstLaunch = false;
     InitWindowWidth = 0;
     InitWindowHeight = 0;
     InitAntialiasing = 0;
     InitFullScreen = false;
     InitEpilepsyProtection = false;
-    HighScore = 0;
+    InitHighScore = 0;
     Debugging = false;
 
     pugi::xml_node * Root = Config->getRoot();
@@ -489,6 +604,10 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
             LogPath = Script::getTextValue( Setting ); }
 
+        else if ( std::string( Setting.name() ) == "FirstLaunch" ) {
+
+            FirstLaunch = Script::getBooleanValue( Setting ); }
+
         else if ( std::string( Setting.name() ) == "WindowWidth" ) {
 
             InitWindowWidth = (unsigned int) Script::getIntegerValue( Setting ); }
@@ -515,7 +634,7 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
         else if ( std::string( Setting.name() ) == "HighScore" ) {
 
-            HighScore = (unsigned int) Script::getIntegerValue( Setting ); }
+            InitHighScore = (unsigned int) Script::getIntegerValue( Setting ); }
 
         else if ( std::string( Setting.name() ) == "Debug" ) {
 
@@ -523,9 +642,29 @@ bool WorldModule::config ( Script ** GraphicsConfig, Script ** AudioConfig ) {
 
     return !( InitWindowWidth == 0 || InitWindowHeight == 0 ); }
 
-void WorldModule::init ( sf::RenderWindow * Window ) {
+void WorldModule::init ( ) {
 
     if ( InitState == 0 ) {
+
+        LoadingProgress = 0.f;
+        LoadingTextures[0].loadFromFile( "logo-bright.png" ); // TODO LOAD FROM MEMORY
+        LoadingTextures[1].loadFromFile( "logo-dark.png" ); // TODO LOAD FROM MEMORY
+        LoadingTextures[0].setSmooth( true );
+        LoadingTextures[1].setSmooth( true );
+        LoadingClock.restart();
+
+        InitState++; }
+
+    else if ( InitState == 1 ) {
+
+        LoadingTime += LoadingClock.restart();
+
+        if ( LoadingTime.asSeconds() > 1.0f ) {
+
+            LoadingTime = sf::seconds( 0.f );
+            InitState++; } }
+
+    else if ( InitState == 2 ) {
 
         GraphicsThread = new sf::Thread ( &GraphicsModule::init, Graphics );
         // TODO AudioThread = new sf::Thread ( &GraphicsModule::init, Audio );
@@ -535,15 +674,23 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
 
         InitState++; }
 
-    else if ( InitState < 2 ) { // TODO 3 with audio module
+    else if ( InitState < 4 ) { // TODO CHANGE TO "5" WHEN AUDIO MODULE WILL BE IMPLEMENTED
 
         Graphics->initContext();
 
-        if ( Window ) {
+        LoadingProgress = Graphics->getInitProgress(); // TODO MULTIPLY BY 0.5f WHEN AUDIO MODULE WILL BE IMPLEMENTED
+        // TODO LoadingProgress += 0.5f * Audio->getInitProgress();
+        LoadingClock.restart(); }
 
-            // TODO UPDATE LOADING SCREEN
+    else if ( InitState == 4 ) { // TODO CHANGE TO "5" WHEN AUDIO MODULE WILL BE IMPLEMENTED
 
-            } }
+        LoadingProgress = 1.f;
+        LoadingTime += LoadingClock.restart();
+
+        if ( LoadingTime.asSeconds() > 0.5f ) {
+
+            LoadingTime = sf::seconds( 0.f );
+            InitState++; } }
 
     else {
 
@@ -567,6 +714,7 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
             Log->manage( Gameplay->getLogger() );
             Gameplay->loadSpaceshipPrototypes( SpaceshipsConfig );
             Gameplay->loadControllersSettingsRegister( ControllersConfig );
+            Gameplay->setHighScore( InitHighScore );
             Log->update();
 
             if ( Log->wasWarningLogged() ) {
@@ -578,9 +726,9 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
 
             else if ( Debugging ) {
 
-                MyMessage = new Message ( Graphics );
                 Debug = new DebugModule ( Graphics, Game );
                 Log->manage( Debug->getLogger() );
+                MyMessage = new Message ( Graphics );
 
                 setMode( Modes::DebugMode ); }
 
@@ -592,10 +740,21 @@ void WorldModule::init ( sf::RenderWindow * Window ) {
                 MyScoreBoard = new ScoreBoard ( Graphics, Gameplay );
                 MyMessage = new Message ( Graphics );
 
-                setMode( Modes::MainMenuMode ); } } } }
+                if ( FirstLaunch ) {
+
+                    FirstLaunch = false;
+                    saveSettings();
+
+                    MyMessage->setType( Message::Types::WelcomeMessage );
+                    setMode( Modes::WelcomeMode ); }
+
+                else {
+
+                    setMode( Modes::MainMenuMode ); } } } } }
 
 void WorldModule::saveSettings ( ) {
 
+    bool FirstLaunchSuccess = false;
     bool WindowWidthSuccess = false;
     bool WindowHeightSuccess = false;
     bool FullScreenSuccess = false;
@@ -620,7 +779,13 @@ void WorldModule::saveSettings ( ) {
 
     for ( auto Setting : SettingNodes ) {
 
-        if ( std::string( Setting.name() ) == "WindowWidth" ) {
+        if ( std::string( Setting.name() ) == "FirstLaunch" ) {
+
+            Script::setValue( Setting, FirstLaunch );
+
+            FirstLaunchSuccess = true; }
+
+        else if ( std::string( Setting.name() ) == "WindowWidth" ) {
 
             Script::setValue( Setting, (int) Graphics->getWindowWidth() );
 
@@ -688,9 +853,14 @@ void WorldModule::saveSettings ( ) {
 
         else if ( std::string( Setting.name() ) == "HighScore" ) {
 
-            Script::setValue( Setting, (int) HighScore );
+            Script::setValue( Setting, (int) Gameplay->getHighScore() );
 
             HighScoreSuccess = true; } }
+
+    if ( !FirstLaunchSuccess ) {
+
+        pugi::xml_node Setting = SettingsNode[0].append_child( "FirstLaunch" );
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), FirstLaunch ); }
 
     if ( !WindowWidthSuccess ) {
 
@@ -755,6 +925,42 @@ void WorldModule::saveSettings ( ) {
     if ( !HighScoreSuccess ) {
 
         pugi::xml_node Setting = SettingsNode[0].append_child( "HighScore" );
-        Script::setValue( Setting.append_child( pugi::node_pcdata ), (int) HighScore ); }
+        Script::setValue( Setting.append_child( pugi::node_pcdata ), (int) Gameplay->getHighScore() ); }
 
     Config->saveToFile(); }
+
+void WorldModule::renderLoadingScreen ( sf::RenderWindow &Window ) {
+
+    sf::RectangleShape WhiteBackground;
+    WhiteBackground.setSize( sf::Vector2f( Graphics->getWindowWidth(), Graphics->getWindowHeight() ) );
+    WhiteBackground.setPosition( 0.f, 0.f );
+    WhiteBackground.setFillColor( sf::Color( 255, 255, 255 ) );
+
+    sf::RectangleShape BlackBackground;
+    BlackBackground.setSize( sf::Vector2f( LoadingProgress * Graphics->getWindowWidth(), Graphics->getWindowHeight() ) );
+    BlackBackground.setPosition( 0.f, 0.f );
+    BlackBackground.setFillColor( sf::Color( 0, 0, 0 ) );
+
+    sf::Sprite BrightLogo ( LoadingTextures[0] );
+
+    float HorizontalScale = (float) Graphics->getWindowWidth() / (float) BrightLogo.getTexture()->getSize().x;
+    float VerticalScale = (float) Graphics->getWindowHeight() / (float) BrightLogo.getTexture()->getSize().y;
+    float Scale = fminf( HorizontalScale, VerticalScale );
+
+    BrightLogo.setScale( Scale, Scale );
+    BrightLogo.setPosition( ( Graphics->getWindowWidth() - Scale * BrightLogo.getTexture()->getSize().x ) / 2.f, ( Graphics->getWindowHeight() - Scale * BrightLogo.getTexture()->getSize().y ) / 2.f );
+
+    sf::Sprite DarkLogo ( LoadingTextures[1] );
+
+    HorizontalScale = (float) Graphics->getWindowWidth() / (float) DarkLogo.getTexture()->getSize().x;
+    VerticalScale = (float) Graphics->getWindowHeight() / (float) DarkLogo.getTexture()->getSize().y;
+    Scale = fminf( HorizontalScale, VerticalScale );
+
+    DarkLogo.setScale( Scale, Scale );
+    DarkLogo.setPosition( ( Graphics->getWindowWidth() - Scale * DarkLogo.getTexture()->getSize().x ) / 2.f, ( Graphics->getWindowHeight() - Scale * DarkLogo.getTexture()->getSize().y ) / 2.f );
+    DarkLogo.setTextureRect( sf::IntRect( 0, 0, (int) ( LoadingProgress * DarkLogo.getTexture()->getSize().x ), DarkLogo.getTexture()->getSize().y ) );
+
+    Window.draw( WhiteBackground );
+    Window.draw( BlackBackground );
+    Window.draw( BrightLogo );
+    Window.draw( DarkLogo ); }

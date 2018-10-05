@@ -7,7 +7,7 @@
 
 class GameModule;
 
-class DebugModule : public Logger {
+class DebugModule : public Logger { // TODO REVIEW
 
 public:
 

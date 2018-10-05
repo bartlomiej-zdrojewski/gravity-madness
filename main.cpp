@@ -4,12 +4,17 @@ int main ( ) {
 
     srand( (unsigned int) time( nullptr ) );
 
+    sf::Image Icon;
     Script Config ( "assets/scripts/settings.xml" );
     WorldModule World ( &Config );
 
     if ( World.getMode() != WorldModule::Modes::IdleMode ) {
 
         sf::RenderWindow Window ( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
+
+        if ( Icon.loadFromFile( "icon.png" ) ) {
+
+            Window.setIcon( Icon.getSize().x, Icon.getSize().y, Icon.getPixelsPtr() ); }
 
         Window.setFramerateLimit( 60 );
         Window.setVerticalSyncEnabled( true );
@@ -38,6 +43,10 @@ int main ( ) {
                     if ( World.hasVideoChanged() ) {
 
                         Window.create( World.getVideoMode(), "Gravity Madness", World.getVideoStyle(), World.getVideoContext() );
+
+                        if ( Icon.loadFromFile( "icon.png" ) ) {
+
+                            Window.setIcon( Icon.getSize().x, Icon.getSize().y, Icon.getPixelsPtr() ); }
 
                         Window.setFramerateLimit( 60 );
                         Window.setVerticalSyncEnabled( true );

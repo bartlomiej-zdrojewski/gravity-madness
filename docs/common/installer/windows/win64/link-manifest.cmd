@@ -1,0 +1,1 @@
+mt.exe -nologo -manifest "gravity-madness.exe.manifest" -outputresource:"gravity-madness.exe"
